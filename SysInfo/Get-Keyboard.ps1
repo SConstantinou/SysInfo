@@ -3,85 +3,46 @@
     $KeyboardLayout = @{
         '0000041c' = 'Albanian'
         '00000401' = 'Arabic (101)'
-        '00000809' = 'UK'}
-
-    [String[]]$Properties = 'Name',
-                            'Description',
-                            'Caption',
-                            'PowerManagementCapabilities',
-                            'PowerManagementSupported',
-                            'Layout',
-                            'NumberOfFunctionKeys',
-                            'IsLocked',
-                            'Status'
-
-    [String[]]$SelectedProperties = 'Name',
-                                    'Description',
-                                    'Caption',
-                                    'PowerManagementCapabilities',
-                                    'PowerManagementSupported',
-                                    @{Name = "Layout"; Expression = {[String]($KeyboardLayout[[String]$($_.Layout)])}},
-                                    'NumberOfFunctionKeys',
-                                    'IsLocked',
-                                    'Status'
-
-    $Keyboard = Get-CimInstance -ClassName Win32_Keyboard -Property $Properties | Select-Object -Property $SelectedProperties
-    Get-CimInstance -ClassName Win32_Keyboard -Property $Properties | Select-Object -Property Name,@{Name = "Layout"; Expression = {[String]($KeyboardLayout[[String]$($_.Layout)])}}
-
-        $KeyboardLayout = {
-
-        param (
-            [String]$Layout)
-
-        switch -Regex ($Layout){
-            {$Layout -eq "0000041c"}{$KBLayout = "Albanian"}
-            {$Layout -eq "00000401"}{$KBLayout = "Arabic (101)"}
-            {$Layout -eq "00010401"}{$KBLayout = "Arabic (102)"}
-            {$Layout -eq "00020401"}{$KBLayout = "Arabic (102) AZERTY"}
-            {$Layout -eq "0000042b"}{$KBLayout = "Armenian Eastern"}
-            {$Layout -eq "0002042b"}{$KBLayout = "Armenian Phonetic"}
-            {$Layout -eq "0003042b"}{$KBLayout = "Armenian Typewriter"}
-            {$Layout -eq "0001042b"}{$KBLayout = "Armenian Western"}
-            {$Layout -eq "0000044d"}{$KBLayout = "Assamese - Inscript"}
-            {$Layout -eq "0001042c"}{$KBLayout = "Azerbaijani (Standard)"}
-            {$Layout -eq "0000082c"}{$KBLayout = "Azerbaijani Cyrillic"}
-            {$Layout -eq "0000042c"}{$KBLayout = "Azerbaijani Latin"}
+        '00010401' = 'Arabic (102)'
+        '00020401' = 'Arabic (102) AZERTY'
+        '0000042b' = 'Armenian Eastern'
+        '0002042b' = 'Armenian Phonetic'
+        '0003042b' = 'Armenian Typewriter'
+        '0001042b' = 'Armenian Western'
+        '0000044d' = 'Assamese - Inscript'
+        '0001042c' = 'Azerbaijani (Standard)'
+        '0000082c' = 'Azerbaijani Cyrillic'
+        '0000042c' = 'Azerbaijani Latin'
+        '0000046d' = 'Bashkir'
+        '00000423' = 'Belarusian'
+        '0001080c' = 'Belgian (Comma)'
+        '00000813' = 'Belgian (Period)'
+	    '0000080c' = 'Belgian French'
+	    '00000445' = 'Bangla (Bangladesh)'
+	    '00020445' = 'Bangla (India)'
+	    '00010445' = 'Bangla (India - Legacy)'
+	    '0000201a' = 'Bosnian (Cyrillic)'
+	    '000b0c00' = 'Buginese'
+	    '00030402' = 'Bulgarian'
+	    '00010402' = 'Bulgarian (Latin)'
+	    '00020402' = 'Bulgarian (phonetic layout)'
+	    '00040402' = 'Bulgarian (phonetic traditional)'
+	    '00000402' = 'Bulgarian (Typewriter)'
+	    '00001009' = 'Canadian French'
+	    '00000c0c' = 'Canadian French (Legacy)'
+	    '00011009' = 'Canadian Multilingual Standard'
+        '0000085f' = 'Central Atlas Tamazight'
+        '00000429' = 'Central Kurdish'
+        '0000045c' = 'Cherokee Nation'
+        '0001045c' = 'Cherokee Nation Phonetic'
+        '00000804' = 'Chinese (Simplified) - US Keyboard'
+        '00000404' = 'Chinese (Traditional) - US Keyboard'
+        
+        
+        <#
 
 
-
-
-
-
-
-
-
-
-<#
-Azerbaijani Latin	0x0000042c
-Bashkir	0x0000046d
-Belarusian	0x00000423
-Belgian (Comma)	0x0001080c
-Belgian (Period)	0x00000813
-Belgian French	0x0000080c
-Bangla (Bangladesh)	0x00000445
-Bangla (India)	0x00020445
-Bangla (India - Legacy)	0x00010445
-Bosnian (Cyrillic)	0x0000201a
-Buginese	0x000b0c00
-Bulgarian	0x0030402
-Bulgarian (Latin)	0x00010402
-Bulgarian (phonetic layout)	0x00020402
-Bulgarian (phonetic traditional)	0x00040402
-Bulgarian (Typewriter)	0x00000402
-Canadian French	0x00001009
-Canadian French (Legacy)	0x00000c0c
-Canadian Multilingual Standard	0x00011009
-Central Atlas Tamazight	0x0000085f
-Central Kurdish	0x00000429
-Cherokee Nation	0x0000045c
-Cherokee Nation Phonetic	0x0001045c
-Chinese (Simplified) - US Keyboard	0x00000804
-Chinese (Traditional) - US Keyboard	0x00000404
+	0x
 Chinese (Traditional, Hong Kong S.A.R.)	0x00000c04
 Chinese (Traditional Macao S.A.R.) US Keyboard	0x00001404
 Chinese (Simplified, Singapore) - US keyboard	0x00001004
@@ -247,4 +208,20 @@ Wolof	0x00000488
 Yakut	0x00000485
 Yoruba	0x0000046a
 #>
+    }
+
+    $Properties = 'Name',
+                            'Description',
+                            'Caption',
+                            'PowerManagementCapabilities',
+                            'PowerManagementSupported',
+                            'Layout',
+                            'NumberOfFunctionKeys',
+                            'IsLocked',
+                            'Status'
+
+    $Keyboard = Get-CimInstance -ClassName Win32_Keyboard -Property $Properties | Select-Object $Properties
+    $Keyboard | ForEach-Object {$_.Layout = $KeyboardLayout["$($_.Layout)"]}
+    
+    Write-Output $Keyboard
 }
