@@ -37,15 +37,12 @@
         '0001045c' = 'Cherokee Nation Phonetic'
         '00000804' = 'Chinese (Simplified) - US Keyboard'
         '00000404' = 'Chinese (Traditional) - US Keyboard'
-        
+        '00000c04' = 'Chinese (Traditional, Hong Kong S.A.R.)'
+        '00001404' = 'Chinese (Traditional Macao S.A.R.) US Keyboard'
+        '00001004' = 'Chinese (Simplified, Singapore) - US keyboard'
         
         <#
 
-
-	0x
-Chinese (Traditional, Hong Kong S.A.R.)	0x00000c04
-Chinese (Traditional Macao S.A.R.) US Keyboard	0x00001404
-Chinese (Simplified, Singapore) - US keyboard	0x00001004
 Croatian	0x0000041a
 Czech	0x00000405
 Czech (QWERTY)	0x00010405
@@ -210,15 +207,9 @@ Yoruba	0x0000046a
 #>
     }
 
-    $Properties = 'Name',
-                            'Description',
-                            'Caption',
-                            'PowerManagementCapabilities',
-                            'PowerManagementSupported',
-                            'Layout',
-                            'NumberOfFunctionKeys',
-                            'IsLocked',
-                            'Status'
+    $Properties = 'Name','Description','Caption','PowerManagementCapabilities',
+                  'PowerManagementSupported','Layout','NumberOfFunctionKeys',
+                  'IsLocked','Status'
 
     $Keyboard = Get-CimInstance -ClassName Win32_Keyboard -Property $Properties | Select-Object $Properties
     $Keyboard | ForEach-Object {$_.Layout = $KeyboardLayout["$($_.Layout)"]}
