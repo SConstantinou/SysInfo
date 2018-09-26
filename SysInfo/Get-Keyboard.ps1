@@ -23,7 +23,7 @@
 	    '00010445' = 'Bangla (India - Legacy)'
 	    '0000201a' = 'Bosnian (Cyrillic)'
 	    '000b0c00' = 'Buginese'
-	    '00030402' = 'Bulgarian'
+	    '0030402' = 'Bulgarian'
 	    '00010402' = 'Bulgarian (Latin)'
 	    '00020402' = 'Bulgarian (phonetic layout)'
 	    '00040402' = 'Bulgarian (phonetic traditional)'
@@ -40,171 +40,167 @@
         '00000c04' = 'Chinese (Traditional, Hong Kong S.A.R.)'
         '00001404' = 'Chinese (Traditional Macao S.A.R.) US Keyboard'
         '00001004' = 'Chinese (Simplified, Singapore) - US keyboard'
-        
-        <#
-
-Croatian	0x0000041a
-Czech	0x00000405
-Czech (QWERTY)	0x00010405
-Czech Programmers	0x00020405
-Danish	0x00000406
-Devanagari-INSCRIPT	0x00000439
-Divehi Phonetic	0x00000465
-Divehi Typewriter	0x00010465
-Dutch	0x00000413
-Dzongkha	0x00000C51
-Estonian	0x00000425
-Faeroese	0x00000438
-Finnish	0x0000040b
-Finnish with Sami	0x0001083b
-French	0x0000040c
-Futhark	0x00120c00
-Georgian	0x00000437
-Georgian (Ergonomic)	0x00020437
-Georgian (QWERTY)	0x00010437
-Georgian Ministry of Education and Science Schools	0x00030437
-Georgian (Old Alphabets)	0x00040437
-German	0x00000407
-German (IBM)	0x00010407
-Gothic	0x000c0c00
-Greek	0x00000408
-Greek (220)	0x00010408
-Greek (220) Latin	0x00030408
-Greek (319)	0x00020408
-Greek (319) Latin	0x00040408
-Greek Latin	0x00050408
-Greek Polytonic	0x00060408
-Greenlandic	0x0000046f
-Guarani	0x00000474
-Gujarati	0x00000447
-Hausa	0x00000468
-Hebrew	0x0000040d
-Hindi Traditional	0x00010439
-Hungarian	0x0000040e
-Hungarian 101-key	0x0001040e
-Icelandic	0x0000040f
-Igbo	0x00000470
-India	0x000004009
-Inuktitut - Latin	0x0000085d
-Inuktitut - Naqittaut	0x0001045d
-Irish	0x00001809
-Italian	0x00000410
-Italian (142)	0x00010410
-Japanese	0x00000411
-Javanese	0x00110c00
-Kannada	0x0000044b
-Kazakh	0x0000043f
-Khmer	0x00000453
-Khmer (NIDA)	0x00010453
-Korean	0x00000412
-Kyrgyz Cyrillic	0x00000440
-Lao	0x00000454
-Latin American	0x0000080a
-Latvian (Standard)	0x00020426
-Latvian (Legacy)	0x00010426
-Lisu (Basic)	0x00070c00
-Lisu (Standard)	0x00080c00
-Lithuanian	0x00010427
-Lithuanian IBM	0x00000427
-Lithuanian Standard	0x00020427
-Luxembourgish	0x0000046e
-Macedonia (FYROM)	0x0000042f
-Macedonia (FYROM) - Standard	0x0001042f
-Malayalam	0x0000044c
-Maltese 47-Key	0x0000043a
-Maltese 48-key	0x0001043a
-Maori	0x00000481
-Marathi	0x0000044e
-Mongolian (Mongolian Script - Legacy)	0x00000850
-Mongolian (Mongolian Script - Standard)	0x00020850
-Mongolian Cyrillic	0x00000450
-Myanmar	0x00010c00
-N'ko	0x00090c00
-Nepali	0x00000461
-New Tai Lue	0x00020c00
-Norwegian	0x00000414
-Norwegian with Sami	0x0000043b
-Odia	0x00000448
-Ol Chiki	0x000d0c00
-Old Italic	0x000f0c00
-Osmanya	0x000e0c00
-Pashto (Afghanistan)	0x00000463
-Persian	0x00000429
-Persian (Standard)	0x00050429
-Phags-pa	0x000a0c00
-Polish (214)	0x00010415
-Polish (Programmers)	0x00000415
-Portuguese	0x00000816
-Portuguese (Brazilian ABNT)	0x00000416
-Portuguese (Brazilian ABNT2)	0x00010416
-Punjabi	0x00000446
-Romanian (Legacy)	0x00000418
-Romanian (Programmers)	0x00020418
-Romanian (Standard)	0x00010418
-Russian	0x00000419
-Russian - Mnemonic	0x00020419
-Russian (Typewriter)	0x00010419
-Sakha	0x00000485
-Sami Extended Finland-Sweden	0x0002083b
-Sami Extended Norway	0x0001043b
-Scottish Gaelic	0x00011809
-Serbian (Cyrillic)	0x00000c1a
-Serbian (Latin)	0x0000081a
-Sesotho sa Leboa	0x0000046c
-Setswana	0x00000432
-Sinhala	0x0000045b
-Sinhala - wij 9	0x0001045b
-Slovak	0x0000041b
-Slovak (QWERTY)	0x0001041b
-Slovenian	0x00000424
-Sora	0x00100c00
-Sorbian Extended	0x0001042e
-Sorbian Standard	0x0002042e
-Sorbian Standard (Legacy)	0x0000042e
-Spanish	0x0000040a
-Spanish Variation	0x0001040a
-Swedish	0x0000041d
-Swedish with Sami	0x0000083b
-Swiss French	0x0000100c
-Swiss German	0x00000807
-Syriac	0x0000045a
-Syriac Phonetic	0x0001045a
-Tai Le	0x00030c00
-Tajik	0x00000428
-Tamil	0x00000449
-Tatar	0x00010444
-Tatar (Legacy)	0x00000444
-Telugu	0x0000044a
-Thai Kedmanee	0x0000041e
-Thai Kedmanee (non-ShiftLock)	0x0002041e
-Thai Pattachote	0x0001041e
-Thai Pattachote (non-ShiftLock)	0x0003041e
-Tibetan (PRC - Standard)	0x00010451
-Tibetan (PRC - Legacy)	0x00000451
-Tifinagh (Basic)	0x00050c00
-Tifinagh (Full)	0x00060c00
-Turkish F	0x0001041f
-Turkish Q	0x0000041f
-Turkmen	0x00000442
-Uyghur	0x00010408
-Uyghur (Legacy)	0x00000480
-Ukrainian	0x00000422
-Ukrainian (Enhanced)	0x00020422
-United Kingdom	0x00000809
-United Kingdom Extended	0x00000452
-United States - Dvorak	0x00010409
-United States - International	0x00020409
-United States-Dvorak for left hand	0x00030409
-United States-Dvorak for right hand	0x00040409
-United States - English	0x00000409
-Urdu	0x00000420
-Uyghur	0x00010480
-Uzbek Cyrillic	0x00000843
-Vietnamese	0x0000042a
-Wolof	0x00000488
-Yakut	0x00000485
-Yoruba	0x0000046a
-#>
+        '0000041a' = 'Croatian'
+        '00000405' = 'Czech'
+        '00010405' = 'Czech (QWERTY)'
+        '00020405' = 'Czech Programmers'
+        '00000406' = 'Danish'
+        '00000439' = 'Devanagari-INSCRIPT'
+        '00000465' = 'Divehi Phonetic'
+        '00010465' = 'Divehi Typewriter'
+        '00000413' = 'Dutch'
+        '00000C51' = 'Dzongkha'
+        '00000425' = 'Estonian'
+        '00000438' = 'Faeroese'
+        '0000040b' = 'Finnish'
+        '0001083b' = 'Finnish with Sami'
+        '0000040c' = 'French'
+        '00120c00' = 'Futhark'
+        '00000437' = 'Georgian'
+        '00020437' = 'Georgian (Ergonomic)'
+        '00010437' = 'Georgian (QWERTY)'
+        '00030437' = 'Georgian Ministry of Education and Science Schools'
+        '00040437' = 'Georgian (Old Alphabets)'
+        '00000407' = 'German'
+        '00010407' = 'German (IBM)'
+        '000c0c00' = 'Gothic'
+        '00000408' = 'Greek'
+        '00010408' = 'Greek (220)'
+        '00030408' = 'Greek (220) Latin'
+        '00020408' = 'Greek (319)'
+        '00040408' = 'Greek (319) Latin'
+        '00050408' = 'Greek Latin'
+        '00060408' = 'Greek Polytonic'
+        '0000046f' = 'Greenlandic'
+        '00000474' = 'Guarani'
+        '00000447' = 'Gujarati'
+        '00000468' = 'Hausa'
+        '0000040d' = 'Hebrew'
+        '00010439' = 'Hindi Traditional'
+        '0000040e' = 'Hungarian'
+        '0001040e' = 'Hungarian 101-key'
+        '0000040f' = 'Icelandic'
+        '00000470' = 'Igbo'
+        '000004009' = 'India'
+        '0000085d' = 'Inuktitut - Latin'
+        '0001045d' = 'Inuktitut - Naqittaut'
+        '00001809' = 'Irish'
+        '00000410' = 'Italian'
+        '00010410' = 'Italian (142)'
+        '00000411' = 'Japanese'
+        '00110c00' = 'Javanese'
+        '0000044b' = 'Kannada'
+        '0000043f' = 'Kazakh'
+        '00000453' = 'Khmer'
+        '00010453' = 'Khmer (NIDA)'
+        '00000412' = 'Korean'
+        '00000440' = 'Kyrgyz Cyrillic'
+        '00000454' = 'Lao'
+        '0000080a' = 'Latin American'
+        '00020426' = 'Latvian (Standard)'
+        '00010426' = 'Latvian (Legacy)'
+        '00070c00' = 'Lisu (Basic)'
+        '00080c00' = 'Lisu (Standard)'
+        '00010427' = 'Lithuanian'
+        '00000427' = 'Lithuanian IBM'
+        '00020427' = 'Lithuanian Standard'
+        '0000046e' = 'Luxembourgish'
+        '0000042f' = 'Macedonia (FYROM)'
+        '0001042f' = 'Macedonia (FYROM) - Standard'
+        '0000044c' = 'Malayalam'
+        '0000043a' = 'Maltese 47-Key'
+        '0001043a' = 'Maltese 48-key'
+        '00000481' = 'Maori'
+        '0000044e' = 'Marathi'
+        '00000850' = 'Mongolian (Mongolian Script - Legacy)'
+        '00020850' = 'Mongolian (Mongolian Script - Standard)'
+        '00000450' = 'Mongolian Cyrillic'
+        '00010c00' = 'Myanmar'
+        '00090c00' = 'N ko'
+        '00000461' = 'Nepali'
+        '00020c00' = 'New Tai Lue'
+	    '00000414' = 'Norwegian'
+	    '0000043b' = 'Norwegian with Sami'
+	    '00000448' = 'Odia'
+	    '000d0c00' = 'Ol Chiki'
+	    '000f0c00' = 'Old Italic'
+	    '000e0c00' = 'Osmanya'
+	    '00000463' = 'Pashto (Afghanistan)'
+	    '0x00000429' = 'Persian'
+	    '00050429' = 'Persian (Standard)'
+	    '000a0c00' = 'Phags-pa'
+	    '00010415' = 'Polish (214)'
+	    '00000415' = 'Polish (Programmers)'
+	    '00000816' = 'Portuguese'
+	    '00000416' = 'Portuguese (Brazilian ABNT)'
+	    '00010416' = 'Portuguese (Brazilian ABNT2)'
+	    '00000446' = 'Punjabi'
+	    '00000418' = 'Romanian (Legacy)'
+	    '00020418' = 'Romanian (Programmers)'
+	    '00010418' = 'Romanian (Standard)'
+        '00000419' = 'Russian'
+        '00020419' = 'Russian - Mnemonic'
+        '00010419' = 'Russian (Typewriter)'
+        '00000485' = 'Sakha'
+        '0002083b' = 'Sami Extended Finland-Sweden'
+        '0001043b' = 'Sami Extended Norway'
+        '00011809' = 'Scottish Gaelic'
+        '00000c1a' = 'Serbian (Cyrillic)'
+        '0000081a' = 'Serbian (Latin)'
+        '0000046c' = 'Sesotho sa Leboa'
+        '00000432' = 'Setswana'
+        '0000045b' = 'Sinhala'
+        '0001045b' = 'Sinhala - wij 9'
+        '0000041b' = 'Slovak'
+        '0001041b' = 'Slovak (QWERTY)'
+        '00000424' = 'Slovenian'
+        '00100c00' = 'Sora'
+        '0001042e' = 'Sorbian Extended'
+        '0002042e' = 'Sorbian Standard'
+        '0000042e' = 'Sorbian Standard (Legacy)'
+        '0000040a' = 'Spanish'
+        '0001040a' = 'Spanish Variation'
+        '0000041d' = 'Swedish'
+        '0000083b' = 'Swedish with Sami'
+        '0000100c' = 'Swiss French'
+        '00000807' = 'Swiss German'
+        '0000045a' = 'Syriac'
+        '0001045a' = 'Syriac Phonetic'
+        '00030c00' = 'Tai Le'
+        '00000428' = 'Tajik'
+        '00000449' = 'Tamil'
+        '00010444' = 'Tatar'
+        '00000444' = 'Tatar (Legacy)'
+        '0000044a' = 'Telugu'
+        '0000041e' = 'Thai Kedmanee'
+        '0002041e' = 'Thai Kedmanee (non-ShiftLock)'
+        '0001041e' = 'Thai Pattachote'
+        '0003041e' = 'Thai Pattachote (non-ShiftLock)'
+        '00010451' = 'Tibetan (PRC - Standard)'
+        '00000451' = 'Tibetan (PRC - Legacy)'
+        '00050c00' = 'Tifinagh (Basic)'
+        '00060c00' = 'Tifinagh (Full)'
+        '0001041f' = 'Turkish F'
+        '0000041f' = 'Turkish Q'
+        '00000442' = 'Turkmen'
+        '0x00010408' = 'Uyghur'
+        '00000480' = 'Uyghur (Legacy)'
+        '00000422' = 'Ukrainian'
+        '00020422' = 'Ukrainian (Enhanced)'
+        '00000809' = 'United Kingdom'
+        '00000452' = 'United Kingdom Extended'
+        '00010409' = 'United States - Dvorak'
+        '00020409' = 'United States - International'
+        '00030409' = 'United States - Dvorak for left hand'
+        '00040409' = 'United States - Dvorak for right hand'
+        '00000409' = 'United States - English'
+        '00000420' = 'Urdu'
+        '00010480' = 'Uyghur'
+        '00000843' = 'Uzbek Cyrillic'
+        '0000042a' = 'Vietnamese'
+        '00000488' = 'Wolof'
+        '0x00000485' = 'Yakut'
+        '0000046a' = 'Yoruba'
     }
 
     $Properties = 'Name','Description','Caption','PowerManagementCapabilities',
