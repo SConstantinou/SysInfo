@@ -104,10 +104,11 @@
         '9' = 'Optical Sensor'
     }
     
-    $Properties = 'Name','Description','Caption','PowerManagementSupported','PowerManagementCapabilities',
-                  'ConfigManagerErrorCode','ConfigManagerUserConfig','IsLocked','Handedness','NumberOfButtons',
-                  'PointingType','Resolution','DeviceInterface','DoubleSpeedThreshold','HardwareType',
-                  'Manufacturer','QuadSpeedThreshold','SampleRate','Synch','StatusInfo','Status'
+    $Properties = 'Caption','Description','InstallDate','Name','Status','Availability','ConfigManagerErrorCode',
+        'ConfigManagerUserConfig','ErrorCleared','ErrorDescription','LastErrorCode','PowerManagementCapabilities',
+        'PowerManagementSupported','StatusInfo','SystemName','IsLocked','Handedness','NumberOfButtons','PointingType',
+        'Resolution','DeviceInterface','DoubleSpeedThreshold','HardwareType','Manufacturer','QuadSpeedThreshold',
+        'SampleRate','Synch'
 
     $PointingDevice = Get-CimInstance -ClassName Win32_PointingDevice -Property $Properties | Select-Object $Properties
     $PointingDevice | ForEach-Object {$_.DeviceInterface = $DeviceInterface["$($_.DeviceInterface)"]}

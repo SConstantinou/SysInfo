@@ -281,9 +281,9 @@
         '0000046a' = 'Yoruba'
     }
 
-    $Properties = 'Name','Description','Caption','Availability','PowerManagementCapabilities',
-                  'PowerManagementSupported','ConfigManagerErrorCode','ConfigManagerUserConfig',
-                  'Password','Layout','NumberOfFunctionKeys','IsLocked','StatusInfo','Status'
+    $Properties = 'Caption','Description','InstallDate','Name','Status','Availability','ConfigManagerErrorCode',
+        'ConfigManagerUserConfig','ErrorCleared','ErrorDescription','LastErrorCode','PowerManagementCapabilities',
+        'PowerManagementSupported','StatusInfo','SystemName','IsLocked','Layout','NumberOfFunctionKeys','Password'
 
     $Keyboard = Get-CimInstance -ClassName Win32_Keyboard -Property $Properties | Select-Object $Properties
     $Keyboard | ForEach-Object {$_.Layout = $Layout["$($_.Layout)"]}

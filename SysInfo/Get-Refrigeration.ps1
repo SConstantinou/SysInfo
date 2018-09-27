@@ -78,9 +78,10 @@
         '5' = 'Not Applicable'
     }
 
-    $Properties = 'Name','Description','Caption','Availability','ActiveCooling','ConfigManagerErrorCode',
-                  'ConfigManagerUserConfig','PowerManagementSupported','PowerManagementCapabilities',
-                  'StatusInfo','Status'
+    $Properties = 'Caption','Description','InstallDate','Name','Status','Availability',
+        'ConfigManagerErrorCode','ConfigManagerUserConfig','ErrorCleared','ErrorDescription',
+        'LastErrorCode','PowerManagementCapabilities','PowerManagementSupported','StatusInfo',
+        'SystemName','ActiveCooling'
 
     $Refrigeration = Get-CimInstance -ClassName Win32_Refrigeration -Property $Properties | Select-Object -Property $Properties
     $Refrigeration | ForEach-Object {$_.Availability = $Availability["$($_.Availability)"]}
@@ -88,4 +89,5 @@
     $Refrigeration | ForEach-Object {$_.PowerManagementCapabilities = $PowerManagementCapabilities["$($_.PowerManagementCapabilities)"]}
     $Refrigeration | ForEach-Object {$_.StatusInfo = $StatusInfo["$($_.StatusInfo)"]}
 
+    Write-Output $Refrigeration
 }

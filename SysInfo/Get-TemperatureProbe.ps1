@@ -78,13 +78,13 @@
         '5' = 'Not Applicable'
     }
 
-    $Properties = 'Name','Description','Caption','Availability','PowerManagementSupported',
-                  'ConfigManagerErrorCode','ConfigManagerUserConfig','PowerManagementCapabilities',
-                  'Accuracy','CurrentReading','IsLinear','LowerThresholdCritical','LowerThresholdFatal',
-                  'LowerThresholdNonCritical','MaxReadable','MinReadable','NominalReading','NormalMax',
-                  'NormalMin','Resolution','Tolerance', 'UpperThresholdCritical','UpperThresholdFatal',
-                  'UpperThresholdNonCritical','StatusInfo','Status'
-    
+    $Properties = 'Status','CurrentReading','Name','StatusInfo','Caption','Description','InstallDate',
+        'Availability','ConfigManagerErrorCode','ConfigManagerUserConfig','ErrorCleared','ErrorDescription',
+        'LastErrorCode','PowerManagementCapabilities','PowerManagementSupported','SystemName','Accuracy',
+        'IsLinear','LowerThresholdCritical','LowerThresholdFatal','LowerThresholdNonCritical','MaxReadable',
+        'MinReadable','NominalReading','NormalMax','NormalMin','Resolution','Tolerance','UpperThresholdCritical',
+        'UpperThresholdFatal','UpperThresholdNonCritical'
+
     $TemperatureProbe = Get-CimInstance -ClassName Win32_TemperatureProbe -Property $Properties | Select-Object $Properties
     $TemperatureProbe | ForEach-Object {$_.Availability = $Availability["$($_.Availability)"]}
     $TemperatureProbe | ForEach-Object {$_.ConfigManagerErrorCode = $ConfigManagerErrorCode["$($_.ConfigManagerErrorCode)"]}

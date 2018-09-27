@@ -78,16 +78,16 @@
         '5' = 'Not Applicable'
     }
 
-    $Properties = 'Name','Description','Caption','Availability','ConfigManagerErrorCode',
-                  'ConfigManagerUserConfig','PowerManagementSupported','PowerManagementCapabilities',
-                  'ActiveCooling','DesiredSpeed','VariableSpeed','StatusInfo','Status'
+    $Properties = 'Caption','Description','InstallDate','Name','Status','Availability',
+        'ConfigManagerErrorCode','ConfigManagerUserConfig','ErrorCleared','ErrorDescription',
+        'LastErrorCode','PowerManagementCapabilities','PowerManagementSupported','StatusInfo',
+        'SystemName','ActiveCooling','DesiredSpeed','VariableSpeed'
 
     $Fan = Get-CimInstance -ClassName Win32_Fan -Property $Properties | Select-Object -Property $Properties
     $Fan | ForEach-Object {$_.Availability = $Availability["$($_.Availability)"]}
     $Fan | ForEach-Object {$_.ConfigManagerErrorCode = $ConfigManagerErrorCode["$($_.ConfigManagerErrorCode)"]}
     $Fan | ForEach-Object {$_.PowerManagementCapabilities = $PowerManagementCapabilities["$($_.PowerManagementCapabilities)"]}
     $Fan | ForEach-Object {$_.StatusInfo = $StatusInfo["$($_.StatusInfo)"]}
-
 
     Write-Output $Fan
 }

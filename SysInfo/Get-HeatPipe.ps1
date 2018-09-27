@@ -78,13 +78,16 @@
         '5' = 'Not Applicable'
     }
     
-    $Properties = 'Name','Description','Caption','Availability','ActiveCooling','ConfigManagerErrorCode',
-                  'ConfigManagerUserConfig','PowerManagementSupported','PowerManagementCapabilities',
-                  'StatusInfo','Status'
+    $Properties = 'Caption','Description','InstallDate','Name','Status','Availability',
+        'ConfigManagerErrorCode','ConfigManagerUserConfig','ErrorCleared','ErrorDescription',
+        'LastErrorCode','PowerManagementCapabilities','PowerManagementSupported','StatusInfo',
+        'SystemName','ActiveCooling'
 
     $HeatPipe = Get-CimInstance -ClassName Win32_HeatPipe -Property $Properties | Select-Object -Property $Properties
     $HeatPipe | ForEach-Object {$_.Availability = $Availability["$($_.Availability)"]}
     $HeatPipe | ForEach-Object {$_.ConfigManagerErrorCode = $ConfigManagerErrorCode["$($_.ConfigManagerErrorCode)"]}
     $HeatPipe | ForEach-Object {$_.PowerManagementCapabilities = $PowerManagementCapabilities["$($_.PowerManagementCapabilities)"]}
     $HeatPipe | ForEach-Object {$_.StatusInfo = $StatusInfo["$($_.StatusInfo)"]}
+
+    Write-Output $HeatPipe
 }
