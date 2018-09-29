@@ -1,4 +1,4 @@
-﻿function Get-CDROMDrive {
+﻿function Get-TapeDrive {
 
     $Availability = @{
         '1' = 'Other'
@@ -78,40 +78,37 @@
         '5' = 'Not Applicable'
     }
 
-    $FileSystemFlagsEx = @{
-        '1' = 'Case Sensitive Search'
-        '2' = 'Case Preserved Names'
-        '4' = 'Unicode On Disk'
-        '8' = 'Persistent ACLs'
-        '16' = 'File Compression'
-        '32' = 'Volume Quotas'
-        '64' = 'Supports Sparse Files'
-        '128' = 'Supports Reparse Points'
-        '256' = 'Supports Remote Storage'
-        '16384' = 'Supports Long Names'
-        '32768' = 'Volume Is Compressed'
-        '524289' = 'Read Only Volume'
-        '65536' = 'Supports Object IDS'
-        '131072' = 'Supports Encryption'
-        '262144' = 'Supports Named Streams'
+    $Compression = @{
+        '0' = 'False'
+        '1' = 'True'
     }
 
-    $Properties = 'Availability','Drive','ErrorCleared','MediaLoaded','NeedsCleaning','Status',
-        'StatusInfo','Caption','Description','InstallDate','Name','ConfigManagerErrorCode',
-        'ConfigManagerUserConfig','CreationClassName','ErrorDescription','LastErrorCode',
-        'PowerManagementCapabilities','PowerManagementSupported','SystemCreationClassName',
-        'SystemName','Capabilities','CapabilityDescriptions','CompressionMethod','DefaultBlockSize',
-        'ErrorMethodology','MaxBlockSize','MaxMediaSize','MinBlockSize','NumberOfMediaSupported',
-        'DriveIntegrity','FileSystemFlags','FileSystemFlagsEx','Id','Manufacturer','MaximumComponentLength',
-        'MediaType','MfrAssignedRevisionLevel','RevisionLevel','SCSIBus','SCSILogicalUnit','SCSIPort',
-        'SCSITargetId','SerialNumber','Size','TransferRate','VolumeName','VolumeSerialNumber'
+    $ECC = @{
+        '0' = 'False'
+        '1' = 'True'
+    }
 
-    $CDROMDrive = Get-CimInstance -ClassName Win32_CDROMDrive -Property $Properties | Select-Object $Properties
-    $CDROMDrive | ForEach-Object {$_.Availability = $Availability["$($_.Availability)"]}
-    $CDROMDrive | ForEach-Object {$_.ConfigManagerErrorCode = $ConfigManagerErrorCode["$($_.ConfigManagerErrorCode)"]}
-    $CDROMDrive | ForEach-Object {$_.PowerManagementCapabilities = $PowerManagementCapabilities["$($_.PowerManagementCapabilities)"]}
-    $CDROMDrive | ForEach-Object {$_.StatusInfo = $StatusInfo["$($_.StatusInfo)"]}
-    $CDROMDrive | ForEach-Object {$_.FileSystemFlagsEx = $FileSystemFlagsEx["$($_.FileSystemFlagsEx)"]}
+    $ReportSetMarks = @{
+        '0' = 'False'
+        '1' = 'True'
+    }
+
+    $Properties = 'Availability','Capabilities','CapabilityDescriptions','Caption','Compression',
+        'CompressionMethod','ConfigManagerErrorCode','ConfigManagerUserConfig','DefaultBlockSize',
+        'Description','ECC','EOTWarningZoneSize','ErrorCleared','ErrorDescription','ErrorMethodology',
+        'FeaturesHigh','FeaturesLow','Id','InstallDate','LastErrorCode','Manufacturer','MaxBlockSize',
+        'MaxMediaSize','MaxPartitionCount','MediaType','MinBlockSize','Name','NeedsCleaning',
+        'NumberOfMediaSupported','Padding','PowerManagementCapabilities','PowerManagementSupported',
+        'ReportSetMarks','Status','StatusInfo','SystemName'
+
+    $TapeDrive = Get-CimInstance -ClassName Win32_TapeDrive -Property $Properties | Select-Object $Properties
+    $TapeDrive | ForEach-Object {$_.Availability = $Availability["$($_.Availability)"]}
+    $TapeDrive | ForEach-Object {$_.ConfigManagerErrorCode = $ConfigManagerErrorCode["$($_.ConfigManagerErrorCode)"]}
+    $TapeDrive | ForEach-Object {$_.PowerManagementCapabilities = $PowerManagementCapabilities["$($_.PowerManagementCapabilities)"]}
+    $TapeDrive | ForEach-Object {$_.StatusInfo = $StatusInfo["$($_.StatusInfo)"]}
+    $TapeDrive | ForEach-Object {$_.Compression = $Compression["$($_.Compression)"]}
+    $TapeDrive | ForEach-Object {$_.ECC = $ECC["$($_.ECC)"]}
+    $TapeDrive | ForEach-Object {$_.ReportSetMarks = $ReportSetMarks["$($_.ReportSetMarks)"]}
     
-    Write-Output $CDROMDrive
+    Write-Output $TapeDrive
 }

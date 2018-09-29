@@ -1,4 +1,4 @@
-﻿function Get-CDROMDrive {
+﻿function Get-FloppyDrive {
 
     $Availability = @{
         '1' = 'Other'
@@ -78,40 +78,18 @@
         '5' = 'Not Applicable'
     }
 
-    $FileSystemFlagsEx = @{
-        '1' = 'Case Sensitive Search'
-        '2' = 'Case Preserved Names'
-        '4' = 'Unicode On Disk'
-        '8' = 'Persistent ACLs'
-        '16' = 'File Compression'
-        '32' = 'Volume Quotas'
-        '64' = 'Supports Sparse Files'
-        '128' = 'Supports Reparse Points'
-        '256' = 'Supports Remote Storage'
-        '16384' = 'Supports Long Names'
-        '32768' = 'Volume Is Compressed'
-        '524289' = 'Read Only Volume'
-        '65536' = 'Supports Object IDS'
-        '131072' = 'Supports Encryption'
-        '262144' = 'Supports Named Streams'
-    }
+    $Properties = 'Availability','Capabilities','CapabilityDescriptions','Caption','CompressionMethod',
+        'ConfigManagerErrorCode','ConfigManagerUserConfig','CreationClassName','DefaultBlockSize',
+        'Description','ErrorCleared','ErrorDescription','ErrorMethodology','InstallDate'
+        'LastErrorCode','Manufacturer','MaxBlockSize','MaxMediaSize','MinBlockSize','Name'
+        'NeedsCleaning','NumberOfMediaSupported','PowerManagementCapabilities'
+        'PowerManagementSupported','Status','StatusInfo','SystemCreationClassName','SystemName'
 
-    $Properties = 'Availability','Drive','ErrorCleared','MediaLoaded','NeedsCleaning','Status',
-        'StatusInfo','Caption','Description','InstallDate','Name','ConfigManagerErrorCode',
-        'ConfigManagerUserConfig','CreationClassName','ErrorDescription','LastErrorCode',
-        'PowerManagementCapabilities','PowerManagementSupported','SystemCreationClassName',
-        'SystemName','Capabilities','CapabilityDescriptions','CompressionMethod','DefaultBlockSize',
-        'ErrorMethodology','MaxBlockSize','MaxMediaSize','MinBlockSize','NumberOfMediaSupported',
-        'DriveIntegrity','FileSystemFlags','FileSystemFlagsEx','Id','Manufacturer','MaximumComponentLength',
-        'MediaType','MfrAssignedRevisionLevel','RevisionLevel','SCSIBus','SCSILogicalUnit','SCSIPort',
-        'SCSITargetId','SerialNumber','Size','TransferRate','VolumeName','VolumeSerialNumber'
-
-    $CDROMDrive = Get-CimInstance -ClassName Win32_CDROMDrive -Property $Properties | Select-Object $Properties
-    $CDROMDrive | ForEach-Object {$_.Availability = $Availability["$($_.Availability)"]}
-    $CDROMDrive | ForEach-Object {$_.ConfigManagerErrorCode = $ConfigManagerErrorCode["$($_.ConfigManagerErrorCode)"]}
-    $CDROMDrive | ForEach-Object {$_.PowerManagementCapabilities = $PowerManagementCapabilities["$($_.PowerManagementCapabilities)"]}
-    $CDROMDrive | ForEach-Object {$_.StatusInfo = $StatusInfo["$($_.StatusInfo)"]}
-    $CDROMDrive | ForEach-Object {$_.FileSystemFlagsEx = $FileSystemFlagsEx["$($_.FileSystemFlagsEx)"]}
+    $FloppyDrive = Get-CimInstance -ClassName Win32_FloppyDrive -Property $Properties | Select-Object $Properties
+    $FloppyDrive | ForEach-Object {$_.Availability = $Availability["$($_.Availability)"]}
+    $FloppyDrive | ForEach-Object {$_.ConfigManagerErrorCode = $ConfigManagerErrorCode["$($_.ConfigManagerErrorCode)"]}
+    $FloppyDrive | ForEach-Object {$_.PowerManagementCapabilities = $PowerManagementCapabilities["$($_.PowerManagementCapabilities)"]}
+    $FloppyDrive | ForEach-Object {$_.StatusInfo = $StatusInfo["$($_.StatusInfo)"]}
     
-    Write-Output $CDROMDrive
+    Write-Output $FloppyDrive
 }
