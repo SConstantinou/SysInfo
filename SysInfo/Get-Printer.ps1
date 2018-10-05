@@ -17,8 +17,11 @@
         $_.ExtendedDetectedErrorState = Get-ExtendedDetectedErrorState ($_.ExtendedDetectedErrorState)
         $_.ExtendedPrinterStatus = Get-ExtendedPrinterStatus ($_.ExtendedPrinterStatus)
         $_.LanguagesSupported = Get-LanguagesSupported ($_.LanguagesSupported)
+        $_.MarkingTechnology = Get-MarkingTechnology ($_.MarkingTechnology)
+        $_.PaperSizesSupported = Get-PaperSizesSupported ($_.PaperSizesSupported)
         $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
-        $_.ProtocolSupported = Get-ProtocolSupported ($_.ProtocolSupported)
+        $_.PrinterState = Get-PrinterState ($_.PrinterState)
+        $_.PrinterStatus = Get-PrinterStatus ($_.PrinterStatus)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
     }
     
