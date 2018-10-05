@@ -1,8 +1,20 @@
 ﻿function Get-PrinterConfiguration {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_PrinterConfiguration).CimClassProperties).Name
 
-    $PrinterConfiguration = Get-CimInstance -ClassName Win32_PrinterConfiguration -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $PrinterConfiguration = Get-CimInstance -ClassName Win32_PrinterConfiguration -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $PrinterConfiguration = Get-CimInstance -ClassName Win32_PrinterConfiguration -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $PrinterConfiguration){
 

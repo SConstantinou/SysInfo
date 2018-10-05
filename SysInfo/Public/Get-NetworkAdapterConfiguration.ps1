@@ -1,8 +1,20 @@
 ﻿function Get-NetworkAdapterConfiguration {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_NetworkAdapterConfiguration).CimClassProperties).Name
 
-    $NetworkAdapterConfiguration = Get-CimInstance -ClassName Win32_NetworkAdapterConfiguration -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $NetworkAdapterConfiguration = Get-CimInstance -ClassName Win32_NetworkAdapterConfiguration -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $NetworkAdapterConfiguration = Get-CimInstance -ClassName Win32_NetworkAdapterConfiguration -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $NetworkAdapterConfiguration){
 

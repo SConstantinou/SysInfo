@@ -1,8 +1,20 @@
 ﻿function Get-SCSIController {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_SCSIController).CimClassProperties).Name
 
-    $SCSIController = Get-CimInstance -ClassName Win32_SCSIController -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $SCSIController = Get-CimInstance -ClassName Win32_SCSIController -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $SCSIController = Get-CimInstance -ClassName Win32_SCSIController -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $SCSIController){
 

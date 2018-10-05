@@ -1,8 +1,20 @@
 ﻿function Get-CacheMemory {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_CacheMemory).CimClassProperties).Name
 
-    $CacheMemory = Get-CimInstance -ClassName Win32_CacheMemory -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $CacheMemory = Get-CimInstance -ClassName Win32_CacheMemory -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $CacheMemory = Get-CimInstance -ClassName Win32_CacheMemory -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $CacheMemory){
 

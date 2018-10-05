@@ -1,8 +1,20 @@
 ﻿function Get-VoltageProbe {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_VoltageProbe).CimClassProperties).Name
 
-    $VoltageProbe = Get-CimInstance -ClassName Win32_VoltageProbe -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $VoltageProbe = Get-CimInstance -ClassName Win32_VoltageProbe -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $VoltageProbe = Get-CimInstance -ClassName Win32_VoltageProbe -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $VoltageProbe){
 

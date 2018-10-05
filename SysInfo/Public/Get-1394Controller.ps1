@@ -1,8 +1,20 @@
 ﻿function Get-1394Controller {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_1394Controller).CimClassProperties).Name
 
-    $1394Controller = Get-CimInstance -ClassName Win32_1394Controller -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $1394Controller = Get-CimInstance -ClassName Win32_1394Controller -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $1394Controller = Get-CimInstance -ClassName Win32_1394Controller -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $1394Controller){
 

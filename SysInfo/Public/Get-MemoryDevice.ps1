@@ -9,13 +9,11 @@
 
     if ($ComputerName -eq ''){
 
-        $MemoryDevice = Get-CimInstance -ClassName Win32_MemoryDevice -Property $Properties |
-            Select-Object $Properties
+        $MemoryDevice = Get-CimInstance -ClassName Win32_MemoryDevice -Property $Properties | Select-Object $Properties
     }
     else {
 
-        $MemoryDevice = Get-CimInstance -ClassName Win32_MemoryDevice -Property $Properties -ComputerName $ComputerName |
-            Select-Object $Properties
+        $MemoryDevice = Get-CimInstance -ClassName Win32_MemoryDevice -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
     }
 
     foreach ($_ in $MemoryDevice){

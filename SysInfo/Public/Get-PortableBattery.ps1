@@ -1,8 +1,20 @@
 ﻿function Get-PortableBattery {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_PortableBattery).CimClassProperties).Name
 
-    $PortableBattery = Get-CimInstance -ClassName Win32_PortableBattery -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $PortableBattery = Get-CimInstance -ClassName Win32_PortableBattery -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $PortableBattery = Get-CimInstance -ClassName Win32_PortableBattery -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $PortableBattery){
 

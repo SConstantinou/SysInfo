@@ -10,13 +10,11 @@
 
     if ($ComputerName -eq ''){
 
-        $AutochkSetting = Get-CimInstance -ClassName Win32_AutochkSetting -Property $Properties |
-            Select-Object $Properties
+        $AutochkSetting = Get-CimInstance -ClassName Win32_AutochkSetting -Property $Properties | Select-Object $Properties
     }
     else{
 
-        $AutochkSetting = Get-CimInstance -ClassName Win32_AutochkSetting -Property $Properties -ComputerName $ComputerName |
-            Select-Object $Properties
+        $AutochkSetting = Get-CimInstance -ClassName Win32_AutochkSetting -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
     }
     
     Write-Output $AutochkSetting

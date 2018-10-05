@@ -1,8 +1,20 @@
 ﻿function Get-SerialPort {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_SerialPort).CimClassProperties).Name
 
-    $SerialPort = Get-CimInstance -ClassName Win32_SerialPort -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $SerialPort = Get-CimInstance -ClassName Win32_SerialPort -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $SerialPort = Get-CimInstance -ClassName Win32_SerialPort -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $SerialPort){
 

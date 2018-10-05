@@ -1,8 +1,20 @@
 ﻿function Get-SMBIOSMemory {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_SMBIOSMemory).CimClassProperties).Name
 
-    $SMBIOSMemory = Get-CimInstance -ClassName Win32_SMBIOSMemory -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $SMBIOSMemory = Get-CimInstance -ClassName Win32_SMBIOSMemory -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $SMBIOSMemory = Get-CimInstance -ClassName Win32_SMBIOSMemory -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $SMBIOSMemory){
 

@@ -1,8 +1,20 @@
 ﻿function Get-MotherboardDevice {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_MotherboardDevice).CimClassProperties).Name
 
-    $MotherboardDevice = Get-CimInstance -ClassName Win32_MotherboardDevice -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+    
+        $MotherboardDevice = Get-CimInstance -ClassName Win32_MotherboardDevice -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $MotherboardDevice = Get-CimInstance -ClassName Win32_MotherboardDevice -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $MotherboardDevice){
 

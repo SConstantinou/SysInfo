@@ -1,8 +1,20 @@
 ﻿function Get-BIOS {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_BIOS).CimClassProperties).Name
 
-    $BIOS = Get-CimInstance -ClassName Win32_BIOS -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $BIOS = Get-CimInstance -ClassName Win32_BIOS -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $BIOS = Get-CimInstance -ClassName Win32_BIOS -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $BIOS){
 

@@ -1,8 +1,20 @@
 ﻿function Get-Bus {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_Bus).CimClassProperties).Name
 
-    $Bus = Get-CimInstance -ClassName Win32_Bus -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+    
+        $Bus = Get-CimInstance -ClassName Win32_Bus -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $Bus = Get-CimInstance -ClassName Win32_Bus -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $Bus){
 

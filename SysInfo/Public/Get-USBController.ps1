@@ -1,8 +1,20 @@
 ﻿function Get-USBController {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_USBController).CimClassProperties).Name
 
-    $USBController = Get-CimInstance -ClassName Win32_USBController -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $USBController = Get-CimInstance -ClassName Win32_USBController -Property $Properties | Select-Object $Properties
+    }
+    else{
+    
+        $USBController = Get-CimInstance -ClassName Win32_USBController -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $USBController){
 

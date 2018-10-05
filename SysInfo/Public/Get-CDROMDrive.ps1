@@ -1,8 +1,20 @@
 ﻿function Get-CDROMDrive {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_CDROMDrive).CimClassProperties).Name
 
-    $CDROMDrive = Get-CimInstance -ClassName Win32_CDROMDrive -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+    
+        $CDROMDrive = Get-CimInstance -ClassName Win32_CDROMDrive -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $CDROMDrive = Get-CimInstance -ClassName Win32_CDROMDrive -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $CDROMDrive){
 

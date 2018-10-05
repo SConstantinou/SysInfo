@@ -1,8 +1,20 @@
 ﻿function Get-PhysicalMedia {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_PhysicalMedia).CimClassProperties).Name
 
-    $PhysicalMedia = Get-CimInstance -ClassName Win32_PhysicalMedia -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $PhysicalMedia = Get-CimInstance -ClassName Win32_PhysicalMedia -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $PhysicalMedia = Get-CimInstance -ClassName Win32_PhysicalMedia -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
     
     $PhysicalMedia |
         ForEach-Object {

@@ -1,8 +1,20 @@
 ﻿function Get-POTSModem {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_POTSModem).CimClassProperties).Name
 
-    $POTSModem = Get-CimInstance -ClassName Win32_POTSModem -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $POTSModem = Get-CimInstance -ClassName Win32_POTSModem -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $POTSModem = Get-CimInstance -ClassName Win32_POTSModem -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $POTSModem){
 

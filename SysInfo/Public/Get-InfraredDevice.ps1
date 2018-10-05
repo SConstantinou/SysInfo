@@ -1,8 +1,20 @@
 ﻿function Get-InfraredDevice {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_InfraredDevice).CimClassProperties).Name
 
-    $InfraredDevice = Get-CimInstance -ClassName Win32_InfraredDevice -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $InfraredDevice = Get-CimInstance -ClassName Win32_InfraredDevice -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $InfraredDevice = Get-CimInstance -ClassName Win32_InfraredDevice -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $InfraredDevice){
 

@@ -1,8 +1,20 @@
 ﻿function Get-SystemEnclosure {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_SystemEnclosure).CimClassProperties).Name
 
-    $SystemEnclosure = Get-CimInstance -ClassName Win32_SystemEnclosure -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $SystemEnclosure = Get-CimInstance -ClassName Win32_SystemEnclosure -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $SystemEnclosure = Get-CimInstance -ClassName Win32_SystemEnclosure -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $SystemEnclosure){
 

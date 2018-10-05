@@ -1,8 +1,20 @@
 ﻿function Get-FloppyController {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_FloppyController).CimClassProperties).Name
 
-    $FloppyController = Get-CimInstance -ClassName Win32_FloppyController -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $FloppyController = Get-CimInstance -ClassName Win32_FloppyController -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $FloppyController = Get-CimInstance -ClassName Win32_FloppyController -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $FloppyController){
 

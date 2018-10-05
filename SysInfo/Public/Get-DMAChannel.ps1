@@ -1,8 +1,20 @@
 ﻿function Get-DMAChannel {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_DMAChannel).CimClassProperties).Name
 
-    $DMAChannel = Get-CimInstance -ClassName Win32_DMAChannel -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $DMAChannel = Get-CimInstance -ClassName Win32_DMAChannel -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $DMAChannel = Get-CimInstance -ClassName Win32_DMAChannel -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $DMAChannel){
 

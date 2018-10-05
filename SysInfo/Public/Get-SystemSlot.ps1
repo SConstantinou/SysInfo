@@ -1,8 +1,20 @@
 ﻿function Get-SystemSlot {
 
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_SystemSlot).CimClassProperties).Name
 
-    $SystemSlot = Get-CimInstance -ClassName Win32_SystemSlot -Property $Properties | Select-Object $Properties
+    if ($ComputerName -eq ''){
+
+        $SystemSlot = Get-CimInstance -ClassName Win32_SystemSlot -Property $Properties | Select-Object $Properties
+    }
+    else{
+
+        $SystemSlot = Get-CimInstance -ClassName Win32_SystemSlot -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
+    }
 
     foreach ($_ in $SystemSlot){
 
