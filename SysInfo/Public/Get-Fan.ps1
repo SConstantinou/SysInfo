@@ -1,8 +1,20 @@
 ﻿function Get-Fan {
     
+    [cmdletbinding()]
+
+    param (
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+
     $Properties = ((Get-CimClass -ClassName Win32_Fan).CimClassProperties).Name
 
-    $Fan = Get-CimInstance -ClassName Win32_Fan -Property $Properties | Select-Object -Property $Properties
+    if ($ComputerName -eq ''){
+
+        $Fan = Get-CimInstance -ClassName Win32_Fan -Property $Properties | Select-Object -Property $Properties
+    }
+    else{
+
+        $Fan = Get-CimInstance -ClassName Win32_Fan -Property $Properties -ComputerName $ComputerName | Select-Object -Property $Properties
+    }
 
     foreach ($_ in $Fan){
 
