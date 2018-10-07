@@ -2,11 +2,14 @@
 
     param ([uint32]$Code)
 
-    switch ($Code){
-        1 {'Standard'}
-        2 {'Transparency'}
-        3 {'Glossy'}
-        default {'Invalid or No Code'}
+    if ($Code -ne ''){
+
+        switch ($Code){
+            1 {'Standard'}
+            2 {'Transparency'}
+            3 {'Glossy'}
+            default {'Invalid Code'}
+        }
     }
 
     Return

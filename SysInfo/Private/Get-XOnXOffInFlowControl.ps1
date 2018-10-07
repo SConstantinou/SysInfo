@@ -2,11 +2,13 @@
 
     param ([uint16]$Code)
 
-    switch ($Code){
-        '0' {'False'}
-        '1' {'True'}
-        default {'Invalid or No Code'}
-    }
+    if ($Code -ne ''){
 
+        switch ($Code){
+            0 {'False'}
+            1 {'True'}
+            default {'Invalid Code'}
+        }
+    }
     Return
 }

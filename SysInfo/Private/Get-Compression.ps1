@@ -2,10 +2,13 @@
 
     param ([uint32]$Code)
 
-    switch ($Code){
-        '0' {'Disabled'}
-        '1' {'Enabled'}
-        default {'Invalid or No Code'}
+    if ($Code -ne ''){
+
+        switch ($Code){
+            0 {'Disabled'}
+            1 {'Enabled'}
+            default {'Invalid Code'}
+        }
     }
 
     Return
