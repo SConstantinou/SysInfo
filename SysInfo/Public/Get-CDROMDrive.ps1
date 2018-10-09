@@ -20,11 +20,68 @@
 
     foreach ($_ in $CDROMDrive){
 
+        [uint64]$MaxMediaSize = $_.MaxMediaSize
+        [uint64]$Size = $_.Size
+
+
+        switch ($MaxMediaSize){
+            {$MaxMediaSize -gt 1MB}
+                {
+                    $CDROMDrive | Add-Member -MemberType NoteProperty -Name "MaxMediaSizeMB" -Value "" -Force
+                }
+            {$MaxMediaSize -gt 1GB}
+                {
+                    $CDROMDrive | Add-Member -MemberType NoteProperty -Name "MaxMediaSizeGB" -Value "" -Force
+                }
+        }
+
+        if ($_.DefaultBlockSize -gt 1KB) {
+
+            $CDROMDrive | Add-Member -MemberType NoteProperty -Name "DefaultBlockSizeKB" -Value "" -Force
+        }
+
+        if ($_.MaxBlockSize -gt 1KB) {
+
+            $CDROMDrive | Add-Member -MemberType NoteProperty -Name "MaxBlockSizeKB" -Value "" -Force
+        }
+
+        if ($_.MinBlockSize -gt 1KB) {
+
+            $CDROMDrive | Add-Member -MemberType NoteProperty -Name "MinBlockSizeKB" -Value "" -Force
+        }
+
+        switch ($Size){
+            {$Size -gt 1KB}
+                {
+                    $CDROMDrive | Add-Member -MemberType NoteProperty -Name "SizeKB" -Value "" -Force
+                }
+            {$Size -gt 1MB}
+                {
+                    $CDROMDrive | Add-Member -MemberType NoteProperty -Name "SizeMB" -Value "" -Force
+                }
+            {$Size -gt 1GB}
+                {
+                    $CDROMDrive | Add-Member -MemberType NoteProperty -Name "SizeGB" -Value "" -Force
+                }
+        }
+
+    }
+    
+    foreach ($_ in $CDROMDrive){
+
         $_.Availability = Get-Availability ($_.Availability)
         $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
         $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
         $_.FileSystemFlagsEx = Get-FileSystemFlagsEx ($_.FileSystemFlagsEx)
+        if ($_.PSObject.Properties.Name -match "DefaultBlockSizeKB"){$_.DefaultBlockSizeKB = Get-SizeKB ($_.DefaultBlockSize)}
+        if ($_.PSObject.Properties.Name -match "MaxBlockSizeKB"){$_.MaxBlockSizeKB = Get-SizeKB ($_.MaxBlockSize)}
+        if ($_.PSObject.Properties.Name -match "MaxMediaSizeMB"){$_.MaxMediaSizeMB = Get-SizeMB ($_.MaxMediaSize)}
+        if ($_.PSObject.Properties.Name -match "MaxMediaSizeGB"){$_.MaxMediaSizeGB = Get-SizeGB ($_.MaxMediaSize)}
+        if ($_.PSObject.Properties.Name -match "MinBlockSizeKB"){$_.MinBlockSizeKB = Get-SizeKB ($_.MinBlockSize)}
+        if ($_.PSObject.Properties.Name -match "SizeKB"){$_.SizeKB = Get-SizeKB ($_.Size)}
+        if ($_.PSObject.Properties.Name -match "SizeMB"){$_.SizeMB = Get-SizeMB ($_.Size)}
+        if ($_.PSObject.Properties.Name -match "SizeGB"){$_.SizeGB = Get-SizeGB ($_.Size)}
     }
     
     Write-Output $CDROMDrive
