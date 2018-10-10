@@ -5,7 +5,9 @@
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
 
-    $Properties = ((Get-CimClass -ClassName Win32_DMAChannel).CimClassProperties).Name
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_DMAChannel).CimClassProperties).Name
+    $RemoveProperties = @("CreationClassName","CSCreationClassName")
+    foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
     if ($ComputerName -eq ''){
 
