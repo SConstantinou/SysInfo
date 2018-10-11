@@ -1,13 +1,13 @@
-﻿Function Get-IGMPLevel {
+﻿Function Get-ForegroundApplicationBoost {
 
     param ([uint16]$Code)
 
     if ($Code -ne ''){
 
         switch ($Code){
-            0 {'No Multicast'}
-            1 {'IP Multicast'}
-            2 {'IP & IGMP multicast'}
+            0 {'None'}
+            1 {'Minimum'}
+            2 {'Maximum'}
             default {'Invalid Code'}
         }
     }

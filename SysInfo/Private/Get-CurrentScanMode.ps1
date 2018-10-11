@@ -1,6 +1,6 @@
 ﻿Function Get-CurrentScanMode {
 
-    param ([uint16[]]$Code)
+    param ([uint16]$Code)
 
     if ($Code -ne ''){
 

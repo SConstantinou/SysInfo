@@ -5,7 +5,9 @@
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
 
-    $Properties = ((Get-CimClass -ClassName Win32_NetworkAdapterConfiguration).CimClassProperties).Name
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_NetworkAdapterConfiguration).CimClassProperties).Name
+    $RemoveProperties = @("DatabasePath")
+    foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
     if ($ComputerName -eq ''){
 

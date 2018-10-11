@@ -2,7 +2,7 @@
 
     param ([uint32[]]$Code)
 
-    if ($Code -ne ''){
+    if ($Code.Count -ne 0){
 
         switch ($Code){
             0 {'Ethernet II'}

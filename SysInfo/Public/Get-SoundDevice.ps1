@@ -5,7 +5,9 @@
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
 
-    $Properties = ((Get-CimClass -ClassName Win32_SoundDevice).CimClassProperties).Name
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_SoundDevice).CimClassProperties).Name
+    $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID","DeviceID")
+    foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
     if ($ComputerName -eq ''){
 
@@ -21,7 +23,6 @@
         $_.Availability = Get-Availability ($_.Availability)
         $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
         $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
-        $_.ProtocolSupported = Get-ProtocolSupported ($_.ProtocolSupported)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
     }
     

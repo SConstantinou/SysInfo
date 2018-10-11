@@ -6,7 +6,7 @@
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
 
     [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_DiskDrive).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")
+    $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
     
     if ($ComputerName -eq ''){

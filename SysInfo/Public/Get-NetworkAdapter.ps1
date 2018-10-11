@@ -5,7 +5,9 @@
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
 
-    $Properties = ((Get-CimClass -ClassName Win32_NetworkAdapter).CimClassProperties).Name
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_NetworkAdapter).CimClassProperties).Name
+    $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
+    foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
     if ($ComputerName -eq ''){
 
@@ -18,11 +20,34 @@
 
     foreach ($_ in $NetworkAdapter){
 
+        [uint64]$Speed = $_.Speed
+
+        switch ($Speed){
+            {$Speed -ge 1000}
+                {
+                    $NetworkAdapter | Add-Member -MemberType NoteProperty -Name "SpeedKbps" -Value "" -Force
+                }
+            {$Speed -ge 1000000}
+                {
+                    $NetworkAdapter | Add-Member -MemberType NoteProperty -Name "SpeedMbps" -Value "" -Force
+                }
+            {$Speed -ge 1000000000}
+                {
+                    $NetworkAdapter | Add-Member -MemberType NoteProperty -Name "SpeedGbps" -Value "" -Force
+                }
+        }
+    }
+
+    foreach ($_ in $NetworkAdapter){
+
         $_.Availability = Get-Availability ($_.Availability)
         $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
         $_.NetConnectionStatus = Get-NetConnectionStatus ($_.NetConnectionStatus)
         $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
+        if ($_.PSObject.Properties.Name -match "SpeedKbps"){$_.SpeedKbps = Get-SpeedKbps ($_.Speed)}
+        if ($_.PSObject.Properties.Name -match "SpeedMbps"){$_.SpeedMbps = Get-SpeedMbps ($_.Speed)}
+        if ($_.PSObject.Properties.Name -match "SpeedGbps"){$_.SpeedGbps = Get-SpeedGbps ($_.Speed)}
     }
     
     Write-Output $NetworkAdapter

@@ -1,8 +1,8 @@
-﻿Function Get-LanguagesSupported {
+﻿Function Get-CurrentLanguage {
 
-    param ([uint16[]]$Code)
+    param ([uint16]$Code)
 
-    if ($Code.Count -ne 0){
+    if ($Code -ne ''){
 
         switch ($Code){
             1 {'Other'}
