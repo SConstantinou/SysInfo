@@ -21,6 +21,7 @@
     [uint64]$FreePhysicalMemory = $OperatingSystem.FreePhysicalMemory * 1KB
     [uint64]$FreeSpaceInPagingFiles = $OperatingSystem.FreeSpaceInPagingFiles * 1KB
     [uint64]$FreeVirtualMemory = $OperatingSystem.FreeVirtualMemory * 1KB
+    [uint64]$MaxProcessMemorySize = $OperatingSystem.MaxProcessMemorySize * 1KB
 
     switch ($FreePhysicalMemory){
         {$FreePhysicalMemory -gt 1MB}
@@ -67,10 +68,29 @@
             }
     }
 
+    switch ($MaxProcessMemorySize){
+        {$MaxProcessMemorySize -gt 1MB}
+            {
+                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "MaxProcessMemorySizeMB" -Value "" -Force
+            }
+        {$MaxProcessMemorySize -gt 1GB}
+            {
+                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "MaxProcessMemorySizeGB" -Value "" -Force
+            }
+        {$MaxProcessMemorySize -gt 1TB}
+            {
+                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "MaxProcessMemorySizeTB" -Value "" -Force
+            }
+    }
+
     $OperatingSystem.DataExecutionPrevention_SupportPolicy = Get-DataExecutionPreventionSupportPolicy ($OperatingSystem.DataExecutionPrevention_SupportPolicy)
     $OperatingSystem.ForegroundApplicationBoost = Get-ForegroundApplicationBoost ($OperatingSystem.ForegroundApplicationBoost)
     $OperatingSystem.Locale = Get-Locale ($OperatingSystem.Locale)
     $OperatingSystem.LargeSystemCache = Get-LargeSystemCache ($OperatingSystem.LargeSystemCache)
+    $OperatingSystem.OperatingSystemSKU = Get-OperatingSystemSKU ($OperatingSystem.OperatingSystemSKU)
+    $OperatingSystem.OSLanguage = Get-OSLanguage ($OperatingSystem.OSLanguage)
+    $OperatingSystem.OSProductSuite = Get-OSProductSuite ($OperatingSystem.OSProductSuite)
+    $OperatingSystem.OSType = Get-OSType ($OperatingSystem.OSType)
 
     if ($OperatingSystem.PSObject.Properties.Name -match "FreePhysicalMemoryMB"){
             
@@ -115,6 +135,21 @@
     if ($OperatingSystem.PSObject.Properties.Name -match "FreeVirtualMemoryTB"){
             
         $OperatingSystem.FreeVirtualMemoryTB = Get-SizeTB ($OperatingSystem.FreeVirtualMemory * 1KB)
+    }
+
+    if ($OperatingSystem.PSObject.Properties.Name -match "MaxProcessMemorySizeMB"){
+            
+        $OperatingSystem.MaxProcessMemorySizeMB = Get-SizeMB ($OperatingSystem.MaxProcessMemorySize * 1KB)
+    }
+
+    if ($OperatingSystem.PSObject.Properties.Name -match "MaxProcessMemorySizeGB"){
+            
+        $OperatingSystem.MaxProcessMemorySizeGB = Get-SizeGB ($OperatingSystem.MaxProcessMemorySize * 1KB)
+    }
+
+    if ($OperatingSystem.PSObject.Properties.Name -match "MaxProcessMemorySizeTB"){
+            
+        $OperatingSystem.MaxProcessMemorySizeTB = Get-SizeTB ($OperatingSystem.MaxProcessMemorySize * 1KB)
     }
     
     Write-Output $OperatingSystem
