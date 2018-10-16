@@ -5,7 +5,9 @@
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
 
-    $Properties = ((Get-CimClass -ClassName Win32_ParallelPort).CimClassProperties).Name
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_ParallelPort).CimClassProperties).Name
+    $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
+    foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
     if ($ComputerName -eq ''){
 

@@ -6,7 +6,7 @@
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
 
     [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_Fan).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
+    $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
     if ($ComputerName -eq ''){
