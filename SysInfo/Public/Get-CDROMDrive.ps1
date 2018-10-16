@@ -6,11 +6,11 @@
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
 
     [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_CDROMDrive).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")
+    $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
     if ($ComputerName -eq ''){
-    
+
         $CDROMDrive = Get-CimInstance -ClassName Win32_CDROMDrive -Property $Properties | Select-Object $Properties
     }
     else{
@@ -20,58 +20,58 @@
 
     foreach ($_ in $CDROMDrive){
 
-        [uint64]$MaxMediaSize = $_.MaxMediaSize
+        [uint64]$MaxMediaSize = $_.MaxMediaSize * 1KB
         [uint64]$Size = $_.Size
 
 
         switch ($MaxMediaSize){
-            {$MaxMediaSize -gt 1MB}
+            {$MaxMediaSize -ge 1MB}
                 {
                     $CDROMDrive | Add-Member -MemberType NoteProperty -Name "MaxMediaSizeMB" -Value "" -Force
                 }
-            {$MaxMediaSize -gt 1GB}
+            {$MaxMediaSize -ge 1GB}
                 {
                     $CDROMDrive | Add-Member -MemberType NoteProperty -Name "MaxMediaSizeGB" -Value "" -Force
                 }
         }
 
-        if ($_.DefaultBlockSize -gt 1KB) {
+        if ($_.DefaultBlockSize -ge 1KB) {
 
             $CDROMDrive | Add-Member -MemberType NoteProperty -Name "DefaultBlockSizeKB" -Value "" -Force
         }
 
-        if ($_.MaxBlockSize -gt 1KB) {
+        if ($_.MaxBlockSize -ge 1KB) {
 
             $CDROMDrive | Add-Member -MemberType NoteProperty -Name "MaxBlockSizeKB" -Value "" -Force
         }
 
-        if ($_.MinBlockSize -gt 1KB) {
+        if ($_.MinBlockSize -ge 1KB) {
 
             $CDROMDrive | Add-Member -MemberType NoteProperty -Name "MinBlockSizeKB" -Value "" -Force
         }
 
         switch ($Size){
-            {$Size -gt 1KB}
+            {$Size -ge 1KB}
                 {
                     $CDROMDrive | Add-Member -MemberType NoteProperty -Name "SizeKB" -Value "" -Force
                 }
-            {$Size -gt 1MB}
+            {$Size -ge 1MB}
                 {
                     $CDROMDrive | Add-Member -MemberType NoteProperty -Name "SizeMB" -Value "" -Force
                 }
-            {$Size -gt 1GB}
+            {$Size -ge 1GB}
                 {
                     $CDROMDrive | Add-Member -MemberType NoteProperty -Name "SizeGB" -Value "" -Force
                 }
         }
 
     }
-    
+
     foreach ($_ in $CDROMDrive){
 
         $_.Availability = Get-Availability ($_.Availability)
         $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
+        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
         $_.FileSystemFlagsEx = Get-FileSystemFlagsEx ($_.FileSystemFlagsEx)
         if ($_.PSObject.Properties.Name -match "DefaultBlockSizeKB"){$_.DefaultBlockSizeKB = Get-SizeKB ($_.DefaultBlockSize)}
@@ -83,6 +83,6 @@
         if ($_.PSObject.Properties.Name -match "SizeMB"){$_.SizeMB = Get-SizeMB ($_.Size)}
         if ($_.PSObject.Properties.Name -match "SizeGB"){$_.SizeGB = Get-SizeGB ($_.Size)}
     }
-    
+
     Write-Output $CDROMDrive
 }

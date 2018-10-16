@@ -6,7 +6,7 @@
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
 
     [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_IDEController).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")
+    $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
     if ($ComputerName -eq ''){
@@ -22,10 +22,10 @@
 
         $_.Availability = Get-Availability ($_.Availability)
         $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
+        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
         $_.ProtocolSupported = Get-ProtocolSupported ($_.ProtocolSupported)
     }
-    
+
     Write-Output $IDEController
 }

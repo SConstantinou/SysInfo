@@ -6,7 +6,7 @@
     [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
 
     [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_MemoryDevice).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID")
+    $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
     if ($ComputerName -eq ''){
@@ -27,7 +27,7 @@
         $_.ErrorDataOrder = Get-ErrorDataOrder ($_.ErrorDataOrder)
         $_.ErrorGranularity = Get-ErrorGranularity ($_.ErrorGranularity)
         $_.ErrorInfo = Get-ErrorInfo ($_.ErrorInfo)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
+        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
     }
 

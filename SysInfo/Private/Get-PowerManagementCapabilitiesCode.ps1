@@ -1,4 +1,4 @@
-﻿Function Get-PowerManagementCapabilities {
+﻿Function Get-PowerManagementCapabilitiesCode {
 
     param ([uint16[]]$Code)
 

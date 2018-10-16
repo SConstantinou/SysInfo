@@ -23,8 +23,8 @@
         $_.IGMPLevel = Get-IGMPLevel ($_.IGMPLevel)
         $_.IPXFrameType = Get-IPXFrameType ($_.IPXFrameType)
         $_.IPXMediaType = Get-IPXMediaType ($_.IPXMediaType)
-        $_.TcpipNetbiosOptions = Get-TcpipNetbiosOptions ($_.TcpipNetbiosOptions)
+        $_.TcpipNetbiosOptions = Get-TcpipNetbiosOption ($_.TcpipNetbiosOptions)
     }
-    
+
     Write-Output $NetworkAdapterConfiguration
 }

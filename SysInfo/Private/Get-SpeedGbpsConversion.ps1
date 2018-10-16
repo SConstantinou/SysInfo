@@ -1,4 +1,4 @@
-﻿Function Get-SpeedGbps {
+﻿Function Get-SpeedGbpsConversion {
 
     param ([uint64]$Speed)
 

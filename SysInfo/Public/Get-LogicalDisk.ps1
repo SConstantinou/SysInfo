@@ -24,53 +24,53 @@
         [uint64]$FreeSpace = $_.FreeSpace
 
         switch ($Size){
-            {$Size -gt 1KB}
+            {$Size -ge 1KB}
                 {
                     $LogicalDisk | Add-Member -MemberType NoteProperty -Name "SizeKB" -Value "" -Force
                 }
-            {$Size -gt 1MB}
+            {$Size -ge 1MB}
                 {
                     $LogicalDisk | Add-Member -MemberType NoteProperty -Name "SizeMB" -Value "" -Force
                 }
-            {$Size -gt 1GB}
+            {$Size -ge 1GB}
                 {
                     $LogicalDisk | Add-Member -MemberType NoteProperty -Name "SizeGB" -Value "" -Force
                 }
-            {$Size -gt 1TB}
+            {$Size -ge 1TB}
                 {
                     $LogicalDisk | Add-Member -MemberType NoteProperty -Name "SizeTB" -Value "" -Force
                 }
-            {$Size -gt 1PB}
+            {$Size -ge 1PB}
                 {
                     $LogicalDisk | Add-Member -MemberType NoteProperty -Name "SizePB" -Value "" -Force
                 }
         }
 
         switch ($FreeSpace){
-            {$FreeSpace -gt 1KB}
+            {$FreeSpace -ge 1KB}
                 {
                     $LogicalDisk | Add-Member -MemberType NoteProperty -Name "FreeSpaceKB" -Value "" -Force
                 }
-            {$FreeSpace -gt 1MB}
+            {$FreeSpace -ge 1MB}
                 {
                     $LogicalDisk | Add-Member -MemberType NoteProperty -Name "FreeSpaceMB" -Value "" -Force
                 }
-            {$FreeSpace -gt 1GB}
+            {$FreeSpace -ge 1GB}
                 {
                     $LogicalDisk | Add-Member -MemberType NoteProperty -Name "FreeSpaceGB" -Value "" -Force
                 }
-            {$FreeSpace -gt 1TB}
+            {$FreeSpace -ge 1TB}
                 {
                     $LogicalDisk | Add-Member -MemberType NoteProperty -Name "FreeSpaceTB" -Value "" -Force
                 }
-            {$FreeSpace -gt 1PB}
+            {$FreeSpace -ge 1PB}
                 {
                     $LogicalDisk | Add-Member -MemberType NoteProperty -Name "FreeSpacePB" -Value "" -Force
                 }
         }
 
     }
-    
+
     foreach ($_ in $LogicalDisk){
 
         $_.Access = Get-Access ($_.Access)
@@ -78,7 +78,7 @@
         $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
         $_.DriveType = Get-DriveType ($_.DriveType)
         $_.MediaType = Get-LogicalDiskMediaType ($_.MediaType)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
+        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
         if ($_.PSObject.Properties.Name -match "SizeKB"){$_.SizeKB = Get-SizeKB ($_.Size)}
         if ($_.PSObject.Properties.Name -match "SizeMB"){$_.SizeMB = Get-SizeMB ($_.Size)}
@@ -91,6 +91,6 @@
         if ($_.PSObject.Properties.Name -match "FreeSpaceTB"){$_.FreeSpaceTB = Get-SizeTB ($_.FreeSpace)}
         if ($_.PSObject.Properties.Name -match "FreeSpacePB"){$_.FreeSpacePB = Get-SizePB ($_.FreeSpace)}
     }
-    
+
     Write-Output $LogicalDisk
 }

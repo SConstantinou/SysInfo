@@ -6,7 +6,7 @@
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
 
     [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_DiskPartition).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")
+    $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
     if ($ComputerName -eq ''){
@@ -25,64 +25,64 @@
 
 
         switch ($Size){
-            {$Size -gt 1KB}
+            {$Size -ge 1KB}
                 {
                     $DiskPartition | Add-Member -MemberType NoteProperty -Name "SizeKB" -Value "" -Force
                 }
-            {$Size -gt 1MB}
+            {$Size -ge 1MB}
                 {
                     $DiskPartition | Add-Member -MemberType NoteProperty -Name "SizeMB" -Value "" -Force
                 }
-            {$Size -gt 1GB}
+            {$Size -ge 1GB}
                 {
                     $DiskPartition | Add-Member -MemberType NoteProperty -Name "SizeGB" -Value "" -Force
                 }
-            {$Size -gt 1TB}
+            {$Size -ge 1TB}
                 {
                     $DiskPartition | Add-Member -MemberType NoteProperty -Name "SizeTB" -Value "" -Force
                 }
-            {$Size -gt 1PB}
+            {$Size -ge 1PB}
                 {
                     $DiskPartition | Add-Member -MemberType NoteProperty -Name "SizePB" -Value "" -Force
                 }
         }
 
-        if ($_.BlockSize -gt 1KB) {
+        if ($_.BlockSize -ge 1KB) {
 
             $DiskPartition | Add-Member -MemberType NoteProperty -Name "BlockSizeKB" -Value "" -Force
         }
 
         switch ($StartingOffset){
-            {$StartingOffset -gt 1KB}
+            {$StartingOffset -ge 1KB}
                 {
                     $DiskPartition | Add-Member -MemberType NoteProperty -Name "StartingOffsetKB" -Value "" -Force
                 }
-            {$StartingOffset -gt 1MB}
+            {$StartingOffset -ge 1MB}
                 {
                     $DiskPartition | Add-Member -MemberType NoteProperty -Name "StartingOffsetMB" -Value "" -Force
                 }
-            {$StartingOffset -gt 1GB}
+            {$StartingOffset -ge 1GB}
                 {
                     $DiskPartition | Add-Member -MemberType NoteProperty -Name "StartingOffsetGB" -Value "" -Force
                 }
-            {$StartingOffset -gt 1TB}
+            {$StartingOffset -ge 1TB}
                 {
                     $DiskPartition | Add-Member -MemberType NoteProperty -Name "StartingOffsetTB" -Value "" -Force
                 }
-            {$StartingOffset -gt 1PB}
+            {$StartingOffset -ge 1PB}
                 {
                     $DiskPartition | Add-Member -MemberType NoteProperty -Name "StartingOffsetPB" -Value "" -Force
                 }
         }
 
     }
-    
+
     foreach ($_ in $DiskPartition){
 
         $_.Access = Get-Access ($_.Access)
         $_.Availability = Get-Availability ($_.Availability)
         $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
+        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
         if ($_.PSObject.Properties.Name -match "SizeKB"){$_.SizeKB = Get-SizeKB ($_.Size)}
         if ($_.PSObject.Properties.Name -match "SizeMB"){$_.SizeMB = Get-SizeMB ($_.Size)}
         if ($_.PSObject.Properties.Name -match "SizeGB"){$_.SizeGB = Get-SizeGB ($_.Size)}
@@ -94,8 +94,8 @@
         if ($_.PSObject.Properties.Name -match "StartingOffsetGB"){$_.StartingOffsetGB = Get-SizeGB ($_.StartingOffset)}
         if ($_.PSObject.Properties.Name -match "StartingOffsetTB"){$_.StartingOffsetTB = Get-SizeTB ($_.StartingOffset)}
         if ($_.PSObject.Properties.Name -match "StartingOffsetPB"){$_.StartingOffsetPB = Get-SizePB ($_.StartingOffset)}
-        $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)    
+        $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
     }
-    
+
     Write-Output $DiskPartition
 }

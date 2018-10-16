@@ -18,10 +18,10 @@
 
     foreach ($_ in $BIOS){
 
-        $_.BiosCharacteristics = Get-BiosCharacteristics ($_.BiosCharacteristics)
+        $_.BiosCharacteristics = Get-BiosCharacteristicsCode ($_.BiosCharacteristics)
         $_.SoftwareElementState = Get-SoftwareElementState ($_.SoftwareElementState)
         $_.TargetOperatingSystem = Get-TargetOperatingSystem ($_.TargetOperatingSystem)
     }
-    
+
     Write-Output $BIOS
 }

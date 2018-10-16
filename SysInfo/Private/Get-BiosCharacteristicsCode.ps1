@@ -1,8 +1,8 @@
-﻿Function Get-BiosCharacteristics {
+﻿Function Get-BiosCharacteristicsCode {
 
     param ([uint16[]]$Code)
 
-    if ($Code -ne ''){
+    if ($Code.Count -ne 0){
 
         switch ($Code){
             0 {'Reserved'}

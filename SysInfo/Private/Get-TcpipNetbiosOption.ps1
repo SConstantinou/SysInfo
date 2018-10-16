@@ -1,4 +1,4 @@
-﻿Function Get-TcpipNetbiosOptions {
+﻿Function Get-TcpipNetbiosOption {
 
     param ([uint32]$Code)
 

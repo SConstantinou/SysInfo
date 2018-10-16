@@ -8,7 +8,7 @@
     [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_DiskDrive).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
-    
+
     if ($ComputerName -eq ''){
 
         $DiskDrive = Get-CimInstance -ClassName Win32_DiskDrive -Property $Properties | Select-Object $Properties
@@ -20,61 +20,61 @@
 
     foreach ($_ in $DiskDrive){
 
-        [uint64]$MaxMediaSize = $_.MaxMediaSize
+        [uint64]$MaxMediaSize = $_.MaxMediaSize * 1KB
         [uint64]$Size = $_.Size
 
-        if ($_.DefaultBlockSize -gt 1KB) {
+        if ($_.DefaultBlockSize -ge 1KB) {
 
             $DiskDrive | Add-Member -MemberType NoteProperty -Name "DefaultBlockSizeKB" -Value "" -Force
         }
 
-        if ($_.MaxBlockSize -gt 1KB) {
+        if ($_.MaxBlockSize -ge 1KB) {
 
             $DiskDrive | Add-Member -MemberType NoteProperty -Name "MaxBlockSizeKB" -Value "" -Force
         }
 
         switch ($MaxMediaSize){
-            {$MaxMediaSize -gt 1MB}
+            {$MaxMediaSize -ge 1MB}
                 {
                     $DiskDrive | Add-Member -MemberType NoteProperty -Name "MaxMediaSizeMB" -Value "" -Force
                 }
-            {$MaxMediaSize -gt 1GB}
+            {$MaxMediaSize -ge 1GB}
                 {
                     $DiskDrive | Add-Member -MemberType NoteProperty -Name "MaxMediaSizeGB" -Value "" -Force
                 }
-            {$MaxMediaSize -gt 1TB}
+            {$MaxMediaSize -ge 1TB}
                 {
                     $DiskDrive | Add-Member -MemberType NoteProperty -Name "MaxMediaSizeTB" -Value "" -Force
                 }
-            {$MaxMediaSize -gt 1PB}
+            {$MaxMediaSize -ge 1PB}
                 {
                     $DiskDrive | Add-Member -MemberType NoteProperty -Name "MaxMediaSizePB" -Value "" -Force
                 }
         }
 
-        if ($_.MinBlockSize -gt 1KB) {
+        if ($_.MinBlockSize -ge 1KB) {
 
             $DiskDrive | Add-Member -MemberType NoteProperty -Name "MinBlockSizeKB" -Value "" -Force
         }
 
         switch ($Size){
-            {$Size -gt 1KB}
+            {$Size -ge 1KB}
                 {
                     $DiskDrive | Add-Member -MemberType NoteProperty -Name "SizeKB" -Value "" -Force
                 }
-            {$Size -gt 1MB}
+            {$Size -ge 1MB}
                 {
                     $DiskDrive | Add-Member -MemberType NoteProperty -Name "SizeMB" -Value "" -Force
                 }
-            {$Size -gt 1GB}
+            {$Size -ge 1GB}
                 {
                     $DiskDrive | Add-Member -MemberType NoteProperty -Name "SizeGB" -Value "" -Force
                 }
-            {$Size -gt 1TB}
+            {$Size -ge 1TB}
                 {
                     $DiskDrive | Add-Member -MemberType NoteProperty -Name "SizeTB" -Value "" -Force
                 }
-            {$Size -gt 1PB}
+            {$Size -ge 1PB}
                 {
                     $DiskDrive | Add-Member -MemberType NoteProperty -Name "SizePB" -Value "" -Force
                 }
@@ -85,7 +85,7 @@
 
         $_.Availability = Get-Availability ($_.Availability)
         $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
+        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
         if ($_.PSObject.Properties.Name -match "DefaultBlockSizeKB"){$_.DefaultBlockSizeKB = Get-SizeKB ($_.DefaultBlockSize)}
         if ($_.PSObject.Properties.Name -match "MaxBlockSizeKB"){$_.MaxBlockSizeKB = Get-SizeKB ($_.MaxBlockSize)}
