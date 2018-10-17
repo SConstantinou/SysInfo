@@ -24,9 +24,9 @@
         $_.BatteryStatus = Get-BatteryStatus ($_.BatteryStatus)
         $_.Chemistry = Get-Chemistry ($_.Chemistry)
         $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
+        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
     }
-    
+
     Write-Output $PortableBattery
 }

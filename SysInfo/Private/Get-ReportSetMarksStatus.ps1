@@ -1,4 +1,4 @@
-﻿Function Get-ReportSetMarks {
+﻿Function Get-ReportSetMarksStatus {
 
     param ([uint32]$Code)
 

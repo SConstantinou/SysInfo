@@ -1,4 +1,4 @@
-﻿Function Get-DefaultCapabilities {
+﻿Function Get-CurrentCapabilitiesCode {
 
     param ([uint16[]]$Code)
 

@@ -14,7 +14,7 @@
         $PointingDevice = Get-CimInstance -ClassName Win32_PointingDevice -Property $Properties | Select-Object $Properties
     }
     else{
-        
+
         $PointingDevice = Get-CimInstance -ClassName Win32_PointingDevice -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
     }
 
@@ -22,7 +22,7 @@
 
         $_.Availability = Get-Availability ($_.Availability)
         $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
+        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
         $_.Handedness = Get-Handedness ($_.Handedness)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
         $_.DeviceInterface = Get-DeviceInterface ($_.DeviceInterface)

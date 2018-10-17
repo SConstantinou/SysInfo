@@ -1,6 +1,6 @@
 ﻿Function Get-PrinterStatus {
 
-    param ([uint32]$Code)
+    param ([uint16]$Code)
 
     if ($Code -ne ''){
 

@@ -9,7 +9,7 @@
             -2 {'Low'}
             -3 {'Medium'}
             -4 {'High'}
-            default {'Invalid Code'}
+            default {"$Code"}
         }
     }
 

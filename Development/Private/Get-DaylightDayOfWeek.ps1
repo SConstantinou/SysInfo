@@ -1,6 +1,6 @@
 ﻿Function Get-DaylightDayOfWeek {
 
-    param ([uint8]$Code)
+    param ([uint32]$Code)
 
     if ($Code -ne ''){
 

@@ -16,13 +16,12 @@
         $TimeZone = Get-CimInstance -ClassName Win32_TimeZone -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
     }
 
-    foreach ($_ in $TimeZone){
-
-        $_.DaylightDayOfWeek = Get-DaylightDayOfWeek ($_.DaylightDayOfWeek)
-        $_.DaylightMonth = Get-DaylightMonth ($_.DaylightMonth)
-        $_.StandardDayOfWeek = Get-StandardDayOfWeek ($_.StandardDayOfWeek)
-        $_.StandardMonth = Get-StandardMonth ($_.StandardMonth)
-    }
-    
+        [String]$DaylightDayOfWeek = $TimeZone.DaylightDayOfWeek
+        
+        $TimeZone.DaylightDayOfWeek = Get-DaylightDayOfWeek $DaylightDayOfWeek
+        $TimeZone.DaylightMonth = Get-DaylightMonth ($TimeZone.DaylightMonth)
+        $TimeZone.StandardDayOfWeek = Get-StandardDayOfWeek ($TimeZone.StandardDayOfWeek)
+        $TimeZone.StandardMonth = Get-StandardMonth ($TimeZone.StandardMonth)
+        $TimeZone.DaylightDay = Get-DaylightDay ($TimeZone.DaylightDay) ($TimeZone.DaylightDayOfWeek) ($TimeZone.Month)
     Write-Output $TimeZone
 }

@@ -1,4 +1,4 @@
-﻿Function Get-VoltageCaps {
+﻿Function Get-VoltageCap {
 
     param ([uint32]$Code)
 

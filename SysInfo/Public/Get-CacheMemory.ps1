@@ -20,12 +20,20 @@
 
     foreach ($_ in $CacheMemory){
 
-        if ($_.BlockSize -gt 1KB) {
+        $InstalledSize = $_.InstalledSize * 1KB
+        $MaxCacheSize = $_.MaxCacheSize * 1KB
+
+        if ($_.BlockSize -ge 1KB) {
 
             $CacheMemory | Add-Member -MemberType NoteProperty -Name "BlockSizeKB" -Value "" -Force
         }
 
-        if ($_.MaxCacheSize -gt 1MB) {
+        if ($InstalledSize -ge 1MB) {
+
+            $CacheMemory | Add-Member -MemberType NoteProperty -Name "InstalledSizeMB" -Value "" -Force
+        }
+
+        if ($MaxCacheSize -ge 1MB) {
 
             $CacheMemory | Add-Member -MemberType NoteProperty -Name "MaxCacheSizeMB" -Value "" -Force
         }
@@ -36,7 +44,7 @@
 
         $_.Availability = Get-Availability ($_.Availability)
         $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
+        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
         $_.Access = Get-Access ($_.Access)
         $_.Associativity = Get-Associativity ($_.Associativity)
@@ -53,8 +61,9 @@
         $_.SupportedSRAM = Get-SupportedSRAM ($_.SupportedSRAM)
         $_.WritePolicy = Get-WritePolicy ($_.WritePolicy)
         if ($_.PSObject.Properties.Name -match "BlockSizeKB"){$_.BlockSizeKB = Get-SizeKB ($_.BlockSize)}
-        if ($_.PSObject.Properties.Name -match "MaxCacheSizeMB"){$_.MaxCacheSizeMB = Get-SizeKB ($_.MaxCacheSize)}
+        if ($_.PSObject.Properties.Name -match "MaxCacheSizeMB"){$_.MaxCacheSizeMB = Get-SizeMB ($_.MaxCacheSize * 1KB)}
+        if ($_.PSObject.Properties.Name -match "InstalledSizeMB"){$_.InstalledSizeMB = Get-SizeMB ($_.InstalledSize * 1KB)}
     }
-    
+
     Write-Output $CacheMemory
 }

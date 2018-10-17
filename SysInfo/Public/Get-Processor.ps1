@@ -51,32 +51,32 @@
         $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
         $_.CpuStatus = Get-CpuStatus ($_.CpuStatus)
         $_.Family = Get-Family ($_.Family)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
+        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
         $_.ProcessorType = Get-ProcessorType ($_.ProcessorType)
         $_.UpgradeMethod = Get-UpgradeMethod ($_.UpgradeMethod)
-        $_.VoltageCaps = Get-VoltageCaps ($_.VoltageCaps)
+        $_.VoltageCaps = Get-VoltageCap ($_.VoltageCaps)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
 
         if ($_.PSObject.Properties.Name -match "L2CacheSizeMB"){
-            
+
             $_.L2CacheSizeMB = Get-SizeMB ($_.L2CacheSize * 1KB)
         }
-        
+
         if ($_.PSObject.Properties.Name -match "L3CacheSizeMB"){
-        
+
             $_.L3CacheSizeMB = Get-SizeMB ($_.L3CacheSize * 1KB)
         }
-        
+
         if ($_.PSObject.Properties.Name -match "CurrentClockSpeedGhz"){
-        
+
             $_.CurrentClockSpeedGhz = [math]::round($_.CurrentClockSpeed / 1000,2)
         }
-        
+
         if ($_.PSObject.Properties.Name -match "MaxClockSpeedGhz"){
-        
+
             $_.MaxClockSpeedGhz = [math]::round($_.MaxClockSpeed / 1000,2)
         }
     }
-    
+
     Write-Output $Processor
 }

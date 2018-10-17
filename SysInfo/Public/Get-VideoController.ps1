@@ -23,22 +23,22 @@
         [uint64]$AdapterRAM = $_.AdapterRAM
 
         switch ($AdapterRAM){
-            {$AdapterRAM -gt 1KB}
+            {$AdapterRAM -ge 1KB}
                 {
                     $VideoController | Add-Member -MemberType NoteProperty -Name "AdapterRAMKB" -Value "" -Force
                 }
-            {$AdapterRAM -gt 1MB}
+            {$AdapterRAM -ge 1MB}
                 {
                     $VideoController | Add-Member -MemberType NoteProperty -Name "AdapterRAMMB" -Value "" -Force
                 }
-            {$AdapterRAM -gt 1GB}
+            {$AdapterRAM -ge 1GB}
                 {
                     $VideoController | Add-Member -MemberType NoteProperty -Name "AdapterRAMGB" -Value "" -Force
                 }
         }
 
     }
-    
+
     foreach ($_ in $VideoController){
 
         $_.AcceleratorCapabilities = Get-AcceleratorCapabilities ($_.AcceleratorCapabilities)
@@ -48,7 +48,7 @@
         $_.DitherType = Get-DitherType ($_.DitherType)
         $_.ICMIntent = Get-ICMIntent ($_.ICMIntent)
         $_.ICMMethod = Get-ICMMethod ($_.ICMMethod)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
+        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
         $_.ProtocolSupported = Get-ProtocolSupported ($_.ProtocolSupported)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
         $_.VideoArchitecture = Get-VideoArchitecture ($_.VideoArchitecture)
@@ -57,6 +57,6 @@
         if ($_.PSObject.Properties.Name -match "AdapterRAMMB"){$_.AdapterRAMMB = Get-SizeMB ($_.AdapterRAM)}
         if ($_.PSObject.Properties.Name -match "AdapterRAMGB"){$_.AdapterRAMGB = Get-SizeGB ($_.AdapterRAM)}
     }
-    
+
     Write-Output $VideoController
 }

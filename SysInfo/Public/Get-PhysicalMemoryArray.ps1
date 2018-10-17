@@ -24,41 +24,66 @@
         [uint64]$MaxCapacityEx = $_.MaxCapacityEx * 1KB
 
         switch ($MaxCapacity){
-            {$MaxCapacity -gt 1MB}
+            {$MaxCapacity -ge 1MB}
                 {
                     $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityMB" -Value "" -Force
                 }
-            {$MaxCapacity -gt 1GB}
+            {$MaxCapacity -ge 1GB}
                 {
                     $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityGB" -Value "" -Force
                 }
-            {$MaxCapacity -gt 1TB}
+            {$MaxCapacity -ge 1TB}
                 {
                     $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityTB" -Value "" -Force
                 }
-            {$MaxCapacity -gt 1PB}
+            {$MaxCapacity -ge 1PB}
                 {
                     $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityPB" -Value "" -Force
                 }
         }
 
         switch ($MaxCapacityEx){
-            {$MaxCapacityEx -gt 1MB}
+            {$MaxCapacityEx -ge 1MB}
                 {
                     $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityExMB" -Value "" -Force
                 }
-            {$MaxCapacityEx -gt 1GB}
+            {$MaxCapacityEx -ge 1GB}
                 {
                     $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityExGB" -Value "" -Force
                 }
-            {$MaxCapacityEx -gt 1TB}
+            {$MaxCapacityEx -ge 1TB}
                 {
                     $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityExTB" -Value "" -Force
                 }
-            {$MaxCapacityEx -gt 1PB}
+            {$MaxCapacityEx -ge 1PB}
                 {
                     $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityExPB" -Value "" -Force
                 }
+        }
+
+        if ($null -ne $_.Depth){
+            $PhysicalMemoryArray |
+                Add-Member -MemberType NoteProperty -Name "DepthCM" -Value "$(Get-LengthCM ($_.Depth))" -Force
+        }
+
+        if ($null -ne $_.Height){
+            $PhysicalMemoryArray |
+                Add-Member -MemberType NoteProperty -Name "HeightCM" -Value "$(Get-LengthCM ($_.Height))" -Force
+        }
+
+        if ($null -ne $_.Width){
+            $PhysicalMemoryArray |
+                Add-Member -MemberType NoteProperty -Name "WidthCM" -Value "$(Get-LengthCM ($_.Width))" -Force
+        }
+        
+        if ($null -ne $_.Weight){
+            $PhysicalMemoryArray |
+                Add-Member -MemberType NoteProperty -Name "WeightGr" -Value "$(Get-WeightGram ($_.Weight))" -Force
+        }
+
+        if (($_.PSObject.Properties.Name -match "WeightGr") -and ($_.WeightGr -ge 1000)){
+            $PhysicalMemoryArray |
+                Add-Member -MemberType NoteProperty -Name "WeightKg" -Value "$(Get-WeightKg ($_.Weight))" -Force
         }
     }
     
@@ -79,3 +104,5 @@
     
     Write-Output $PhysicalMemoryArray
 }
+
+    

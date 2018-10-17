@@ -24,7 +24,7 @@
         $_.ErrorAccess = Get-ErrorAccess ($_.ErrorAccess)
         $_.ErrorDataOrder = Get-ErrorDataOrder ($_.ErrorDataOrder)
         $_.ErrorInfo = Get-ErrorInfo ($_.ErrorInfo)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
+        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
     }
     

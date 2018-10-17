@@ -5,7 +5,9 @@
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
 
-    $Properties = ((Get-CimClass -ClassName Win32_SCSIController).CimClassProperties).Name
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_SCSIController).CimClassProperties).Name
+    $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")
+    foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
     if ($ComputerName -eq ''){
 
@@ -25,6 +27,6 @@
         $_.ProtocolSupported = Get-ProtocolSupported ($_.ProtocolSupported)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
     }
-    
+
     Write-Output $SCSIController
 }

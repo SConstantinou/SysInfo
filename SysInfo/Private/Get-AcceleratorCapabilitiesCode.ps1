@@ -1,4 +1,4 @@
-﻿Function Get-AcceleratorCapabilities {
+﻿Function Get-AcceleratorCapabilitiesCode {
 
     param ([uint16[]]$Code)
 
@@ -12,6 +12,6 @@
             default {'Invalid Code'}
         }
     }
-    
+
     Return
 }

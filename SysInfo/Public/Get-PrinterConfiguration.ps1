@@ -27,6 +27,6 @@
         $_.PrintQuality = Get-PrintQuality ($_.PrintQuality)
         $_.TTOption = Get-TTOption ($_.TTOption)
     }
-    
+
     Write-Output $PrinterConfiguration
 }

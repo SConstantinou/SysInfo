@@ -1,4 +1,4 @@
-﻿Function Get-Attributes {
+﻿Function Get-AttributesCode {
 
     param ([uint32]$Code)
 

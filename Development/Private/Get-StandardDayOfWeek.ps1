@@ -1,6 +1,6 @@
 ﻿Function Get-StandardDayOfWeek {
 
-    param ([uint8]$Code)
+    param ([uint16]$Code)
 
     if ($Code -ne ''){
 
