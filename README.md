@@ -14,12 +14,12 @@ will help you out perform your job.
 ### Commands
 
 * Get-1394Controller
-* 
-Get-BaseBoard
-* 
-Get-Battery
-* 
-Get-BIOS
+
+* Get-BaseBoard
+
+* Get-Battery
+
+* Get-BIOS
 
 * Get-Bus
 
