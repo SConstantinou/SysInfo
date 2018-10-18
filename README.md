@@ -118,3 +118,10 @@ will help you out perform your job.
 * Get-VideoController
 
 * Get-VoltageProbe
+
+---
+
+### Release Notes
+
+* __1.0.0 18/10/2018__
+  * Initial Realease
