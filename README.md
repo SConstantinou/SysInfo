@@ -125,3 +125,9 @@ will help you out perform your job.
 
 * __1.0.0 18/10/2018__
   * Initial Realease
+
+### More Information
+
+For more information please check
+
+[https://www.sconstantinou.com/not-active-yet](https://www.sconstantinou.com/not-active-yet)
