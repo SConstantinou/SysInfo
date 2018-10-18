@@ -104,5 +104,3 @@
     
     Write-Output $PhysicalMemoryArray
 }
-
-    

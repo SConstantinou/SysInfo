@@ -28,4 +28,3 @@
 
     Write-Output $TemperatureProbe
 }
-
