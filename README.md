@@ -14,9 +14,7 @@ will help you out perform your job.
 ### Commands
 
 * [Get-1394Controller](https://www.sconstantinou.com/Get-1394Controller)
-
 * [Get-BaseBoard](https://www.sconstantinou.com/Get-BaseBoard)
-
 * [Get-Battery](https://www.sconstantinou.com/Get-Battery)
 
 * [Get-BIOS](https://www.sconstantinou.com/Get-BIOS)
