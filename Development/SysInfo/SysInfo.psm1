@@ -3464,7 +3464,7 @@ and converts all codes in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -3573,7 +3573,7 @@ in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -3700,7 +3700,7 @@ format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -3812,7 +3812,7 @@ all codes in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -3919,7 +3919,7 @@ results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -4028,7 +4028,7 @@ and converts all codes in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -4177,7 +4177,7 @@ readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -4347,7 +4347,7 @@ human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -4445,7 +4445,7 @@ format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -4546,7 +4546,7 @@ Display Driver Model (WDDM) returns inaccurate property values.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -4657,7 +4657,7 @@ into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -4841,7 +4841,7 @@ and converts all codes in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -5020,7 +5020,7 @@ and converts all codes in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -5131,7 +5131,7 @@ for use as of Windows 10 and Windows Server 2016.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -5242,7 +5242,7 @@ and Windows Server 2016.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -5378,7 +5378,7 @@ all codes in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -5474,7 +5474,7 @@ all codes in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -5584,7 +5584,7 @@ all codes in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -5695,7 +5695,7 @@ format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -5806,7 +5806,7 @@ human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -5917,7 +5917,7 @@ into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -6014,7 +6014,7 @@ and converts all codes in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -6190,7 +6190,7 @@ readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -6305,7 +6305,7 @@ results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -6420,7 +6420,7 @@ codes in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -6528,7 +6528,7 @@ codes in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -6627,7 +6627,7 @@ only supplies IPv4 data.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -6762,7 +6762,7 @@ independent from the network adapter.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -6872,7 +6872,7 @@ into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -6970,7 +6970,7 @@ into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -7291,7 +7291,7 @@ into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -7389,7 +7389,7 @@ all codes in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -7523,7 +7523,7 @@ available, and memory type
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -7711,7 +7711,7 @@ to the display on a computer system running Windows
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -7824,7 +7824,7 @@ human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -7938,7 +7938,7 @@ all codes in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -8079,7 +8079,7 @@ and orientation.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -8191,7 +8191,7 @@ and converts all codes in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -8353,7 +8353,7 @@ human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -8449,7 +8449,7 @@ all codes in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -8559,7 +8559,7 @@ into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -8657,7 +8657,7 @@ into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -8769,7 +8769,7 @@ readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -8879,7 +8879,7 @@ human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -9014,7 +9014,7 @@ into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -9174,7 +9174,7 @@ in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -9284,7 +9284,7 @@ in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -9382,7 +9382,7 @@ in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -9480,7 +9480,7 @@ in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -9578,7 +9578,7 @@ in results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -9676,7 +9676,7 @@ results into human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -9791,7 +9791,7 @@ property values
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
@@ -9933,7 +9933,7 @@ human readable format.
 
 .PARAMETER ComputerName
 
-Specifies the computer name or IP Address of the system that
+Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
 .INPUTS
