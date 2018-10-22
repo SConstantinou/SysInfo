@@ -1,4 +1,83 @@
 ﻿function Get-DiskDrive {
+<#
+.SYNOPSIS
+
+Gets a physical disk drive as seen by a computer running
+the Windows operating system.
+
+.DESCRIPTION
+
+Gets a physical disk drive as seen by a computer running
+the Windows operating system and converts all codes in results
+into human readable format.
+
+.PARAMETER ComputerName
+
+Specifies the computer names or IP Addresses of the systems that
+we want to get the information from.
+
+.INPUTS
+
+System.Array. Get-DiskDrive can accept a string value to
+determine the ComputerName parameter.
+
+.OUTPUTS
+
+System.Object. Get-DiskDrive returns an object containing
+all the information that has been retrieved.
+
+.EXAMPLE
+
+PS C:\> Get-DiskDrive
+
+.EXAMPLE
+
+PS C:\> Get-DiskDrive -ComputerName Server1
+
+.EXAMPLE
+
+PS C:\> Get-DiskDrive -ComputerName "192.168.0.5"
+
+.EXAMPLE
+
+PS C:\> Get-DiskDrive -ComputerName Server1,Server2,Server3
+
+.EXAMPLE
+
+PS C:\> Get-DiskDrive -ComputerName "192.168.0.5","192.168.0.6","192.168.0.7"
+
+.EXAMPLE
+
+PS C:\> $MyServers = Server1,Server2,Server3
+PS C:\> Get-DiskDrive -ComputerName $MyServers
+
+.EXAMPLE
+
+PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
+PS C:\> Get-DiskDrive -ComputerName $MyIPs
+
+.EXAMPLE
+
+PS C:\> $MyServers = Server1,Server2,Server3
+PS C:\> $MyServers | Get-DiskDrive
+
+.EXAMPLE
+
+PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
+PS C:\> $MyIPs | Get-DiskDrive
+
+.EXAMPLE
+
+PS C:\> "Server1" | Get-DiskDrive
+
+.EXAMPLE
+
+PS C:\> "192.168.0.5" | Get-DiskDrive
+
+.LINK
+
+https://www.sconstantinou.com/get-diskdrive
+#>
 
     [cmdletbinding()]
 

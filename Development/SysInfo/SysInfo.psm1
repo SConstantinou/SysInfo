@@ -777,6 +777,26 @@ Function Get-DeviceInterface {
     Return
 }
 
+Function Get-DisplayType {
+
+    param ([uint16]$Code)
+
+    if ($Code -ne ''){
+
+        switch ($Code){
+            0 {'Unknown'}
+            1 {'Other'}
+            2 {'Multiscan Color'}
+            3 {'Multiscan Monochrome'}
+            4 {'Fixed Frequency Color'}
+            5 {'Fixed Frequency Monochrome'}
+            default {'Invalid Code'}
+        }
+    }
+
+    Return
+}
+
 Function Get-DitherType {
 
     param ([uint32]$Code)
@@ -3657,29 +3677,48 @@ https://www.sconstantinou.com/get-baseboard
         $BaseBoard = Get-CimInstance -ClassName Win32_BaseBoard -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
     }
 
-    if ($null -ne $BaseBoard.Depth){
-        $BaseBoard |
-            Add-Member -MemberType NoteProperty -Name "DepthCM" -Value "$(Get-LengthCM ($BaseBoard.Depth))" -Force
+    foreach ($_ in $BaseBoard){
+
+        if ($null -ne $_.Depth){
+            $BaseBoard |
+                Add-Member -MemberType NoteProperty -Name "DepthCM" -Value "" -Force
+        }
+
+        if ($null -ne $_.Height){
+            $BaseBoard |
+                Add-Member -MemberType NoteProperty -Name "HeightCM" -Value "" -Force
+        }
+
+        if ($null -ne $_.Width){
+            $BaseBoard |
+                Add-Member -MemberType NoteProperty -Name "WidthCM" -Value "" -Force
+        }
+
+        if ($null -ne $_.Weight){
+            $BaseBoard |
+                Add-Member -MemberType NoteProperty -Name "WeightGr" -Value "" -Force
+        }
     }
 
-    if ($null -ne $BaseBoard.Height){
-        $BaseBoard |
-            Add-Member -MemberType NoteProperty -Name "HeightCM" -Value "$(Get-LengthCM ($BaseBoard.Height))" -Force
+    Foreach ($_ in $BaseBoard){
+
+        if ($_.PSObject.Properties.Name -match "DepthCM"){$_.DepthCM = Get-LengthCM ($_.Depth)}
+        if ($_.PSObject.Properties.Name -match "HeightCM"){$_.HeightCM = Get-LengthCM ($_.Height)}
+        if ($_.PSObject.Properties.Name -match "WidthCM"){$_.WidthCM = Get-LengthCM ($_.Width)}
+        if ($_.PSObject.Properties.Name -match "WeightGr"){$_.WeightGr = Get-WeightGram ($_.Weight)}
     }
 
-    if ($null -ne $BaseBoard.Width){
-        $BaseBoard |
-            Add-Member -MemberType NoteProperty -Name "WidthCM" -Value "$(Get-LengthCM ($BaseBoard.Width))" -Force
+    foreach ($_ in $BaseBoard){
+
+        if (($BaseBoard.PSObject.Properties.Name -match "WeightGr") -and ($_.WeightGr -ge 1000)){
+            $BaseBoard |
+                Add-Member -MemberType NoteProperty -Name "WeightKg" -Value "" -Force
+        }
     }
 
-    if ($null -ne $BaseBoard.Weight){
-        $BaseBoard |
-            Add-Member -MemberType NoteProperty -Name "WeightGr" -Value "$(Get-WeightGram ($BaseBoard.Weight))" -Force
-    }
+    foreach ($_ in $BaseBoard){
 
-    if (($BaseBoard.PSObject.Properties.Name -match "WeightGr") -and ($BaseBoard.WeightGr -ge 1000)){
-        $BaseBoard |
-            Add-Member -MemberType NoteProperty -Name "WeightKg" -Value "$(Get-WeightKg ($BaseBoard.Weight))" -Force
+        if ($_.PSObject.Properties.Name -match "WeightKg"){$_.WeightKg = Get-WeightKg ($_.Weight)}
     }
 
     Write-Output $BaseBoard
