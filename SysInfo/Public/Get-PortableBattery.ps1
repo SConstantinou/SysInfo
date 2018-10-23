@@ -1,4 +1,83 @@
 ﻿function Get-PortableBattery {
+<#
+.SYNOPSIS
+
+Gets the information related to a portable battery, such as a
+notebook computer battery.
+
+.DESCRIPTION
+
+Gets the information related to a portable battery, such as a
+notebook computer battery and converts all codes in results into
+human readable format.
+
+.PARAMETER ComputerName
+
+Specifies the computer names or IP Addresses of the systems that
+we want to get the information from.
+
+.INPUTS
+
+System.Array. Get-PortableBattery can accept a string value
+to determine the ComputerName parameter.
+
+.OUTPUTS
+
+System.Object. Get-PortableBattery returns an object containing
+all the information that has been retrieved.
+
+.EXAMPLE
+
+PS C:\> Get-PortableBattery
+
+.EXAMPLE
+
+PS C:\> Get-PortableBattery -ComputerName Server1
+
+.EXAMPLE
+
+PS C:\> Get-PortableBattery -ComputerName "192.168.0.5"
+
+.EXAMPLE
+
+PS C:\> Get-PortableBattery -ComputerName Server1,Server2,Server3
+
+.EXAMPLE
+
+PS C:\> Get-PortableBattery -ComputerName "192.168.0.5","192.168.0.6","192.168.0.7"
+
+.EXAMPLE
+
+PS C:\> $MyServers = Server1,Server2,Server3
+PS C:\> Get-PortableBattery -ComputerName $MyServers
+
+.EXAMPLE
+
+PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
+PS C:\> Get-PortableBattery -ComputerName $MyIPs
+
+.EXAMPLE
+
+PS C:\> $MyServers = Server1,Server2,Server3
+PS C:\> $MyServers | Get-PortableBattery
+
+.EXAMPLE
+
+PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
+PS C:\> $MyIPs | Get-PortableBattery
+
+.EXAMPLE
+
+PS C:\> "Server1" | Get-PortableBattery
+
+.EXAMPLE
+
+PS C:\> "192.168.0.5" | Get-PortableBattery
+
+.LINK
+
+https://www.sconstantinou.com/get-portablebattery
+#>
 
     [cmdletbinding()]
 
