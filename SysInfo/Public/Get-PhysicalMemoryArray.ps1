@@ -1,4 +1,83 @@
 ﻿function Get-PhysicalMemoryArray {
+<#
+.SYNOPSIS
+
+Gets the details about the computer system physical memory.
+
+.DESCRIPTION
+
+Gets the details about the computer system physical memory and
+converts all codes in results into human readable format.
+Output includes the number of memory devices, memory capacity
+available, and memory type
+
+.PARAMETER ComputerName
+
+Specifies the computer names or IP Addresses of the systems that
+we want to get the information from.
+
+.INPUTS
+
+System.Array. Get-PhysicalMemoryArray can accept a string value
+to determine the ComputerName parameter.
+
+.OUTPUTS
+
+System.Object. Get-PhysicalMemoryArray returns an object containing
+all the information that has been retrieved.
+
+.EXAMPLE
+
+PS C:\> Get-PhysicalMemoryArray
+
+.EXAMPLE
+
+PS C:\> Get-PhysicalMemoryArray -ComputerName Server1
+
+.EXAMPLE
+
+PS C:\> Get-PhysicalMemoryArray -ComputerName "192.168.0.5"
+
+.EXAMPLE
+
+PS C:\> Get-PhysicalMemoryArray -ComputerName Server1,Server2,Server3
+
+.EXAMPLE
+
+PS C:\> Get-PhysicalMemoryArray -ComputerName "192.168.0.5","192.168.0.6","192.168.0.7"
+
+.EXAMPLE
+
+PS C:\> $MyServers = Server1,Server2,Server3
+PS C:\> Get-PhysicalMemoryArray -ComputerName $MyServers
+
+.EXAMPLE
+
+PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
+PS C:\> Get-PhysicalMemoryArray -ComputerName $MyIPs
+
+.EXAMPLE
+
+PS C:\> $MyServers = Server1,Server2,Server3
+PS C:\> $MyServers | Get-PhysicalMemoryArray
+
+.EXAMPLE
+
+PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
+PS C:\> $MyIPs | Get-PhysicalMemoryArray
+
+.EXAMPLE
+
+PS C:\> "Server1" | Get-PhysicalMemoryArray
+
+.EXAMPLE
+
+PS C:\> "192.168.0.5" | Get-PhysicalMemoryArray
+
+.LINK
+
+https://www.sconstantinou.com/get-physicalmemoryarray
+#>
 
     [cmdletbinding()]
 
@@ -75,7 +154,7 @@
             $PhysicalMemoryArray |
                 Add-Member -MemberType NoteProperty -Name "WidthCM" -Value "$(Get-LengthCM ($_.Width))" -Force
         }
-        
+
         if ($null -ne $_.Weight){
             $PhysicalMemoryArray |
                 Add-Member -MemberType NoteProperty -Name "WeightGr" -Value "$(Get-WeightGram ($_.Weight))" -Force
@@ -86,7 +165,7 @@
                 Add-Member -MemberType NoteProperty -Name "WeightKg" -Value "$(Get-WeightKg ($_.Weight))" -Force
         }
     }
-    
+
     foreach ($_ in $PhysicalMemoryArray){
 
         $_.Location = Get-PhysicalMemoryArrayLocation ($_.Location)
@@ -101,6 +180,6 @@
         if ($_.PSObject.Properties.Name -match "MaxCapacityExTB"){$_.MaxCapacityExTB = Get-SizeTB ($_.MaxCapacityEx * 1KB)}
         if ($_.PSObject.Properties.Name -match "MaxCapacityExPB"){$_.MaxCapacityExPB = Get-SizePB ($_.MaxCapacityEx * 1KB)}
     }
-    
+
     Write-Output $PhysicalMemoryArray
 }
