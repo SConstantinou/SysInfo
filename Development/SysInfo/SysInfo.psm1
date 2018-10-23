@@ -7093,223 +7093,229 @@ https://www.sconstantinou.com/get-operatingsystem
         $OperatingSystem = Get-CimInstance -ClassName Win32_OperatingSystem -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
     }
 
-    [uint64]$FreePhysicalMemory = $OperatingSystem.FreePhysicalMemory * 1KB
-    [uint64]$FreeSpaceInPagingFiles = $OperatingSystem.FreeSpaceInPagingFiles * 1KB
-    [uint64]$FreeVirtualMemory = $OperatingSystem.FreeVirtualMemory * 1KB
-    [uint64]$MaxProcessMemorySize = $OperatingSystem.MaxProcessMemorySize * 1KB
-    [uint64]$SizeStoredInPagingFiles = $OperatingSystem.SizeStoredInPagingFiles * 1KB
-    [uint64]$TotalVirtualMemorySize = $OperatingSystem.TotalVirtualMemorySize * 1KB
-    [uint64]$TotalVisibleMemorySize = $OperatingSystem.TotalVisibleMemorySize * 1KB
+    Foreach ($_ in $OperatingSystem){
+    
+        [uint64]$FreePhysicalMemory = $_.FreePhysicalMemory * 1KB
+        [uint64]$FreeSpaceInPagingFiles = $_.FreeSpaceInPagingFiles * 1KB
+        [uint64]$FreeVirtualMemory = $_.FreeVirtualMemory * 1KB
+        [uint64]$MaxProcessMemorySize = $_.MaxProcessMemorySize * 1KB
+        [uint64]$SizeStoredInPagingFiles = $_.SizeStoredInPagingFiles * 1KB
+        [uint64]$TotalVirtualMemorySize = $_.TotalVirtualMemorySize * 1KB
+        [uint64]$TotalVisibleMemorySize = $_.TotalVisibleMemorySize * 1KB
 
-    switch ($FreePhysicalMemory){
-        {$FreePhysicalMemory -ge 1MB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreePhysicalMemoryMB" -Value "" -Force
-            }
-        {$FreePhysicalMemory -ge 1GB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreePhysicalMemoryGB" -Value "" -Force
-            }
-        {$FreePhysicalMemory -ge 1TB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreePhysicalMemoryTB" -Value "" -Force
-            }
+        switch ($FreePhysicalMemory){
+            {$FreePhysicalMemory -ge 1MB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreePhysicalMemoryMB" -Value "" -Force
+                }
+            {$FreePhysicalMemory -ge 1GB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreePhysicalMemoryGB" -Value "" -Force
+                }
+            {$FreePhysicalMemory -ge 1TB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreePhysicalMemoryTB" -Value "" -Force
+                }
+        }
+
+        switch ($FreeSpaceInPagingFiles){
+            {$FreeSpaceInPagingFiles -ge 1MB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreeSpaceInPagingFilesMB" -Value "" -Force
+                }
+            {$FreeSpaceInPagingFiles -ge 1GB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreeSpaceInPagingFilesGB" -Value "" -Force
+                }
+            {$FreeSpaceInPagingFiles -ge 1TB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreeSpaceInPagingFilesTB" -Value "" -Force
+                }
+        }
+
+        switch ($FreeVirtualMemory){
+            {$FreeVirtualMemory -ge 1MB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreeVirtualMemoryMB" -Value "" -Force
+                }
+            {$FreeVirtualMemory -ge 1GB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreeVirtualMemoryGB" -Value "" -Force
+                }
+            {$FreeVirtualMemory -ge 1TB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreeVirtualMemoryTB" -Value "" -Force
+                }
+        }
+
+        switch ($MaxProcessMemorySize){
+            {$MaxProcessMemorySize -ge 1MB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "MaxProcessMemorySizeMB" -Value "" -Force
+                }
+            {$MaxProcessMemorySize -ge 1GB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "MaxProcessMemorySizeGB" -Value "" -Force
+                }
+            {$MaxProcessMemorySize -ge 1TB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "MaxProcessMemorySizeTB" -Value "" -Force
+                }
+        }
+
+        switch ($SizeStoredInPagingFiles){
+            {$SizeStoredInPagingFiles -ge 1MB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "SizeStoredInPagingFilesMB" -Value "" -Force
+                }
+            {$SizeStoredInPagingFiles -ge 1GB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "SizeStoredInPagingFilesGB" -Value "" -Force
+                }
+        }
+
+        switch ($TotalVirtualMemorySize){
+            {$TotalVirtualMemorySize -ge 1MB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "TotalVirtualMemorySizeMB" -Value "" -Force
+                }
+            {$TotalVirtualMemorySize -ge 1GB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "TotalVirtualMemorySizeGB" -Value "" -Force
+                }
+            {$TotalVirtualMemorySize -ge 1TB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "TotalVirtualMemorySizeTB" -Value "" -Force
+                }
+        }
+
+        switch ($TotalVisibleMemorySize){
+            {$TotalVisibleMemorySize -ge 1MB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "TotalVisibleMemorySizeMB" -Value "" -Force
+                }
+            {$TotalVisibleMemorySize -ge 1GB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "TotalVisibleMemorySizeGB" -Value "" -Force
+                }
+            {$TotalVisibleMemorySize -ge 1TB}
+                {
+                    $OperatingSystem | Add-Member -MemberType NoteProperty -Name "TotalVisibleMemorySizeTB" -Value "" -Force
+                }
+        }
     }
 
-    switch ($FreeSpaceInPagingFiles){
-        {$FreeSpaceInPagingFiles -ge 1MB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreeSpaceInPagingFilesMB" -Value "" -Force
-            }
-        {$FreeSpaceInPagingFiles -ge 1GB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreeSpaceInPagingFilesGB" -Value "" -Force
-            }
-        {$FreeSpaceInPagingFiles -ge 1TB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreeSpaceInPagingFilesTB" -Value "" -Force
-            }
-    }
+    foreach ($_ in $OperatingSystem){
 
-    switch ($FreeVirtualMemory){
-        {$FreeVirtualMemory -ge 1MB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreeVirtualMemoryMB" -Value "" -Force
-            }
-        {$FreeVirtualMemory -ge 1GB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreeVirtualMemoryGB" -Value "" -Force
-            }
-        {$FreeVirtualMemory -ge 1TB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "FreeVirtualMemoryTB" -Value "" -Force
-            }
-    }
+        $_.DataExecutionPrevention_SupportPolicy = Get-DataExecutionPreventionSupportPolicy ($_.DataExecutionPrevention_SupportPolicy)
+        $_.ForegroundApplicationBoost = Get-ForegroundApplicationBoost ($_.ForegroundApplicationBoost)
+        $_.Locale = Get-Locale ($_.Locale)
+        $_.LargeSystemCache = Get-LargeSystemCache ($_.LargeSystemCache)
+        $_.OperatingSystemSKU = Get-OperatingSystemSKU ($_.OperatingSystemSKU)
+        $_.OSLanguage = Get-OSLanguage ($_.OSLanguage)
+        $_.OSProductSuite = Get-OSProductSuite ($_.OSProductSuite)
+        $_.OSType = Get-OSType ($_.OSType)
+        $_.ProductType = Get-ProductType ($_.ProductType)
 
-    switch ($MaxProcessMemorySize){
-        {$MaxProcessMemorySize -ge 1MB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "MaxProcessMemorySizeMB" -Value "" -Force
-            }
-        {$MaxProcessMemorySize -ge 1GB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "MaxProcessMemorySizeGB" -Value "" -Force
-            }
-        {$MaxProcessMemorySize -ge 1TB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "MaxProcessMemorySizeTB" -Value "" -Force
-            }
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "FreePhysicalMemoryMB"){
 
-    switch ($SizeStoredInPagingFiles){
-        {$SizeStoredInPagingFiles -ge 1MB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "SizeStoredInPagingFilesMB" -Value "" -Force
-            }
-        {$SizeStoredInPagingFiles -ge 1GB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "SizeStoredInPagingFilesGB" -Value "" -Force
-            }
-    }
+            $_.FreePhysicalMemoryMB = Get-SizeMB ($_.FreePhysicalMemory * 1KB)
+        }
 
-    switch ($TotalVirtualMemorySize){
-        {$TotalVirtualMemorySize -ge 1MB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "TotalVirtualMemorySizeMB" -Value "" -Force
-            }
-        {$TotalVirtualMemorySize -ge 1GB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "TotalVirtualMemorySizeGB" -Value "" -Force
-            }
-        {$TotalVirtualMemorySize -ge 1TB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "TotalVirtualMemorySizeTB" -Value "" -Force
-            }
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "FreePhysicalMemoryGB"){
 
-    switch ($TotalVisibleMemorySize){
-        {$TotalVisibleMemorySize -ge 1MB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "TotalVisibleMemorySizeMB" -Value "" -Force
-            }
-        {$TotalVisibleMemorySize -ge 1GB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "TotalVisibleMemorySizeGB" -Value "" -Force
-            }
-        {$TotalVisibleMemorySize -ge 1TB}
-            {
-                $OperatingSystem | Add-Member -MemberType NoteProperty -Name "TotalVisibleMemorySizeTB" -Value "" -Force
-            }
-    }
+            $_.FreePhysicalMemoryGB = Get-SizeGB ($_.FreePhysicalMemory * 1KB)
+        }
 
-    $OperatingSystem.DataExecutionPrevention_SupportPolicy = Get-DataExecutionPreventionSupportPolicy ($OperatingSystem.DataExecutionPrevention_SupportPolicy)
-    $OperatingSystem.ForegroundApplicationBoost = Get-ForegroundApplicationBoost ($OperatingSystem.ForegroundApplicationBoost)
-    $OperatingSystem.Locale = Get-Locale ($OperatingSystem.Locale)
-    $OperatingSystem.LargeSystemCache = Get-LargeSystemCache ($OperatingSystem.LargeSystemCache)
-    $OperatingSystem.OperatingSystemSKU = Get-OperatingSystemSKU ($OperatingSystem.OperatingSystemSKU)
-    $OperatingSystem.OSLanguage = Get-OSLanguage ($OperatingSystem.OSLanguage)
-    $OperatingSystem.OSProductSuite = Get-OSProductSuite ($OperatingSystem.OSProductSuite)
-    $OperatingSystem.OSType = Get-OSType ($OperatingSystem.OSType)
-    $OperatingSystem.ProductType = Get-ProductType ($OperatingSystem.ProductType)
+        if ($OperatingSystem.PSObject.Properties.Name -match "FreePhysicalMemoryTB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "FreePhysicalMemoryMB"){
+            $_.FreePhysicalMemoryTB = Get-SizeTB ($_.FreePhysicalMemory * 1KB)
+        }
 
-        $OperatingSystem.FreePhysicalMemoryMB = Get-SizeMB ($OperatingSystem.FreePhysicalMemory * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "FreeSpaceInPagingFilesMB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "FreePhysicalMemoryGB"){
+            $_.FreeSpaceInPagingFilesMB = Get-SizeMB ($_.FreeSpaceInPagingFiles * 1KB)
+        }
 
-        $OperatingSystem.FreePhysicalMemoryGB = Get-SizeGB ($OperatingSystem.FreePhysicalMemory * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "FreeSpaceInPagingFilesGB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "FreePhysicalMemoryTB"){
+            $_.FreeSpaceInPagingFilesGB = Get-SizeGB ($_.FreeSpaceInPagingFiles * 1KB)
+        }
 
-        $OperatingSystem.FreePhysicalMemoryTB = Get-SizeTB ($OperatingSystem.FreePhysicalMemory * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "FreeSpaceInPagingFilesTB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "FreeSpaceInPagingFilesMB"){
+            $_.FreeSpaceInPagingFilesTB = Get-SizeTB ($_.FreeSpaceInPagingFiles * 1KB)
+        }
 
-        $OperatingSystem.FreeSpaceInPagingFilesMB = Get-SizeMB ($OperatingSystem.FreeSpaceInPagingFiles * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "FreeVirtualMemoryMB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "FreeSpaceInPagingFilesGB"){
+            $_.FreeVirtualMemoryMB = Get-SizeMB ($_.FreeVirtualMemory * 1KB)
+        }
 
-        $OperatingSystem.FreeSpaceInPagingFilesGB = Get-SizeGB ($OperatingSystem.FreeSpaceInPagingFiles * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "FreeVirtualMemoryGB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "FreeSpaceInPagingFilesTB"){
+            $_.FreeVirtualMemoryGB = Get-SizeGB ($_.FreeVirtualMemory * 1KB)
+        }
 
-        $OperatingSystem.FreeSpaceInPagingFilesTB = Get-SizeTB ($OperatingSystem.FreeSpaceInPagingFiles * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "FreeVirtualMemoryTB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "FreeVirtualMemoryMB"){
+            $_.FreeVirtualMemoryTB = Get-SizeTB ($_.FreeVirtualMemory * 1KB)
+        }
 
-        $OperatingSystem.FreeVirtualMemoryMB = Get-SizeMB ($OperatingSystem.FreeVirtualMemory * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "MaxProcessMemorySizeMB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "FreeVirtualMemoryGB"){
+            $_.MaxProcessMemorySizeMB = Get-SizeMB ($_.MaxProcessMemorySize * 1KB)
+        }
 
-        $OperatingSystem.FreeVirtualMemoryGB = Get-SizeGB ($OperatingSystem.FreeVirtualMemory * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "MaxProcessMemorySizeGB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "FreeVirtualMemoryTB"){
+            $_.MaxProcessMemorySizeGB = Get-SizeGB ($_.MaxProcessMemorySize * 1KB)
+        }
 
-        $OperatingSystem.FreeVirtualMemoryTB = Get-SizeTB ($OperatingSystem.FreeVirtualMemory * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "MaxProcessMemorySizeTB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "MaxProcessMemorySizeMB"){
+            $_.MaxProcessMemorySizeTB = Get-SizeTB ($_.MaxProcessMemorySize * 1KB)
+        }
 
-        $OperatingSystem.MaxProcessMemorySizeMB = Get-SizeMB ($OperatingSystem.MaxProcessMemorySize * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "SizeStoredInPagingFilesMB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "MaxProcessMemorySizeGB"){
+            $_.SizeStoredInPagingFilesMB = Get-SizeMB ($_.SizeStoredInPagingFiles * 1KB)
+        }
 
-        $OperatingSystem.MaxProcessMemorySizeGB = Get-SizeGB ($OperatingSystem.MaxProcessMemorySize * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "SizeStoredInPagingFilesGB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "MaxProcessMemorySizeTB"){
+            $_.SizeStoredInPagingFilesGB = Get-SizeGB ($_.SizeStoredInPagingFiles * 1KB)
+        }
 
-        $OperatingSystem.MaxProcessMemorySizeTB = Get-SizeTB ($OperatingSystem.MaxProcessMemorySize * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "TotalVirtualMemorySizeMB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "SizeStoredInPagingFilesMB"){
+            $_.TotalVirtualMemorySizeMB = Get-SizeMB ($_.TotalVirtualMemorySize * 1KB)
+        }
 
-        $OperatingSystem.SizeStoredInPagingFilesMB = Get-SizeMB ($OperatingSystem.SizeStoredInPagingFiles * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "TotalVirtualMemorySizeGB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "SizeStoredInPagingFilesGB"){
+            $_.TotalVirtualMemorySizeGB = Get-SizeGB ($_.TotalVirtualMemorySize * 1KB)
+        }
 
-        $OperatingSystem.SizeStoredInPagingFilesGB = Get-SizeGB ($OperatingSystem.SizeStoredInPagingFiles * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "TotalVirtualMemorySizeTB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "TotalVirtualMemorySizeMB"){
+            $_.TotalVirtualMemorySizeTB = Get-SizeTB ($_.TotalVirtualMemorySize * 1KB)
+        }
 
-        $OperatingSystem.TotalVirtualMemorySizeMB = Get-SizeMB ($OperatingSystem.TotalVirtualMemorySize * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "TotalVisibleMemorySizeMB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "TotalVirtualMemorySizeGB"){
+            $_.TotalVisibleMemorySizeMB = Get-SizeMB ($_.TotalVisibleMemorySize * 1KB)
+        }
 
-        $OperatingSystem.TotalVirtualMemorySizeGB = Get-SizeGB ($OperatingSystem.TotalVirtualMemorySize * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "TotalVisibleMemorySizeGB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "TotalVirtualMemorySizeTB"){
+            $_.TotalVisibleMemorySizeGB = Get-SizeGB ($_.TotalVisibleMemorySize * 1KB)
+        }
 
-        $OperatingSystem.TotalVirtualMemorySizeTB = Get-SizeTB ($OperatingSystem.TotalVirtualMemorySize * 1KB)
-    }
+        if ($OperatingSystem.PSObject.Properties.Name -match "TotalVisibleMemorySizeTB"){
 
-    if ($OperatingSystem.PSObject.Properties.Name -match "TotalVisibleMemorySizeMB"){
-
-        $OperatingSystem.TotalVisibleMemorySizeMB = Get-SizeMB ($OperatingSystem.TotalVisibleMemorySize * 1KB)
-    }
-
-    if ($OperatingSystem.PSObject.Properties.Name -match "TotalVisibleMemorySizeGB"){
-
-        $OperatingSystem.TotalVisibleMemorySizeGB = Get-SizeGB ($OperatingSystem.TotalVisibleMemorySize * 1KB)
-    }
-
-    if ($OperatingSystem.PSObject.Properties.Name -match "TotalVisibleMemorySizeTB"){
-
-        $OperatingSystem.TotalVisibleMemorySizeTB = Get-SizeTB ($OperatingSystem.TotalVisibleMemorySize * 1KB)
+            $_.TotalVisibleMemorySizeTB = Get-SizeTB ($_.TotalVisibleMemorySize * 1KB)
+        }
     }
 
     Write-Output $OperatingSystem

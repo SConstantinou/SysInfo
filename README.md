@@ -73,6 +73,7 @@ will help you out perform your job.
 
 * __1.0.1 23/10/2018__
   * Renamed Get-Printer to Get-PrinterInfo
+  * Fixed a bug on Get-OperatingSystem for not retrieving OS for multiple systems.
 
 * __1.0.0 22/10/2018__
   * Initial Realease
