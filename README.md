@@ -48,8 +48,8 @@ will help you out perform your job.
 * [Get-PhysicalMemoryArray](https://www.sconstantinou.com/Get-PhysicalMemoryArray)
 * [Get-PointingDevice](https://www.sconstantinou.com/Get-PointingDevice)
 * [Get-PortableBattery](https://www.sconstantinou.com/Get-PortableBattery)
-* [Get-Printer](https://www.sconstantinou.com/Get-Printer)
 * [Get-PrinterConfiguration](https://www.sconstantinou.com/Get-PrinterConfiguration)
+* [Get-PrinterInfo](https://www.sconstantinou.com/Get-PrinterInfo)
 * [Get-Processor](https://www.sconstantinou.com/Get-Processor)
 * [Get-RAMDisk](https://www.sconstantinou.com/Get-RAMDisk)
 * [Get-Refrigeration](https://www.sconstantinou.com/Get-Refrigeration)
@@ -71,11 +71,14 @@ will help you out perform your job.
 
 ### Release Notes
 
-* __1.0.0 18/10/2018__
+* __1.0.1 23/10/2018__
+  * Renamed Get-Printer to Get-PrinterInfo
+
+* __1.0.0 22/10/2018__
   * Initial Realease
 
 ### More Information
 
 For more information please check
 
-[https://www.sconstantinou.com/not-active-yet](https://www.sconstantinou.com/not-active-yet)
+[https://www.sconstantinou.com/powershell-module-sysinfo](https://www.sconstantinou.com/powershell-module-sysinfo)
