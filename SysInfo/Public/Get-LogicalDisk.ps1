@@ -1,4 +1,83 @@
 ﻿function Get-LogicalDisk {
+<#
+.SYNOPSIS
+
+Gets the information about a data source that resolves to an
+actual local storage device on a computer system running Windows.
+
+.DESCRIPTION
+
+Gets the information about a data source that resolves to an
+actual local storage device on a computer system running Windows
+and converts all codes in results into human readable format.
+
+.PARAMETER ComputerName
+
+Specifies the computer names or IP Addresses of the systems that
+we want to get the information from.
+
+.INPUTS
+
+System.Array. Get-LogicalDisk can accept a string value to
+determine the ComputerName parameter.
+
+.OUTPUTS
+
+System.Object. Get-LogicalDisk returns an object containing
+all the information that has been retrieved.
+
+.EXAMPLE
+
+PS C:\> Get-LogicalDisk
+
+.EXAMPLE
+
+PS C:\> Get-LogicalDisk -ComputerName Server1
+
+.EXAMPLE
+
+PS C:\> Get-LogicalDisk -ComputerName "192.168.0.5"
+
+.EXAMPLE
+
+PS C:\> Get-LogicalDisk -ComputerName Server1,Server2,Server3
+
+.EXAMPLE
+
+PS C:\> Get-LogicalDisk -ComputerName "192.168.0.5","192.168.0.6","192.168.0.7"
+
+.EXAMPLE
+
+PS C:\> $MyServers = Server1,Server2,Server3
+PS C:\> Get-LogicalDisk -ComputerName $MyServers
+
+.EXAMPLE
+
+PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
+PS C:\> Get-LogicalDisk -ComputerName $MyIPs
+
+.EXAMPLE
+
+PS C:\> $MyServers = Server1,Server2,Server3
+PS C:\> $MyServers | Get-LogicalDisk
+
+.EXAMPLE
+
+PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
+PS C:\> $MyIPs | Get-LogicalDisk
+
+.EXAMPLE
+
+PS C:\> "Server1" | Get-LogicalDisk
+
+.EXAMPLE
+
+PS C:\> "192.168.0.5" | Get-LogicalDisk
+
+.LINK
+
+https://www.sconstantinou.com/get-logicaldisk
+#>
 
     [cmdletbinding()]
 

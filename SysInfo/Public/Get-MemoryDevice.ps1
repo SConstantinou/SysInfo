@@ -1,4 +1,83 @@
 ﻿Function Get-MemoryDevice {
+<#
+.SYNOPSIS
+
+Gets the properties of a computer system memory device and
+its associated mapped addresses.
+
+.DESCRIPTION
+
+Gets the properties of a computer system memory device and
+its associated mapped addresses and converts all codes in
+results into human readable format.
+
+.PARAMETER ComputerName
+
+Specifies the computer names or IP Addresses of the systems that
+we want to get the information from.
+
+.INPUTS
+
+System.Array. Get-MemoryDevice can accept a string value to
+determine the ComputerName parameter.
+
+.OUTPUTS
+
+System.Object. Get-MemoryDevice returns an object containing
+all the information that has been retrieved.
+
+.EXAMPLE
+
+PS C:\> Get-MemoryDevice
+
+.EXAMPLE
+
+PS C:\> Get-MemoryDevice -ComputerName Server1
+
+.EXAMPLE
+
+PS C:\> Get-MemoryDevice -ComputerName "192.168.0.5"
+
+.EXAMPLE
+
+PS C:\> Get-MemoryDevice -ComputerName Server1,Server2,Server3
+
+.EXAMPLE
+
+PS C:\> Get-MemoryDevice -ComputerName "192.168.0.5","192.168.0.6","192.168.0.7"
+
+.EXAMPLE
+
+PS C:\> $MyServers = Server1,Server2,Server3
+PS C:\> Get-MemoryDevice -ComputerName $MyServers
+
+.EXAMPLE
+
+PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
+PS C:\> Get-MemoryDevice -ComputerName $MyIPs
+
+.EXAMPLE
+
+PS C:\> $MyServers = Server1,Server2,Server3
+PS C:\> $MyServers | Get-MemoryDevice
+
+.EXAMPLE
+
+PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
+PS C:\> $MyIPs | Get-MemoryDevice
+
+.EXAMPLE
+
+PS C:\> "Server1" | Get-MemoryDevice
+
+.EXAMPLE
+
+PS C:\> "192.168.0.5" | Get-MemoryDevice
+
+.LINK
+
+https://www.sconstantinou.com/get-memorydevice
+#>
 
     [cmdletbinding()]
 
