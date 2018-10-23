@@ -32,7 +32,7 @@ will help you out perform your job.
 * [Get-HeatPipe](https://www.sconstantinou.com/Get-HeatPipe)
 * [Get-IDEController](https://www.sconstantinou.com/Get-IDEController)
 * [Get-InfraredDevice](https://www.sconstantinou.com/Get-InfraredDevice)
-* [Get-InfraredDevice](https://www.sconstantinou.com/Get-InfraredDevice)
+* [Get-Keyboard](https://www.sconstantinou.com/Get-Keyboard)
 * [Get-LocalDisk](https://www.sconstantinou.com/Get-LocalDisk)
 * [Get-LogicalDisk](https://www.sconstantinou.com/Get-LogicalDisk)
 * [Get-MemoryArray](https://www.sconstantinou.com/Get-MemoryArray)
