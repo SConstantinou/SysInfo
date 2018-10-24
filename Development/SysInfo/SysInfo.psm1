@@ -7094,7 +7094,7 @@ https://www.sconstantinou.com/get-operatingsystem
     }
 
     Foreach ($_ in $OperatingSystem){
-    
+
         [uint64]$FreePhysicalMemory = $_.FreePhysicalMemory * 1KB
         [uint64]$FreeSpaceInPagingFiles = $_.FreeSpaceInPagingFiles * 1KB
         [uint64]$FreeVirtualMemory = $_.FreeVirtualMemory * 1KB
