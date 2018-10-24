@@ -71,6 +71,10 @@ will help you out perform your job.
 
 ### Release Notes
 
+* __1.0.2 24/10/2018__
+  * Fixed a bug on Get-SCSIController
+  * Fixed a bug on Get-VideoController
+
 * __1.0.1 23/10/2018__
   * Renamed Get-Printer to Get-PrinterInfo
   * Fixed a bug on Get-OperatingSystem for not retrieving OS for multiple systems.
