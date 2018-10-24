@@ -9943,7 +9943,7 @@ https://www.sconstantinou.com/get-videocontroller
 
     foreach ($_ in $VideoController){
 
-        $_.AcceleratorCapabilities = Get-AcceleratorCapabilities ($_.AcceleratorCapabilities)
+        $_.AcceleratorCapabilities = Get-AcceleratorCapabilitiesCode ($_.AcceleratorCapabilities)
         $_.Availability = Get-Availability ($_.Availability)
         $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
         $_.CurrentScanMode = Get-CurrentScanMode ($_.CurrentScanMode)
