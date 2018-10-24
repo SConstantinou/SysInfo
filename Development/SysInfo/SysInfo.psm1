@@ -8387,7 +8387,7 @@ function Get-RAMDisk {
 <#
 .SYNOPSIS
 
-Gets the information about a a RAM disk on a computer running on
+Gets the information about a RAM disk on a computer running on
 a Windows operating system.
 
 .DESCRIPTION
@@ -8790,7 +8790,7 @@ https://www.sconstantinou.com/get-scsicontroller
 
         $_.Availability = Get-Availability ($_.Availability)
         $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilities ($_.PowerManagementCapabilities)
+        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
         $_.ProtectionManagement = Get-ProtectionManagement ($_.ProtectionManagement)
         $_.ProtocolSupported = Get-ProtocolSupported ($_.ProtocolSupported)
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
