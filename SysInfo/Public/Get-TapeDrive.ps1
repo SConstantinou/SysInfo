@@ -1,4 +1,83 @@
 ﻿function Get-TapeDrive {
+<#
+.SYNOPSIS
+
+Gets the information about a tape drive on a computer
+system running Windows.
+
+.DESCRIPTION
+
+Gets the information about a tape drive on a computer
+system running Windows and converts all codes in results
+into human readable format.
+
+.PARAMETER ComputerName
+
+Specifies the computer names or IP Addresses of the systems that
+we want to get the information from.
+
+.INPUTS
+
+System.Array. Get-TapeDrive can accept a string value to
+determine the ComputerName parameter.
+
+.OUTPUTS
+
+System.Object. Get-TapeDrive returns an object containing
+all the information that has been retrieved.
+
+.EXAMPLE
+
+PS C:\> Get-TapeDrive
+
+.EXAMPLE
+
+PS C:\> Get-TapeDrive -ComputerName Server1
+
+.EXAMPLE
+
+PS C:\> Get-TapeDrive -ComputerName "192.168.0.5"
+
+.EXAMPLE
+
+PS C:\> Get-TapeDrive -ComputerName Server1,Server2,Server3
+
+.EXAMPLE
+
+PS C:\> Get-TapeDrive -ComputerName "192.168.0.5","192.168.0.6","192.168.0.7"
+
+.EXAMPLE
+
+PS C:\> $MyServers = Server1,Server2,Server3
+PS C:\> Get-TapeDrive -ComputerName $MyServers
+
+.EXAMPLE
+
+PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
+PS C:\> Get-TapeDrive -ComputerName $MyIPs
+
+.EXAMPLE
+
+PS C:\> $MyServers = Server1,Server2,Server3
+PS C:\> $MyServers | Get-TapeDrive
+
+.EXAMPLE
+
+PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
+PS C:\> $MyIPs | Get-TapeDrive
+
+.EXAMPLE
+
+PS C:\> "Server1" | Get-TapeDrive
+
+.EXAMPLE
+
+PS C:\> "192.168.0.5" | Get-TapeDrive
+
+.LINK
+
+https://www.sconstantinou.com/get-tapedrive
+#>
 
     [cmdletbinding()]
 

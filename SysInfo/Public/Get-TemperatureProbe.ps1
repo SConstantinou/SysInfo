@@ -1,4 +1,83 @@
 ﻿function Get-TemperatureProbe {
+<#
+.SYNOPSIS
+
+Gets the properties of a temperature sensor
+(electronic thermometer).
+
+.DESCRIPTION
+
+Gets the properties of a temperature sensor
+(electronic thermometer) and converts all codes
+in results into human readable format.
+
+.PARAMETER ComputerName
+
+Specifies the computer names or IP Addresses of the systems that
+we want to get the information from.
+
+.INPUTS
+
+System.Array. Get-TemperatureProbe can accept a string value to
+determine the ComputerName parameter.
+
+.OUTPUTS
+
+System.Object. Get-TemperatureProbe returns an object containing
+all the information that has been retrieved.
+
+.EXAMPLE
+
+PS C:\> Get-TemperatureProbe
+
+.EXAMPLE
+
+PS C:\> Get-TemperatureProbe -ComputerName Server1
+
+.EXAMPLE
+
+PS C:\> Get-TemperatureProbe -ComputerName "192.168.0.5"
+
+.EXAMPLE
+
+PS C:\> Get-TemperatureProbe -ComputerName Server1,Server2,Server3
+
+.EXAMPLE
+
+PS C:\> Get-TemperatureProbe -ComputerName "192.168.0.5","192.168.0.6","192.168.0.7"
+
+.EXAMPLE
+
+PS C:\> $MyServers = Server1,Server2,Server3
+PS C:\> Get-TemperatureProbe -ComputerName $MyServers
+
+.EXAMPLE
+
+PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
+PS C:\> Get-TemperatureProbe -ComputerName $MyIPs
+
+.EXAMPLE
+
+PS C:\> $MyServers = Server1,Server2,Server3
+PS C:\> $MyServers | Get-TemperatureProbe
+
+.EXAMPLE
+
+PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
+PS C:\> $MyIPs | Get-TemperatureProbe
+
+.EXAMPLE
+
+PS C:\> "Server1" | Get-TemperatureProbe
+
+.EXAMPLE
+
+PS C:\> "192.168.0.5" | Get-TemperatureProbe
+
+.LINK
+
+https://www.sconstantinou.com/get-temperatureprobe
+#>
 
     [cmdletbinding()]
 
