@@ -14,6 +14,11 @@ and converts all codes in results into human readable format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-1394Controller can accept a string value to
@@ -80,20 +85,16 @@ https://www.sconstantinou.com/get-1394controller
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_1394Controller).CimClassProperties).Name
+    $ClassName = 'Win32_1394Controller'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $1394Controller = Get-CimInstance -ClassName Win32_1394Controller -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $1394Controller = Get-CimInstance -ClassName Win32_1394Controller -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $1394Controller = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $1394Controller){
 
