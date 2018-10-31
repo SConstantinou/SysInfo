@@ -18,6 +18,11 @@ human readable format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-CompactDisc can accept a string value to
@@ -84,16 +89,10 @@ https://www.sconstantinou.com/get-compactdisc
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    if ($ComputerName -eq ''){
-
-        $CompactDisc = Get-LogicalDisk | Where-Object {$_.DriveType -eq 'Compact Disc'}
-    }
-    else{
-
-        $CompactDisc = Get-LogicalDisk -ComputerName $ComputerName | Where-Object {$_.DriveType -eq 'Compact Disc'}
-    }
+    $CompactDisc = Get-LogicalDisk -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.DriveType -eq 'Compact Disc'}
 
     Write-Output $CompactDisc
 }

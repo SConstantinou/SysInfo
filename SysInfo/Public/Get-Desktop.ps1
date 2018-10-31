@@ -16,6 +16,11 @@ format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-Desktop can accept a string value to
@@ -82,18 +87,14 @@ https://www.sconstantinou.com/get-desktop
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    $Properties = ((Get-CimClass -ClassName Win32_Desktop).CimClassProperties).Name
+    $ClassName = 'Win32_Desktop'
 
-    if ($ComputerName -eq ''){
+    $Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
 
-        $Desktop = Get-CimInstance -ClassName Win32_Desktop -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $Desktop = Get-CimInstance -ClassName Win32_Desktop -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $Desktop = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     Write-Output $Desktop
 }

@@ -17,6 +17,11 @@ Display Driver Model (WDDM) returns inaccurate property values.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-DesktopMonitor can accept a string value to
@@ -83,20 +88,16 @@ https://www.sconstantinou.com/get-desktopmonitor
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
+
+    $ClassName = 'Win32_DesktopMonitor'
 
     [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_DesktopMonitor).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $DesktopMonitor = Get-CimInstance -ClassName Win32_DesktopMonitor -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $DesktopMonitor = Get-CimInstance -ClassName Win32_DesktopMonitor -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $DesktopMonitor = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $DesktopMonitor){
 
