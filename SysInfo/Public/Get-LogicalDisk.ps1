@@ -97,6 +97,9 @@ https://www.sconstantinou.com/get-logicaldisk
         $LogicalDisk = Get-CimInstance -ClassName Win32_LogicalDisk -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
     }
 
+    $LogicalDisk | Add-Member -MemberType NoteProperty -Name "FreeSpacePercentage" -Value "" -Force
+    $LogicalDisk | Add-Member -MemberType NoteProperty -Name "UsedSpacePercentage" -Value "" -Force
+
     foreach ($_ in $LogicalDisk){
 
         [uint64]$Size = $_.Size
@@ -146,6 +149,14 @@ https://www.sconstantinou.com/get-logicaldisk
                 {
                     $LogicalDisk | Add-Member -MemberType NoteProperty -Name "FreeSpacePB" -Value "" -Force
                 }
+        }
+
+        if ($Size -ne 0){
+
+            [uint64]$FreeSpacePercentageCalculation = $FreeSpace * 100 / $Size
+            $_.FreeSpacePercentage = [math]::Round($FreeSpacePercentageCalculation,2)
+            [uint64]$FreeSpacePercentage = $_.FreeSpacePercentage
+            $_.UsedSpacePercentage = 100 - ($FreeSpacePercentage)
         }
 
     }
