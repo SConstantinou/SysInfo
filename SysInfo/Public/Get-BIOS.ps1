@@ -79,6 +79,10 @@ PS C:\> "Server1" | Get-BIOS
 
 PS C:\> "192.168.0.5" | Get-BIOS
 
+.EXAMPLE
+
+PS C:\> Get-BIOS -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-bios

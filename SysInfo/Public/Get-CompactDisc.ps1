@@ -81,6 +81,10 @@ PS C:\> "Server1" | Get-CompactDisc
 
 PS C:\> "192.168.0.5" | Get-CompactDisc
 
+.EXAMPLE
+
+PS C:\> Get-CompactDisc -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-compactdisc

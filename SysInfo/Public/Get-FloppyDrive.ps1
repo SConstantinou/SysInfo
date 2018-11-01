@@ -16,6 +16,11 @@ and Windows Server 2016.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-FloppyDrive can accept a string value to
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-FloppyDrive
 
 PS C:\> "192.168.0.5" | Get-FloppyDrive
 
+.EXAMPLE
+
+PS C:\> Get-FloppyDrive -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-floppydrive
@@ -82,20 +91,16 @@ https://www.sconstantinou.com/get-floppydrive
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_FloppyDrive).CimClassProperties).Name
+    $ClassName = 'Win32_FloppyDrive'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $FloppyDrive = Get-CimInstance -ClassName Win32_FloppyDrive -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $FloppyDrive = Get-CimInstance -ClassName Win32_FloppyDrive -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $FloppyDrive = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $FloppyDrive){
 

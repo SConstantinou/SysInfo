@@ -16,6 +16,11 @@ and converts all codes in results into human readable format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-LogicalDisk can accept a string value to
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-LogicalDisk
 
 PS C:\> "192.168.0.5" | Get-LogicalDisk
 
+.EXAMPLE
+
+PS C:\> Get-LogicalDisk -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-logicaldisk
@@ -82,20 +91,16 @@ https://www.sconstantinou.com/get-logicaldisk
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_LogicalDisk).CimClassProperties).Name
+    $ClassName = 'Win32_LogicalDisk'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $LogicalDisk = Get-CimInstance -ClassName Win32_LogicalDisk -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $LogicalDisk = Get-CimInstance -ClassName Win32_LogicalDisk -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $LogicalDisk = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     $LogicalDisk | Add-Member -MemberType NoteProperty -Name "FreeSpacePercentage" -Value "" -Force
     $LogicalDisk | Add-Member -MemberType NoteProperty -Name "UsedSpacePercentage" -Value "" -Force

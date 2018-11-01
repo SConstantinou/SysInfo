@@ -16,6 +16,11 @@ readable format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-SoundDevice can accept a string value to
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-SoundDevice
 
 PS C:\> "192.168.0.5" | Get-SoundDevice
 
+.EXAMPLE
+
+PS C:\> Get-SoundDevice -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-sounddevice
@@ -82,20 +91,16 @@ https://www.sconstantinou.com/get-sounddevice
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_SoundDevice).CimClassProperties).Name
+    $ClassName = 'Win32_SoundDevice'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID","DeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $SoundDevice = Get-CimInstance -ClassName Win32_SoundDevice -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $SoundDevice = Get-CimInstance -ClassName Win32_SoundDevice -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $SoundDevice = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $SoundDevice){
 

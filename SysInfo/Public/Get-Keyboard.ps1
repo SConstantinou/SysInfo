@@ -16,6 +16,11 @@ human readable format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-Keyboard can accept a string value to
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-Keyboard
 
 PS C:\> "192.168.0.5" | Get-Keyboard
 
+.EXAMPLE
+
+PS C:\> Get-Keyboard -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-keyboard
@@ -82,20 +91,16 @@ https://www.sconstantinou.com/get-keyboard
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_Keyboard).CimClassProperties).Name
+    $ClassName = 'Win32_Keyboard'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $Keyboard = Get-CimInstance -ClassName Win32_Keyboard -Property $Properties | Select-Object $Properties
-    }
-    else {
-
-        $Keyboard = Get-CimInstance -ClassName Win32_Keyboard -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $Keyboard = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $Keyboard){
 

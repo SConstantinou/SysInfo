@@ -16,6 +16,11 @@ human readable format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-RAMDisk can accept a string value to
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-RAMDisk
 
 PS C:\> "192.168.0.5" | Get-RAMDisk
 
+.EXAMPLE
+
+PS C:\> Get-RAMDisk -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-ramdisk
@@ -82,16 +91,10 @@ https://www.sconstantinou.com/get-ramdisk
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    if ($ComputerName -eq ''){
-
-        $RAMDisk = Get-LogicalDisk | Where-Object {$_.DriveType -eq 'RAM Disk'}
-    }
-    else{
-
-        $RAMDisk = Get-LogicalDisk -ComputerName $ComputerName | Where-Object {$_.DriveType -eq 'RAM Disk'}
-    }
+    $RAMDisk = Get-LogicalDisk -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.DriveType -eq 'RAM Disk'}
 
     Write-Output $RAMDisk
 }

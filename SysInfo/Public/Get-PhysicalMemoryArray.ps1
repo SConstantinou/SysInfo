@@ -16,6 +16,11 @@ available, and memory type
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-PhysicalMemoryArray can accept a string value
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-PhysicalMemoryArray
 
 PS C:\> "192.168.0.5" | Get-PhysicalMemoryArray
 
+.EXAMPLE
+
+PS C:\> Get-PhysicalMemoryArray -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-physicalmemoryarray
@@ -82,20 +91,16 @@ https://www.sconstantinou.com/get-physicalmemoryarray
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_PhysicalMemoryArray).CimClassProperties).Name
+    $ClassName = 'Win32_PhysicalMemoryArray'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $PhysicalMemoryArray = Get-CimInstance -ClassName Win32_PhysicalMemoryArray -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $PhysicalMemoryArray = Get-CimInstance -ClassName Win32_PhysicalMemoryArray -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $PhysicalMemoryArray = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $PhysicalMemoryArray){
 

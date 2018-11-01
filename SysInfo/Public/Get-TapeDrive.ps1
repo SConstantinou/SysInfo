@@ -16,6 +16,11 @@ into human readable format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-TapeDrive can accept a string value to
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-TapeDrive
 
 PS C:\> "192.168.0.5" | Get-TapeDrive
 
+.EXAMPLE
+
+PS C:\> Get-TapeDrive -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-tapedrive
@@ -82,20 +91,16 @@ https://www.sconstantinou.com/get-tapedrive
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_TapeDrive).CimClassProperties).Name
+    $ClassName = 'Win32_TapeDrive'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $TapeDrive = Get-CimInstance -ClassName Win32_TapeDrive -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $TapeDrive = Get-CimInstance -ClassName Win32_TapeDrive -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $TapeDrive = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $TapeDrive){
 

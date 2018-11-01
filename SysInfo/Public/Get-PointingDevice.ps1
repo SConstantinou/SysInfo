@@ -18,6 +18,11 @@ to the display on a computer system running Windows
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-PointingDevice can accept a string value
@@ -76,6 +81,10 @@ PS C:\> "Server1" | Get-PointingDevice
 
 PS C:\> "192.168.0.5" | Get-PointingDevice
 
+.EXAMPLE
+
+PS C:\> Get-PointingDevice -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-pointingdevice
@@ -84,20 +93,16 @@ https://www.sconstantinou.com/get-pointingdevice
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_PointingDevice).CimClassProperties).Name
+    $ClassName = 'Win32_PointingDevice'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $PointingDevice = Get-CimInstance -ClassName Win32_PointingDevice -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $PointingDevice = Get-CimInstance -ClassName Win32_PointingDevice -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $PointingDevice = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $PointingDevice){
 

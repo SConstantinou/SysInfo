@@ -16,6 +16,11 @@ results into human readable format.
 Specifies the computer name or IP Address of the system that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-USBController can accept a string value to
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-USBController
 
 PS C:\> "192.168.0.5" | Get-USBController
 
+.EXAMPLE
+
+PS C:\> Get-USBController -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-usbcontroller
@@ -82,20 +91,16 @@ https://www.sconstantinou.com/get-usbcontroller
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_USBController).CimClassProperties).Name
+    $ClassName = 'Win32_USBController'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $USBController = Get-CimInstance -ClassName Win32_USBController -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $USBController = Get-CimInstance -ClassName Win32_USBController -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $USBController = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $USBController){
 

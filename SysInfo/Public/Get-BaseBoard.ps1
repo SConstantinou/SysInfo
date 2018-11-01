@@ -77,6 +77,10 @@ PS C:\> "Server1" | Get-BaseBoard
 
 PS C:\> "192.168.0.5" | Get-BaseBoard
 
+.EXAMPLE
+
+PS C:\> Get-BaseBoard -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-baseboard

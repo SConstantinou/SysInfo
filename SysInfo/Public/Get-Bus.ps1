@@ -79,6 +79,10 @@ PS C:\> "Server1" | Get-Bus
 
 PS C:\> "192.168.0.5" | Get-Bus
 
+.EXAMPLE
+
+PS C:\> Get-Bus -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-bus

@@ -77,6 +77,10 @@ PS C:\> "Server1" | Get-1394Controller
 
 PS C:\> "192.168.0.5" | Get-1394Controller
 
+.EXAMPLE
+
+PS C:\> Get-1394Controller -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-1394controller

@@ -16,6 +16,11 @@ and orientation.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-PrinterConfiguration can accept a string value
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-PrinterConfiguration
 
 PS C:\> "192.168.0.5" | Get-PrinterConfiguration
 
+.EXAMPLE
+
+PS C:\> Get-PrinterConfiguration -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-printerconfiguration
@@ -82,18 +91,14 @@ https://www.sconstantinou.com/get-printerconfiguration
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    $Properties = ((Get-CimClass -ClassName Win32_PrinterConfiguration).CimClassProperties).Name
+    $ClassName = 'Win32_PrinterConfiguration'
 
-    if ($ComputerName -eq ''){
+    $Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
 
-        $PrinterConfiguration = Get-CimInstance -ClassName Win32_PrinterConfiguration -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $PrinterConfiguration = Get-CimInstance -ClassName Win32_PrinterConfiguration -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $PrinterConfiguration = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $PrinterConfiguration){
 

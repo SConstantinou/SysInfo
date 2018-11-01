@@ -14,6 +14,11 @@ all codes in results into human readable format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-Refrigeration can accept a string value to
@@ -72,6 +77,10 @@ PS C:\> "Server1" | Get-Refrigeration
 
 PS C:\> "192.168.0.5" | Get-Refrigeration
 
+.EXAMPLE
+
+PS C:\> Get-Refrigeration -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-refrigeration
@@ -80,20 +89,16 @@ https://www.sconstantinou.com/get-refrigeration
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_Refrigeration).CimClassProperties).Name
+    $ClassName = 'Win32_Refrigeration'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $Refrigeration = Get-CimInstance -ClassName Win32_Refrigeration -Property $Properties | Select-Object -Property $Properties
-    }
-    else{
-
-        $Refrigeration = Get-CimInstance -ClassName Win32_Refrigeration -Property $Properties -ComputerName $ComputerName | Select-Object -Property $Properties
-    }
+    $Refrigeration = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $Refrigeration){
 

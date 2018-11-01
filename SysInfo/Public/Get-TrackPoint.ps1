@@ -16,6 +16,11 @@ in results into human readable format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-TrackPoint can accept a string value to
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-TrackPoint
 
 PS C:\> "192.168.0.5" | Get-TrackPoint
 
+.EXAMPLE
+
+PS C:\> Get-TrackPoint -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-trackpoint
@@ -82,16 +91,10 @@ https://www.sconstantinou.com/get-trackpoint
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    if ($ComputerName -eq ''){
-
-        $TrackPoint = Get-PointingDevice | Where-Object {$_.PointingType -eq 'Track Point'}
-    }
-    else{
-
-        $TrackPoint = Get-PointingDevice -ComputerName $ComputerName | Where-Object {$_.PointingType -eq 'Track Point'}
-    }
+    $TrackPoint = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Track Point'}
 
     Write-Output $TrackPoint
 }

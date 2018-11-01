@@ -79,6 +79,10 @@ PS C:\> "Server1" | Get-Desktop
 
 PS C:\> "192.168.0.5" | Get-Desktop
 
+.EXAMPLE
+
+PS C:\> Get-Desktop -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-desktop

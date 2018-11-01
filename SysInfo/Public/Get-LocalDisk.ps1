@@ -16,6 +16,11 @@ into human readable format.
 Specifies the computer name or IP Address of the system that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-LocalDisk can accept a string value to
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-LocalDisk
 
 PS C:\> "192.168.0.5" | Get-LocalDisk
 
+.EXAMPLE
+
+PS C:\> Get-LocalDisk -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-localdisk
@@ -81,16 +90,11 @@ https://www.sconstantinou.com/get-localdisk
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    if ($ComputerName -eq ''){
+    $LocalDisk = Get-LogicalDisk -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.DriveType -eq 'Local Disk'}
 
-        $LocalDisk = Get-LogicalDisk | Where-Object {$_.DriveType -eq 'Local Disk'}
-    }
-    else{
-
-        $LocalDisk = Get-LogicalDisk -ComputerName $ComputerName | Where-Object {$_.DriveType -eq 'Local Disk'}
-    }
 
     Write-Output $LocalDisk
 }

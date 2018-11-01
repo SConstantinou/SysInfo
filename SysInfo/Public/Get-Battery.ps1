@@ -79,6 +79,10 @@ PS C:\> "Server1" | Get-Battery
 
 PS C:\> "192.168.0.5" | Get-Battery
 
+.EXAMPLE
+
+PS C:\> Get-Battery -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-battery

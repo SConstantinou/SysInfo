@@ -16,6 +16,11 @@ format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-InfraredDevice can accept a string value to
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-InfraredDevice
 
 PS C:\> "192.168.0.5" | Get-InfraredDevice
 
+.EXAMPLE
+
+PS C:\> Get-InfraredDevice -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-infrareddevice
@@ -82,20 +91,16 @@ https://www.sconstantinou.com/get-infrareddevice
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_InfraredDevice).CimClassProperties).Name
+    $ClassName = 'Win32_InfraredDevice'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $InfraredDevice = Get-CimInstance -ClassName Win32_InfraredDevice -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $InfraredDevice = Get-CimInstance -ClassName Win32_InfraredDevice -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $InfraredDevice = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $InfraredDevice){
 

@@ -20,6 +20,11 @@ property values
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-VideoController can accept a string value to
@@ -78,6 +83,10 @@ PS C:\> "Server1" | Get-VideoController
 
 PS C:\> "192.168.0.5" | Get-VideoController
 
+.EXAMPLE
+
+PS C:\> Get-VideoController -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-videocontroller
@@ -86,20 +95,16 @@ https://www.sconstantinou.com/get-videocontroller
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_VideoController).CimClassProperties).Name
+    $ClassName = 'Win32_VideoController'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $VideoController = Get-CimInstance -ClassName Win32_VideoController -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $VideoController = Get-CimInstance -ClassName Win32_VideoController -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $VideoController = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $VideoController){
 

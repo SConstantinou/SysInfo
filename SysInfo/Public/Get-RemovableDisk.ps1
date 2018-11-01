@@ -16,6 +16,11 @@ into human readable format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-RemovableDisk can accept a string value to
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-RemovableDisk
 
 PS C:\> "192.168.0.5" | Get-RemovableDisk
 
+.EXAMPLE
+
+PS C:\> Get-RemovableDisk -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-removabledisk
@@ -82,16 +91,10 @@ https://www.sconstantinou.com/get-removabledisk
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    if ($ComputerName -eq ''){
-
-        $RemovableDisk = Get-LogicalDisk | Where-Object {$_.DriveType -eq 'Removable Disk'}
-    }
-    else{
-
-        $RemovableDisk = Get-LogicalDisk -ComputerName $ComputerName | Where-Object {$_.DriveType -eq 'Removable Disk'}
-    }
+    $RemovableDisk = Get-LogicalDisk -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.DriveType -eq 'Removable Disk'}
 
     Write-Output $RemovableDisk
 }

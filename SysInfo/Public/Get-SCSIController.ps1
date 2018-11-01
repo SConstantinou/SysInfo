@@ -16,6 +16,11 @@ into human readable format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-SCSIController can accept a string value to
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-SCSIController
 
 PS C:\> "192.168.0.5" | Get-SCSIController
 
+.EXAMPLE
+
+PS C:\> Get-SCSIController -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-scsicontroller
@@ -82,20 +91,16 @@ https://www.sconstantinou.com/get-scsicontroller
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_SCSIController).CimClassProperties).Name
+    $ClassName = 'Win32_SCSIController'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $SCSIController = Get-CimInstance -ClassName Win32_SCSIController -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $SCSIController = Get-CimInstance -ClassName Win32_SCSIController -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $SCSIController = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $SCSIController){
 

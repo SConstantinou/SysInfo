@@ -16,6 +16,11 @@ human readable format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-PortableBattery can accept a string value
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-PortableBattery
 
 PS C:\> "192.168.0.5" | Get-PortableBattery
 
+.EXAMPLE
+
+PS C:\> Get-PortableBattery -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-portablebattery
@@ -82,20 +91,16 @@ https://www.sconstantinou.com/get-portablebattery
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_PortableBattery).CimClassProperties).Name
+    $ClassName = 'Win32_PortableBattery'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $PortableBattery = Get-CimInstance -ClassName Win32_PortableBattery -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $PortableBattery = Get-CimInstance -ClassName Win32_PortableBattery -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $PortableBattery = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $PortableBattery){
 

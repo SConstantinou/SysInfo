@@ -79,6 +79,10 @@ PS C:\> "Server1" | Get-CDROMDrive
 
 PS C:\> "192.168.0.5" | Get-CDROMDrive
 
+.EXAMPLE
+
+PS C:\> Get-CDROMDrive -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-cdromdrive

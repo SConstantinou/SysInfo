@@ -17,6 +17,11 @@ for use as of Windows 10 and Windows Server 2016.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-FloppyController can accept a string value to
@@ -75,6 +80,10 @@ PS C:\> "Server1" | Get-FloppyController
 
 PS C:\> "192.168.0.5" | Get-FloppyController
 
+.EXAMPLE
+
+PS C:\> Get-FloppyController -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-floppycontroller
@@ -83,20 +92,16 @@ https://www.sconstantinou.com/get-floppycontroller
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_FloppyController).CimClassProperties).Name
+    $ClassName = 'Win32_FloppyController'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $FloppyController = Get-CimInstance -ClassName Win32_FloppyController -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $FloppyController = Get-CimInstance -ClassName Win32_FloppyController -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $FloppyController = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $FloppyController){
 

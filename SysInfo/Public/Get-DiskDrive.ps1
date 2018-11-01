@@ -79,6 +79,10 @@ PS C:\> "Server1" | Get-DiskDrive
 
 PS C:\> "192.168.0.5" | Get-DiskDrive
 
+.EXAMPLE
+
+PS C:\> Get-DiskDrive -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-diskdrive
@@ -87,20 +91,16 @@ https://www.sconstantinou.com/get-diskdrive
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName Win32_DiskDrive).CimClassProperties).Name
+    $ClassName = 'Win32_DiskDrive'
+
+    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
     foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
 
-    if ($ComputerName -eq ''){
-
-        $DiskDrive = Get-CimInstance -ClassName Win32_DiskDrive -Property $Properties | Select-Object $Properties
-    }
-    else{
-
-        $DiskDrive = Get-CimInstance -ClassName Win32_DiskDrive -Property $Properties -ComputerName $ComputerName | Select-Object $Properties
-    }
+    $DiskDrive = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
 
     foreach ($_ in $DiskDrive){
 

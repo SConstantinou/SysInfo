@@ -16,6 +16,11 @@ into human readable format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-OpticalSensor can accept a string value
@@ -74,6 +79,10 @@ PS C:\> "Server1" | Get-OpticalSensor
 
 PS C:\> "192.168.0.5" | Get-OpticalSensor
 
+.EXAMPLE
+
+PS C:\> Get-OpticalSensor -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-opticalsensor
@@ -84,14 +93,7 @@ https://www.sconstantinou.com/get-opticalsensor
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
 
-    if ($ComputerName -eq ''){
-
-        $OpticalSensor = Get-PointingDevice | Where-Object {$_.PointingType -eq 'Optical Sensor'}
-    }
-    else{
-
-        $OpticalSensor = Get-PointingDevice -ComputerName $ComputerName | Where-Object {$_.PointingType -eq 'Optical Sensor'}
-    }
+    $OpticalSensor = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Optical Sensor'}
 
     Write-Output $OpticalSensor
 }

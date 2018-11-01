@@ -14,6 +14,11 @@ codes in results into human readable format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Protocol
+
+Specifies the protocol that will be used to get the information
+from the remote system.
+
 .INPUTS
 
 System.Array. Get-Mouse can accept a string value to
@@ -72,6 +77,10 @@ PS C:\> "Server1" | Get-Mouse
 
 PS C:\> "192.168.0.5" | Get-Mouse
 
+.EXAMPLE
+
+PS C:\> Get-Mouse -ComputerName Server1 -Protocol DCOM
+
 .LINK
 
 https://www.sconstantinou.com/get-mouse
@@ -80,16 +89,10 @@ https://www.sconstantinou.com/get-mouse
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
+        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    if ($ComputerName -eq ''){
-
-        $Mouse = Get-PointingDevice | Where-Object {$_.PointingType -eq 'Mouse'}
-    }
-    else{
-
-        $Mouse = Get-PointingDevice -ComputerName $ComputerName | Where-Object {$_.PointingType -eq 'Mouse'}
-    }
+    $Mouse = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Mouse'}
 
     Write-Output $Mouse
 }
