@@ -71,12 +71,11 @@ will help you out perform your job.
 
 ### Release Notes
 
-*__1.2.0 31-10-2018__
-  * Added protocol choice (WinRM, DCOM)
-
-*__1.1.0 29-10-2018__
+*__1.1.0 01-11-2018__
   * FreeSpacePercentage property added
   * UsedSpacePercentage property added
+  * Added protocol choice (WinRM, DCOM)
+  * Code Improvements
 
 * __1.0.2 24/10/2018__
   * Fixed a bug on Get-SCSIController
