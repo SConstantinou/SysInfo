@@ -94,7 +94,12 @@ https://www.sconstantinou.com/get-removabledisk
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    $RemovableDisk = Get-LogicalDisk -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.DriveType -eq 'Removable Disk'}
+    if ($Protocol -eq ''){
+
+        $RemovableDisk = Get-LogicalDisk -ComputerName $ComputerName | Where-Object {$_.DriveType -eq 'Removable Disk'}}
+    else{
+
+        $RemovableDisk = Get-LogicalDisk -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.DriveType -eq 'Removable Disk'}}
 
     Write-Output $RemovableDisk
 }

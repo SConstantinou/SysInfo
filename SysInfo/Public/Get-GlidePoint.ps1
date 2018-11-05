@@ -92,7 +92,12 @@ https://www.sconstantinou.com/get-glidepoint
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    $GlidePoint = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Glide Point'}
+    if ($Protocol -eq ''){
+
+        $GlidePoint = Get-PointingDevice -ComputerName $ComputerName | Where-Object {$_.PointingType -eq 'Glide Point'}}
+    else{
+
+        $GlidePoint = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Glide Point'}}
 
     Write-Output $GlidePoint
 }

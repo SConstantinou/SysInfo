@@ -93,8 +93,12 @@ https://www.sconstantinou.com/get-localdisk
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    $LocalDisk = Get-LogicalDisk -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.DriveType -eq 'Local Disk'}
+    if ($Protocol -eq ''){
 
+        $LocalDisk = Get-LogicalDisk -ComputerName $ComputerName | Where-Object {$_.DriveType -eq 'Local Disk'}}
+    else{
+
+        $LocalDisk = Get-LogicalDisk -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.DriveType -eq 'Local Disk'}}
 
     Write-Output $LocalDisk
 }

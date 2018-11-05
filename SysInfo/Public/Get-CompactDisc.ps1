@@ -96,7 +96,12 @@ https://www.sconstantinou.com/get-compactdisc
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    $CompactDisc = Get-LogicalDisk -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.DriveType -eq 'Compact Disc'}
+    if ($Protocol -eq ''){
+
+        $CompactDisc = Get-LogicalDisk -ComputerName $ComputerName | Where-Object {$_.DriveType -eq 'Compact Disc'}}
+    else{
+
+        $CompactDisc = Get-LogicalDisk -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.DriveType -eq 'Compact Disc'}}
 
     Write-Output $CompactDisc
 }

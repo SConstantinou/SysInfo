@@ -94,7 +94,12 @@ https://www.sconstantinou.com/get-networkdrive
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    $NetworkDrive = Get-LogicalDisk -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.DriveType -eq 'Network Drive'}
+    if ($Protocol -eq ''){
+
+        $NetworkDrive = Get-LogicalDisk -ComputerName $ComputerName | Where-Object {$_.DriveType -eq 'Network Drive'}}
+    else{
+
+        $NetworkDrive = Get-LogicalDisk -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.DriveType -eq 'Network Drive'}}
 
     Write-Output $NetworkDrive
 }

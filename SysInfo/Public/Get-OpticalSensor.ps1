@@ -93,7 +93,12 @@ https://www.sconstantinou.com/get-opticalsensor
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName)
 
-    $OpticalSensor = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Optical Sensor'}
+    if ($Protocol -eq ''){
+
+        $OpticalSensor = Get-PointingDevice -ComputerName $ComputerName | Where-Object {$_.PointingType -eq 'Optical Sensor'}}
+    else{
+
+        $OpticalSensor = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Optical Sensor'}}
 
     Write-Output $OpticalSensor
 }

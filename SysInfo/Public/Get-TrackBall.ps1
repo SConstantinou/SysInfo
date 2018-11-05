@@ -94,7 +94,12 @@ https://www.sconstantinou.com/get-trackball
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    $TrackBall = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Track Ball'}
+    if ($Protocol -eq ''){
+
+        $TrackBall = Get-PointingDevice -ComputerName $ComputerName | Where-Object {$_.PointingType -eq 'Track Ball'}}
+    else{
+
+        $TrackBall = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Track Ball'}}
 
     Write-Output $TrackBall
 }

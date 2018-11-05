@@ -94,7 +94,12 @@ https://www.sconstantinou.com/get-touchscreen
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    $TouchScreen = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Touch Screen'}
+    if ($Protocol -eq ''){
+
+        $TouchScreen = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Touch Screen'}}
+    else{
+
+        $TouchScreen = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Touch Screen'}}
 
     Write-Output $TouchScreen
 }

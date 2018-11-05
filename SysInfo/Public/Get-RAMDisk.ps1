@@ -94,7 +94,12 @@ https://www.sconstantinou.com/get-ramdisk
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    $RAMDisk = Get-LogicalDisk -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.DriveType -eq 'RAM Disk'}
+    if ($Protocol -eq ''){
+
+        $RAMDisk = Get-LogicalDisk -ComputerName $ComputerName | Where-Object {$_.DriveType -eq 'RAM Disk'}}
+    else{
+    
+        $RAMDisk = Get-LogicalDisk -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.DriveType -eq 'RAM Disk'}}
 
     Write-Output $RAMDisk
 }

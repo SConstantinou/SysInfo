@@ -92,7 +92,12 @@ https://www.sconstantinou.com/get-mouse
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    $Mouse = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Mouse'}
+    if ($Protocol -eq ''){
+
+        $Mouse = Get-PointingDevice -ComputerName $ComputerName | Where-Object {$_.PointingType -eq 'Mouse'}}
+    else{
+
+        $Mouse = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Mouse'}}
 
     Write-Output $Mouse
 }

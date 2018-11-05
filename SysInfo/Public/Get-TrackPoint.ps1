@@ -94,7 +94,12 @@ https://www.sconstantinou.com/get-trackpoint
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    $TrackPoint = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Track Point'}
+    if ($Protocol -eq ''){
+
+        $TrackPoint = Get-PointingDevice -ComputerName $ComputerName | Where-Object {$_.PointingType -eq 'Track Point'}}
+    else{
+
+        $TrackPoint = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Track Point'}}
 
     Write-Output $TrackPoint
 }

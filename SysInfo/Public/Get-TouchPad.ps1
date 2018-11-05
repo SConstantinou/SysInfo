@@ -94,7 +94,12 @@ https://www.sconstantinou.com/get-touchpad
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
-    $TouchPad = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Touch Pad'}
+    if ($Protocol -eq ''){
+
+        $TouchPad = Get-PointingDevice -ComputerName $ComputerName | Where-Object {$_.PointingType -eq 'Touch Pad'}}
+    else{
+
+        $TouchPad = Get-PointingDevice -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.PointingType -eq 'Touch Pad'}}
 
     Write-Output $TouchPad
 }
