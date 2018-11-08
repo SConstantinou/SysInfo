@@ -90,15 +90,16 @@ https://www.sconstantinou.com/get-baseboard
 
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
+        [alias("Properties")][String[]]$Property,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
 
     $ClassName = 'Win32_BaseBoard'
     
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+    [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName")
-    foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
+    foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
 
-    $BaseBoard = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
+    $BaseBoard = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
 
     foreach ($_ in $BaseBoard){
 
@@ -144,5 +145,16 @@ https://www.sconstantinou.com/get-baseboard
         if ($_.PSObject.Properties.Name -match "WeightKg"){$_.WeightKg = Get-WeightKg ($_.Weight)}
     }
 
-    Write-Output $BaseBoard
+    if ($Property.Count -eq 0) {
+
+        Write-Output $BaseBoard | Format-List -Property Manufacturer,Model,Name,SerialNumber,SKU,Product
+    }
+    elseif (($Property.Count -eq 1) -and ($Property[0] -eq '*')){
+
+        Write-Output $BaseBoard
+    }
+    else{
+
+        Write-Output $BaseBoard | Format-List -Property $Property
+    }
 }
