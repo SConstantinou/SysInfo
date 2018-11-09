@@ -21,6 +21,11 @@ we want to get the information from.
 Specifies the protocol that will be used to get the information
 from the remote system.
 
+.PARAMETER Properties
+
+Specifies the object properties that appear in the display and
+the order in which they appear. Wildcards are permitted.
+
 .INPUTS
 
 System.Array. Get-LogicalDisk can accept a string value to
@@ -92,15 +97,17 @@ https://www.sconstantinou.com/get-logicaldisk
 
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
+        [alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_LogicalDisk'
+    [System.Collections.ArrayList]$DefaultProperties = 'DeviceID','DriveType','ProviderName','VolumeName','Size','FreeSpace','FreeSpacePercentage','SystemName'
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+    [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
-    foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
+    foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
 
-    $LogicalDisk = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
+    $LogicalDisk = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
 
     $LogicalDisk | Add-Member -MemberType NoteProperty -Name "FreeSpacePercentage" -Value "" -Force
     $LogicalDisk | Add-Member -MemberType NoteProperty -Name "UsedSpacePercentage" -Value "" -Force
@@ -187,5 +194,5 @@ https://www.sconstantinou.com/get-logicaldisk
         if ($_.PSObject.Properties.Name -match "FreeSpacePB"){$_.FreeSpacePB = Get-SizePB ($_.FreeSpace)}
     }
 
-    Write-Output $LogicalDisk
+    Optimize-Output -Object $LogicalDisk -Properties $Properties -DefaultProperties $DefaultProperties
 }

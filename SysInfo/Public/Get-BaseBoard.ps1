@@ -19,6 +19,11 @@ we want to get the information from.
 Specifies the protocol that will be used to get the information
 from the remote system.
 
+.PARAMETER Properties
+
+Specifies the object properties that appear in the display and
+the order in which they appear. Wildcards are permitted.
+
 .INPUTS
 
 System.Array. Get-BaseBoard can accept a string value to
@@ -33,53 +38,50 @@ all the information that has been retrieved.
 
 PS C:\> Get-BaseBoard
 
+This commnand gets the information from local system
+
 .EXAMPLE
 
 PS C:\> Get-BaseBoard -ComputerName Server1
+
+This commnand gets the information from Server1
 
 .EXAMPLE
 
 PS C:\> Get-BaseBoard -ComputerName "192.168.0.5"
 
+This commnand gets the information from remoted system with IP 192.168.0.5
+
 .EXAMPLE
 
 PS C:\> Get-BaseBoard -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
-
-PS C:\> Get-BaseBoard -ComputerName "192.168.0.5","192.168.0.6","192.168.0.7"
+This commnand gets the information from Server1, Server2 and Server3
 
 .EXAMPLE
 
-PS C:\> $MyServers = Server1,Server2,Server3
-PS C:\> Get-BaseBoard -ComputerName $MyServers
+PS C:\> Get-BaseBoard -ComputerName Server1 -Properties Name,Status
+
+This commnand gets the information from Server1 and will output only Name
+and Status Properties.
 
 .EXAMPLE
 
-PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
-PS C:\> Get-BaseBoard -ComputerName $MyIPs
+PS C:\> Get-BaseBoard -ComputerName Server1 -Properties *
 
-.EXAMPLE
-
-PS C:\> $MyServers = Server1,Server2,Server3
-PS C:\> $MyServers | Get-BaseBoard
-
-.EXAMPLE
-
-PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
-PS C:\> $MyIPs | Get-BaseBoard
+This commnand gets the information from Server1 and will output all properties
 
 .EXAMPLE
 
 PS C:\> "Server1" | Get-BaseBoard
 
-.EXAMPLE
-
-PS C:\> "192.168.0.5" | Get-BaseBoard
+This commnand gets the information from Server1
 
 .EXAMPLE
 
 PS C:\> Get-BaseBoard -ComputerName Server1 -Protocol DCOM
+
+This commnand gets the information from Server1 using DCOM protocol
 
 .LINK
 
@@ -90,11 +92,12 @@ https://www.sconstantinou.com/get-baseboard
 
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("Properties")][String[]]$Property,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
+        [alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_BaseBoard'
-    
+    [System.Collections.ArrayList]$DefaultProperties = 'Manufacturer','Model','Name','SerialNumber','SKU','Product'
+
     [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName")
     foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
@@ -145,16 +148,5 @@ https://www.sconstantinou.com/get-baseboard
         if ($_.PSObject.Properties.Name -match "WeightKg"){$_.WeightKg = Get-WeightKg ($_.Weight)}
     }
 
-    if ($Property.Count -eq 0) {
-
-        Write-Output $BaseBoard | Format-List -Property Manufacturer,Model,Name,SerialNumber,SKU,Product
-    }
-    elseif (($Property.Count -eq 1) -and ($Property[0] -eq '*')){
-
-        Write-Output $BaseBoard
-    }
-    else{
-
-        Write-Output $BaseBoard | Format-List -Property $Property
-    }
+    Optimize-Output -Object $BaseBoard -Properties $Properties -DefaultProperties $DefaultProperties
 }

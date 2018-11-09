@@ -98,7 +98,7 @@ https://www.sconstantinou.com/get-ramdisk
 
         $RAMDisk = Get-LogicalDisk -ComputerName $ComputerName | Where-Object {$_.DriveType -eq 'RAM Disk'}}
     else{
-    
+
         $RAMDisk = Get-LogicalDisk -ComputerName $ComputerName -Protocol $Protocol | Where-Object {$_.DriveType -eq 'RAM Disk'}}
 
     Write-Output $RAMDisk

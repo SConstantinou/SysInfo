@@ -21,6 +21,11 @@ we want to get the information from.
 Specifies the protocol that will be used to get the information
 from the remote system.
 
+.PARAMETER Properties
+
+Specifies the object properties that appear in the display and
+the order in which they appear. Wildcards are permitted.
+
 .INPUTS
 
 System.Array. Get-DiskPartition can accept a string value to
@@ -35,53 +40,50 @@ all the information that has been retrieved.
 
 PS C:\> Get-DiskPartition
 
+This commnand gets the information from local system
+
 .EXAMPLE
 
 PS C:\> Get-DiskPartition -ComputerName Server1
+
+This commnand gets the information from Server1
 
 .EXAMPLE
 
 PS C:\> Get-DiskPartition -ComputerName "192.168.0.5"
 
+This commnand gets the information from remoted system with IP 192.168.0.5
+
 .EXAMPLE
 
 PS C:\> Get-DiskPartition -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
-
-PS C:\> Get-DiskPartition -ComputerName "192.168.0.5","192.168.0.6","192.168.0.7"
+This commnand gets the information from Server1, Server2 and Server3
 
 .EXAMPLE
 
-PS C:\> $MyServers = Server1,Server2,Server3
-PS C:\> Get-DiskPartition -ComputerName $MyServers
+PS C:\> Get-DiskPartition -ComputerName Server1 -Properties Name,Status
+
+This commnand gets the information from Server1 and will output only Name
+and Status Properties.
 
 .EXAMPLE
 
-PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
-PS C:\> Get-DiskPartition -ComputerName $MyIPs
+PS C:\> Get-DiskPartition -ComputerName Server1 -Properties *
 
-.EXAMPLE
-
-PS C:\> $MyServers = Server1,Server2,Server3
-PS C:\> $MyServers | Get-DiskPartition
-
-.EXAMPLE
-
-PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
-PS C:\> $MyIPs | Get-DiskPartition
+This commnand gets the information from Server1 and will output all properties
 
 .EXAMPLE
 
 PS C:\> "Server1" | Get-DiskPartition
 
-.EXAMPLE
-
-PS C:\> "192.168.0.5" | Get-DiskPartition
+This commnand gets the information from Server1
 
 .EXAMPLE
 
 PS C:\> Get-DiskPartition -ComputerName Server1 -Protocol DCOM
+
+This commnand gets the information from Server1 using DCOM protocol
 
 .LINK
 
@@ -92,15 +94,17 @@ https://www.sconstantinou.com/get-diskpartition
 
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
+        [alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_DiskPartition'
+    [System.Collections.ArrayList]$DefaultProperties = 'Name','NumberOfBlocks','BootPartition','PrimaryPartition','Size','Index','SystemName'
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+    [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
-    foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
+    foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
 
-    $DiskPartition = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
+    $DiskPartition = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
 
     foreach ($_ in $DiskPartition){
 
@@ -181,5 +185,5 @@ https://www.sconstantinou.com/get-diskpartition
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
     }
 
-    Write-Output $DiskPartition
+    Optimize-Output -Object $DiskPartition -Properties $Properties -DefaultProperties $DefaultProperties
 }

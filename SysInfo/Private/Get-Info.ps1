@@ -24,14 +24,14 @@
     }
     elseif (($ComputerName -ne '') -and ($Protocol -ieq "WinRM")) {
 
-        $SessionProtocolOption = New-CimSessionOption -Protocol Wsman 
+        $SessionProtocolOption = New-CimSessionOption -Protocol Wsman
         $Session = New-CimSession -ComputerName $ComputerName -SessionOption $SessionProtocolOption
         $Info = Get-CimInstance -ClassName $ClassName -CimSession $Session -Property $Properties | Select-Object $Properties
         Remove-CimSession -CimSession $Session | Out-Null
     }
     elseif (($ComputerName -ne '') -and ($Protocol -ieq "DCOM")) {
 
-        $SessionProtocolOption = New-CimSessionOption -Protocol DCOM 
+        $SessionProtocolOption = New-CimSessionOption -Protocol DCOM
         $Session = New-CimSession -ComputerName $ComputerName -SessionOption $SessionProtocolOption
         $Info = Get-CimInstance -ClassName $ClassName -CimSession $Session -Property $Properties | Select-Object $Properties
         Remove-CimSession -CimSession $Session | Out-Null
