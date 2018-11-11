@@ -98,7 +98,7 @@ https://www.sconstantinou.com/get-battery
         [alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_Battery'
-    [System.Collections.ArrayList]$DefaultProperties = 'Manufacturer','Name','Status','SystemName'
+    [System.Collections.ArrayList]$DefaultProperties = 'Name','BatteryStatus','DesignCapacity','Status','SystemName'
 
     [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")

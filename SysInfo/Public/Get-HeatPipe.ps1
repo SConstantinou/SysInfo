@@ -96,7 +96,7 @@ https://www.sconstantinou.com/get-heatpipe
         [alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_HeatPipe'
-    [System.Collections.ArrayList]$DefaultProperties = 'Name','Manufacturer','Status','SystemName'
+    [System.Collections.ArrayList]$DefaultProperties = 'Name','ActiveCooling','Status','SystemName'
 
     [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")

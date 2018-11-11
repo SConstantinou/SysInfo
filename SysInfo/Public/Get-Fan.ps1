@@ -96,7 +96,7 @@ https://www.sconstantinou.com/get-fan
         [alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_Fan'
-    [System.Collections.ArrayList]$DefaultProperties = 'Name','Manufacturer','Status','SystemName'
+    [System.Collections.ArrayList]$DefaultProperties = 'Name','ActiveCooling','DesiredSpeed','VariableSpeed','Status','SystemName'
 
     [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")

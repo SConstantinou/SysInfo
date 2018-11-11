@@ -40,53 +40,50 @@ all the information that has been retrieved.
 
 PS C:\> Get-LogicalDisk
 
+This commnand gets the information from local system
+
 .EXAMPLE
 
 PS C:\> Get-LogicalDisk -ComputerName Server1
+
+This commnand gets the information from Server1
 
 .EXAMPLE
 
 PS C:\> Get-LogicalDisk -ComputerName "192.168.0.5"
 
+This commnand gets the information from remoted system with IP 192.168.0.5
+
 .EXAMPLE
 
 PS C:\> Get-LogicalDisk -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
-
-PS C:\> Get-LogicalDisk -ComputerName "192.168.0.5","192.168.0.6","192.168.0.7"
+This commnand gets the information from Server1, Server2 and Server3
 
 .EXAMPLE
 
-PS C:\> $MyServers = Server1,Server2,Server3
-PS C:\> Get-LogicalDisk -ComputerName $MyServers
+PS C:\> Get-LogicalDisk -ComputerName Server1 -Properties Name,Status
+
+This commnand gets the information from Server1 and will output only Name
+and Status Properties
 
 .EXAMPLE
 
-PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
-PS C:\> Get-LogicalDisk -ComputerName $MyIPs
+PS C:\> Get-LogicalDisk -ComputerName Server1 -Properties *
 
-.EXAMPLE
-
-PS C:\> $MyServers = Server1,Server2,Server3
-PS C:\> $MyServers | Get-LogicalDisk
-
-.EXAMPLE
-
-PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
-PS C:\> $MyIPs | Get-LogicalDisk
+This commnand gets the information from Server1 and will output all properties
 
 .EXAMPLE
 
 PS C:\> "Server1" | Get-LogicalDisk
 
-.EXAMPLE
-
-PS C:\> "192.168.0.5" | Get-LogicalDisk
+This commnand gets the information from Server1
 
 .EXAMPLE
 
 PS C:\> Get-LogicalDisk -ComputerName Server1 -Protocol DCOM
+
+This commnand gets the information from Server1 using DCOM protocol
 
 .LINK
 
