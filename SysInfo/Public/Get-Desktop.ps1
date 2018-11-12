@@ -95,7 +95,7 @@ https://www.sconstantinou.com/get-desktop
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [alias("Property")][String[]]$Properties)
+        [SupportsWildcards()][alias("Property")][String[]]$Properties)s
 
     $ClassName = 'Win32_Desktop'
     [System.Collections.ArrayList]$DefaultProperties = 'SettingID','Name','ScreenSaverActive','ScreenSaverSecure','ScreenSaverTimeout','SystemName'

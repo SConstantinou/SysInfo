@@ -95,7 +95,7 @@ https://www.sconstantinou.com/get-bios
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [alias("Property")][String[]]$Properties)
+        [SupportsWildcards()][alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_BIOS'
     [System.Collections.ArrayList]$DefaultProperties = 'Name','Manufacturer','SerialNumber','Version','SMBIOSBIOSVersion','SystemName'
