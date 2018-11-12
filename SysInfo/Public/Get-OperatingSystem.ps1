@@ -62,14 +62,14 @@ This commnand gets the information from Server1, Server2 and Server3
 
 .EXAMPLE
 
-PS C:\>  Get-NetworkAdapterConfiguration -ComputerName Server1 -Properties Name,Status
+PS C:\> Get-OperatingSystem -ComputerName Server1 -Properties Name,Status
 
 This commnand gets the information from Server1 and will output only Name
 and Status Properties
 
 .EXAMPLE
 
-PS C:\>  Get-NetworkAdapterConfiguration -ComputerName Server1 -Properties *
+PS C:\> Get-OperatingSystem -ComputerName Server1 -Properties *
 
 This commnand gets the information from Server1 and will output all properties
 

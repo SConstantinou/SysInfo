@@ -21,6 +21,11 @@ we want to get the information from.
 Specifies the protocol that will be used to get the information
 from the remote system.
 
+.PARAMETER Properties
+
+Specifies the object properties that appear in the display and
+the order in which they appear. Wildcards are permitted.
+
 .INPUTS
 
 System.Array. Get-VoltageProbe can accept a string value to
@@ -35,53 +40,50 @@ all the information that has been retrieved.
 
 PS C:\> Get-VoltageProbe
 
+This commnand gets the information from local system
+
 .EXAMPLE
 
 PS C:\> Get-VoltageProbe -ComputerName Server1
+
+This commnand gets the information from Server1
 
 .EXAMPLE
 
 PS C:\> Get-VoltageProbe -ComputerName "192.168.0.5"
 
+This commnand gets the information from remoted system with IP 192.168.0.5
+
 .EXAMPLE
 
 PS C:\> Get-VoltageProbe -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
-
-PS C:\> Get-VoltageProbe -ComputerName "192.168.0.5","192.168.0.6","192.168.0.7"
+This commnand gets the information from Server1, Server2 and Server3
 
 .EXAMPLE
 
-PS C:\> $MyServers = Server1,Server2,Server3
-PS C:\> Get-VoltageProbe -ComputerName $MyServers
+PS C:\> Get-VoltageProbe -ComputerName Server1 -Properties Name,Status
+
+This commnand gets the information from Server1 and will output only Name
+and Status Properties.
 
 .EXAMPLE
 
-PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
-PS C:\> Get-VoltageProbe -ComputerName $MyIPs
+PS C:\> Get-VoltageProbe -ComputerName Server1 -Properties *
 
-.EXAMPLE
-
-PS C:\> $MyServers = Server1,Server2,Server3
-PS C:\> $MyServers | Get-VoltageProbe
-
-.EXAMPLE
-
-PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
-PS C:\> $MyIPs | Get-VoltageProbe
+This commnand gets the information from Server1 and will output all properties
 
 .EXAMPLE
 
 PS C:\> "Server1" | Get-VoltageProbe
 
-.EXAMPLE
-
-PS C:\> "192.168.0.5" | Get-VoltageProbe
+This commnand gets the information from Server1
 
 .EXAMPLE
 
 PS C:\> Get-VoltageProbe -ComputerName Server1 -Protocol DCOM
+
+This commnand gets the information from Server1 using DCOM protocol
 
 .LINK
 
@@ -92,15 +94,17 @@ https://www.sconstantinou.com/get-voltageprobe
 
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
+        [alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_VoltageProbe'
+    [System.Collections.ArrayList]$DefaultProperties = 'Name','Status','Description','CurrentReading','MaxReadable','MinReadable','SystemName'
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+    [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")
-    foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
+    foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
 
-    $VoltageProbe = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
+    $VoltageProbe = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
 
     foreach ($_ in $VoltageProbe){
 
@@ -110,5 +114,5 @@ https://www.sconstantinou.com/get-voltageprobe
         $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
     }
 
-    Write-Output $VoltageProbe
+    Optimize-Output -Object $VoltageProbe -Properties $Properties -DefaultProperties $DefaultProperties
 }

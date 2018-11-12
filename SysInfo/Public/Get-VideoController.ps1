@@ -25,6 +25,11 @@ we want to get the information from.
 Specifies the protocol that will be used to get the information
 from the remote system.
 
+.PARAMETER Properties
+
+Specifies the object properties that appear in the display and
+the order in which they appear. Wildcards are permitted.
+
 .INPUTS
 
 System.Array. Get-VideoController can accept a string value to
@@ -39,53 +44,50 @@ all the information that has been retrieved.
 
 PS C:\> Get-VideoController
 
+This commnand gets the information from local system
+
 .EXAMPLE
 
 PS C:\> Get-VideoController -ComputerName Server1
+
+This commnand gets the information from Server1
 
 .EXAMPLE
 
 PS C:\> Get-VideoController -ComputerName "192.168.0.5"
 
+This commnand gets the information from remoted system with IP 192.168.0.5
+
 .EXAMPLE
 
 PS C:\> Get-VideoController -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
-
-PS C:\> Get-VideoController -ComputerName "192.168.0.5","192.168.0.6","192.168.0.7"
+This commnand gets the information from Server1, Server2 and Server3
 
 .EXAMPLE
 
-PS C:\> $MyServers = Server1,Server2,Server3
-PS C:\> Get-VideoController -ComputerName $MyServers
+PS C:\> Get-VideoController -ComputerName Server1 -Properties Name,Status
+
+This commnand gets the information from Server1 and will output only Name
+and Status Properties.
 
 .EXAMPLE
 
-PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
-PS C:\> Get-VideoController -ComputerName $MyIPs
+PS C:\> Get-VideoController -ComputerName Server1 -Properties *
 
-.EXAMPLE
-
-PS C:\> $MyServers = Server1,Server2,Server3
-PS C:\> $MyServers | Get-VideoController
-
-.EXAMPLE
-
-PS C:\> $MyIPs = "192.168.0.5","192.168.0.6","192.168.0.7"
-PS C:\> $MyIPs | Get-VideoController
+This commnand gets the information from Server1 and will output all properties
 
 .EXAMPLE
 
 PS C:\> "Server1" | Get-VideoController
 
-.EXAMPLE
-
-PS C:\> "192.168.0.5" | Get-VideoController
+This commnand gets the information from Server1
 
 .EXAMPLE
 
 PS C:\> Get-VideoController -ComputerName Server1 -Protocol DCOM
+
+This commnand gets the information from Server1 using DCOM protocol
 
 .LINK
 
@@ -96,15 +98,17 @@ https://www.sconstantinou.com/get-videocontroller
 
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol)
+        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
+        [alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_VideoController'
+    [System.Collections.ArrayList]$DefaultProperties = 'Name','DeviceID','VideoProcessor','VideoArchitecture','AdapterDACType','AdapterRAM','Status','SystemName'
 
-    [System.Collections.ArrayList]$Properties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+    [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
     $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
-    foreach ($_ in $RemoveProperties){$Properties.Remove($_)}
+    foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
 
-    $VideoController = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $Properties
+    $VideoController = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
 
     foreach ($_ in $VideoController){
 
@@ -146,5 +150,5 @@ https://www.sconstantinou.com/get-videocontroller
         if ($_.PSObject.Properties.Name -match "AdapterRAMGB"){$_.AdapterRAMGB = Get-SizeGB ($_.AdapterRAM)}
     }
 
-    Write-Output $VideoController
+    Optimize-Output -Object $VideoController -Properties $Properties -DefaultProperties $DefaultProperties
 }
