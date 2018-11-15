@@ -99,7 +99,7 @@ https://www.sconstantinou.com/get-videocontroller
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [alias("Property")][String[]]$Properties)
+        [SupportsWildcards()][alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_VideoController'
     [System.Collections.ArrayList]$DefaultProperties = 'Name','DeviceID','VideoProcessor','VideoArchitecture','AdapterDACType','AdapterRAM','Status','SystemName'

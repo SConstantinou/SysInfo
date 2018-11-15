@@ -95,7 +95,7 @@ https://www.sconstantinou.com/get-physicalmemoryarray
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [alias("Property")][String[]]$Properties)
+        [SupportsWildcards()][alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_PhysicalMemoryArray'
     [System.Collections.ArrayList]$DefaultProperties = 'Name','MemoryDevices','MaxCapacity','Model','Tag'

@@ -93,7 +93,7 @@ https://www.sconstantinou.com/get-fan
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [alias("Property")][String[]]$Properties)
+        [SupportsWildcards()][alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_Fan'
     [System.Collections.ArrayList]$DefaultProperties = 'Name','ActiveCooling','DesiredSpeed','VariableSpeed','Status','SystemName'

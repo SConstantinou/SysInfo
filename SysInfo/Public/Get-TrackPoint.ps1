@@ -95,7 +95,7 @@ https://www.sconstantinou.com/get-trackpoint
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [alias("Property")][String[]]$Properties)
+        [SupportsWildcards()][alias("Property")][String[]]$Properties)
 
     if ($Protocol -eq ''){
 

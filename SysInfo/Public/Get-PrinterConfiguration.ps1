@@ -95,7 +95,7 @@ https://www.sconstantinou.com/get-printerconfiguration
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [alias("Property")][String[]]$Properties)
+        [SupportsWildcards()][alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_PrinterConfiguration'
     [System.Collections.ArrayList]$DefaultProperties = 'PrintQuality','DriverVersion','Name','PaperSize','Caption','Manufacturer','SystemName'

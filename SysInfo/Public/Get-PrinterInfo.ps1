@@ -97,7 +97,7 @@ https://www.sconstantinou.com/get-printerinfo
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [alias("Property")][String[]]$Properties)
+        [SupportsWildcards()][alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_Printer'
     [System.Collections.ArrayList]$DefaultProperties = 'Name','ShareName','PrinterState','PrinterStatus','Location','SystemName'

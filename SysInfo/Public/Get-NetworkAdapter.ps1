@@ -96,7 +96,7 @@ https://www.sconstantinou.com/get-networkadapter
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [alias("Property")][String[]]$Properties)
+        [SupportsWildcards()][alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_NetworkAdapter'
     [System.Collections.ArrayList]$DefaultProperties = 'DeviceID','Name','AdapterType','ServiceName','SystemName'

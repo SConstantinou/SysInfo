@@ -95,7 +95,7 @@ https://www.sconstantinou.com/get-tapedrive
     param (
         [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
         [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [alias("Property")][String[]]$Properties)
+        [SupportsWildcards()][alias("Property")][String[]]$Properties)
 
     $ClassName = 'Win32_TapeDrive'
     [System.Collections.ArrayList]$DefaultProperties = 'Name','Id','Manufacturer','Compression','ECC','MediaType','NeedsCleaning','SystemName'
