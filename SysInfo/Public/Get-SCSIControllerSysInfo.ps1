@@ -1,4 +1,4 @@
-﻿function Get-SCSIController {
+﻿function Get-SCSIControllerSysInfo {
 <#
 .SYNOPSIS
 
@@ -28,66 +28,66 @@ the order in which they appear. Wildcards are permitted.
 
 .INPUTS
 
-System.Array. Get-SCSIController can accept a string value to
+System.Array. Get-SCSIControllerSysInfo can accept a string value to
 determine the ComputerName parameter.
 
 .OUTPUTS
 
-System.Object. Get-SCSIController returns an object containing
+System.Object. Get-SCSIControllerSysInfo returns an object containing
 all the information that has been retrieved.
 
 .EXAMPLE
 
-PS C:\> Get-SCSIController
+PS C:\> Get-SCSIControllerSysInfo
 
-This commnand gets the information from local system
-
-.EXAMPLE
-
-PS C:\> Get-SCSIController -ComputerName Server1
-
-This commnand gets the information from Server1
+This command gets the information from local system
 
 .EXAMPLE
 
-PS C:\> Get-SCSIController -ComputerName "192.168.0.5"
+PS C:\> Get-SCSIControllerSysInfo -ComputerName Server1
 
-This commnand gets the information from remoted system with IP 192.168.0.5
-
-.EXAMPLE
-
-PS C:\> Get-SCSIController -ComputerName Server1,Server2,Server3
-
-This commnand gets the information from Server1, Server2 and Server3
+This command gets the information from Server1
 
 .EXAMPLE
 
-PS C:\> Get-SCSIController -ComputerName Server1 -Properties Name,Status
+PS C:\> Get-SCSIControllerSysInfo -ComputerName "192.168.0.5"
 
-This commnand gets the information from Server1 and will output only Name
+This command gets the information from remote system with IP 192.168.0.5
+
+.EXAMPLE
+
+PS C:\> Get-SCSIControllerSysInfo -ComputerName Server1,Server2,Server3
+
+This command gets the information from Server1, Server2 and Server3
+
+.EXAMPLE
+
+PS C:\> Get-SCSIControllerSysInfo -ComputerName Server1 -Properties Name,Status
+
+This command gets the information from Server1 and will output only Name
 and Status Properties.
 
 .EXAMPLE
 
-PS C:\> Get-SCSIController -ComputerName Server1 -Properties *
+PS C:\> Get-SCSIControllerSysInfo -ComputerName Server1 -Properties *
 
-This commnand gets the information from Server1 and will output all properties
-
-.EXAMPLE
-
-PS C:\> "Server1" | Get-SCSIController
-
-This commnand gets the information from Server1
+This command gets the information from Server1 and will output all properties
 
 .EXAMPLE
 
-PS C:\> Get-SCSIController -ComputerName Server1 -Protocol DCOM
+PS C:\> "Server1" | Get-SCSIControllerSysInfo
 
-This commnand gets the information from Server1 using DCOM protocol
+This command gets the information from Server1
+
+.EXAMPLE
+
+PS C:\> Get-SCSIControllerSysInfo -ComputerName Server1 -Protocol DCOM
+
+This command gets the information from Server1 using DCOM protocol
 
 .LINK
 
-https://www.sconstantinou.com/get-scsicontroller
+https://www.sconstantinou.com/Get-SCSIControllerSysInfo
 #>
 
     [cmdletbinding()]

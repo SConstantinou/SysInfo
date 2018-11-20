@@ -1,4 +1,4 @@
-﻿function Get-FloppyDrive {
+﻿function Get-FloppyDriveSysInfo {
 <#
 .SYNOPSIS
 
@@ -8,7 +8,7 @@ Gets the information and functions of a floppy disk drive.
 
 Gets the information and functions of a floppy disk drive
 and converts all codes in results into human readable format.
-Get-FloppyDrive is not available for use as of Windows 10
+Get-FloppyDriveSysInfo is not available for use as of Windows 10
 and Windows Server 2016.
 
 .PARAMETER ComputerName
@@ -28,66 +28,66 @@ the order in which they appear. Wildcards are permitted.
 
 .INPUTS
 
-System.Array. Get-FloppyDrive can accept a string value to
+System.Array. Get-FloppyDriveSysInfo can accept a string value to
 determine the ComputerName parameter.
 
 .OUTPUTS
 
-System.Object. Get-FloppyDrive returns an object containing
+System.Object. Get-FloppyDriveSysInfo returns an object containing
 all the information that has been retrieved.
 
 .EXAMPLE
 
-PS C:\> Get-FloppyDrive
+PS C:\> Get-FloppyDriveSysInfo
 
-This commnand gets the information from local system
-
-.EXAMPLE
-
-PS C:\> Get-FloppyDrive -ComputerName Server1
-
-This commnand gets the information from Server1
+This command gets the information from local system
 
 .EXAMPLE
 
-PS C:\> Get-FloppyDrive -ComputerName "192.168.0.5"
+PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1
 
-This commnand gets the information from remoted system with IP 192.168.0.5
-
-.EXAMPLE
-
-PS C:\> Get-FloppyDrive -ComputerName Server1,Server2,Server3
-
-This commnand gets the information from Server1, Server2 and Server3
+This command gets the information from Server1
 
 .EXAMPLE
 
-PS C:\> Get-FloppyDrive -ComputerName Server1 -Properties Name,Status
+PS C:\> Get-FloppyDriveSysInfo -ComputerName "192.168.0.5"
 
-This commnand gets the information from Server1 and will output only Name
+This command gets the information from remote system with IP 192.168.0.5
+
+.EXAMPLE
+
+PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1,Server2,Server3
+
+This command gets the information from Server1, Server2 and Server3
+
+.EXAMPLE
+
+PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1 -Properties Name,Status
+
+This command gets the information from Server1 and will output only Name
 and Status Properties.
 
 .EXAMPLE
 
-PS C:\> Get-FloppyDrive -ComputerName Server1 -Properties *
+PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1 -Properties *
 
-This commnand gets the information from Server1 and will output all properties
-
-.EXAMPLE
-
-PS C:\> "Server1" | Get-FloppyDrive
-
-This commnand gets the information from Server1
+This command gets the information from Server1 and will output all properties
 
 .EXAMPLE
 
-PS C:\> Get-FloppyDrive -ComputerName Server1 -Protocol DCOM
+PS C:\> "Server1" | Get-FloppyDriveSysInfo
 
-This commnand gets the information from Server1 using DCOM protocol
+This command gets the information from Server1
+
+.EXAMPLE
+
+PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1 -Protocol DCOM
+
+This command gets the information from Server1 using DCOM protocol
 
 .LINK
 
-https://www.sconstantinou.com/get-floppydrive
+https://www.sconstantinou.com/Get-FloppyDriveSysInfo
 #>
 
     [cmdletbinding()]

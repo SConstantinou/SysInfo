@@ -71,6 +71,13 @@ will help you out perform your job.
 
 ### Release Notes
 
+*__1.1.3 20-11-2018__
+  * Get-FloppyDrive renamed to Get-FloppyDriveSysInfo
+  * Get-NetworkAdapter renamed to GetNetworkAdapterSysInfo
+  * Get-PrinterInfo renamed to Get-PrinterSysInfo
+  * Get-SCSIController renamed to Get-SCSIControllerSysInfo
+  * Fixed typo errors in help info
+
 *__1.1.2 13-11-2018__
   * Fixed Wildcard bug on Properties parameter
 

@@ -1,4 +1,4 @@
-﻿function Get-NetworkAdapter {
+﻿function Get-NetworkAdapterSysInfo {
 <#
 .SYNOPSIS
 
@@ -9,7 +9,7 @@ running a Windows operating system.
 
 Gets the information about a network adapter of a computer
 running a Windows operating system and converts all
-codes in results into human readable format.Get-NetworkAdapter
+codes in results into human readable format.Get-NetworkAdapterSysInfo
 only supplies IPv4 data.
 
 .PARAMETER ComputerName
@@ -29,66 +29,66 @@ the order in which they appear. Wildcards are permitted.
 
 .INPUTS
 
-System.Array. Get-NetworkAdapter can accept a string value to
+System.Array. Get-NetworkAdapterSysInfo can accept a string value to
 determine the ComputerName parameter.
 
 .OUTPUTS
 
-System.Object. Get-NetworkAdapter returns an object containing
+System.Object. Get-NetworkAdapterSysInfo returns an object containing
 all the information that has been retrieved.
 
 .EXAMPLE
 
-PS C:\> Get-NetworkAdapter
+PS C:\> Get-NetworkAdapterSysInfo
 
-This commnand gets the information from local system
-
-.EXAMPLE
-
-PS C:\> Get-NetworkAdapter -ComputerName Server1
-
-This commnand gets the information from Server1
+This command gets the information from local system
 
 .EXAMPLE
 
-PS C:\> Get-NetworkAdapter -ComputerName "192.168.0.5"
+PS C:\> Get-NetworkAdapterSysInfo -ComputerName Server1
 
-This commnand gets the information from remoted system with IP 192.168.0.5
-
-.EXAMPLE
-
-PS C:\> Get-NetworkAdapter -ComputerName Server1,Server2,Server3
-
-This commnand gets the information from Server1, Server2 and Server3
+This command gets the information from Server1
 
 .EXAMPLE
 
-PS C:\>  Get-NetworkAdapter -ComputerName Server1 -Properties Name,Status
+PS C:\> Get-NetworkAdapterSysInfo -ComputerName "192.168.0.5"
 
-This commnand gets the information from Server1 and will output only Name
+This command gets the information from remote system with IP 192.168.0.5
+
+.EXAMPLE
+
+PS C:\> Get-NetworkAdapterSysInfo -ComputerName Server1,Server2,Server3
+
+This command gets the information from Server1, Server2 and Server3
+
+.EXAMPLE
+
+PS C:\>  Get-NetworkAdapterSysInfo -ComputerName Server1 -Properties Name,Status
+
+This command gets the information from Server1 and will output only Name
 and Status Properties
 
 .EXAMPLE
 
-PS C:\>  Get-NetworkAdapter -ComputerName Server1 -Properties *
+PS C:\>  Get-NetworkAdapterSysInfo -ComputerName Server1 -Properties *
 
-This commnand gets the information from Server1 and will output all properties
-
-.EXAMPLE
-
-PS C:\> "Server1" | Get-NetworkAdapter
-
-This commnand gets the information from Server1
+This command gets the information from Server1 and will output all properties
 
 .EXAMPLE
 
-PS C:\> Get-NetworkAdapter -ComputerName Server1 -Protocol DCOM
+PS C:\> "Server1" | Get-NetworkAdapterSysInfo
 
-This commnand gets the information from Server1 using DCOM protocol
+This command gets the information from Server1
+
+.EXAMPLE
+
+PS C:\> Get-NetworkAdapterSysInfo -ComputerName Server1 -Protocol DCOM
+
+This command gets the information from Server1 using DCOM protocol
 
 .LINK
 
-https://www.sconstantinou.com/get-networkadapter
+https://www.sconstantinou.com/Get-NetworkAdapterSysInfo
 #>
 
     [cmdletbinding()]

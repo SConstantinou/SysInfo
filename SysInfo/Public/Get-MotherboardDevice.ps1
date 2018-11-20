@@ -40,50 +40,50 @@ all the information that has been retrieved.
 
 PS C:\> Get-MotherboardDevice
 
-This commnand gets the information from local system
+This command gets the information from local system
 
 .EXAMPLE
 
 PS C:\> Get-MotherboardDevice -ComputerName Server1
 
-This commnand gets the information from Server1
+This command gets the information from Server1
 
 .EXAMPLE
 
 PS C:\> Get-MotherboardDevice -ComputerName "192.168.0.5"
 
-This commnand gets the information from remoted system with IP 192.168.0.5
+This command gets the information from remote system with IP 192.168.0.5
 
 .EXAMPLE
 
 PS C:\> Get-MotherboardDevice -ComputerName Server1,Server2,Server3
 
-This commnand gets the information from Server1, Server2 and Server3
+This command gets the information from Server1, Server2 and Server3
 
 .EXAMPLE
 
 PS C:\> Get-MotherboardDevice -ComputerName Server1 -Properties Name,Status
 
-This commnand gets the information from Server1 and will output only Name
+This command gets the information from Server1 and will output only Name
 and Status Properties
 
 .EXAMPLE
 
 PS C:\> Get-MotherboardDevice -ComputerName Server1 -Properties *
 
-This commnand gets the information from Server1 and will output all properties
+This command gets the information from Server1 and will output all properties
 
 .EXAMPLE
 
 PS C:\> "Server1" | Get-MotherboardDevice
 
-This commnand gets the information from Server1
+This command gets the information from Server1
 
 .EXAMPLE
 
 PS C:\> Get-MotherboardDevice -ComputerName Server1 -Protocol DCOM
 
-This commnand gets the information from Server1 using DCOM protocol
+This command gets the information from Server1 using DCOM protocol
 
 .LINK
 

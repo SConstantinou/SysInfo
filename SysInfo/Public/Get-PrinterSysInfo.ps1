@@ -1,4 +1,4 @@
-﻿function Get-PrinterInfo {
+﻿function Get-PrinterSysInfo {
 <#
 .SYNOPSIS
 
@@ -30,66 +30,66 @@ the order in which they appear. Wildcards are permitted.
 
 .INPUTS
 
-System.Array. Get-PrinterInfo can accept a string value
+System.Array. Get-PrinterSysInfo can accept a string value
 to determine the ComputerName parameter.
 
 .OUTPUTS
 
-System.Object. Get-PrinterInfo returns an object containing
+System.Object. Get-PrinterSysInfo returns an object containing
 all the information that has been retrieved.
 
 .EXAMPLE
 
-PS C:\> Get-PrinterInfo
+PS C:\> Get-PrinterSysInfo
 
-This commnand gets the information from local system
-
-.EXAMPLE
-
-PS C:\> Get-PrinterInfo -ComputerName Server1
-
-This commnand gets the information from Server1
+This command gets the information from local system
 
 .EXAMPLE
 
-PS C:\> Get-PrinterInfo -ComputerName "192.168.0.5"
+PS C:\> Get-PrinterSysInfo -ComputerName Server1
 
-This commnand gets the information from remoted system with IP 192.168.0.5
-
-.EXAMPLE
-
-PS C:\> Get-PrinterInfo -ComputerName Server1,Server2,Server3
-
-This commnand gets the information from Server1, Server2 and Server3
+This command gets the information from Server1
 
 .EXAMPLE
 
-PS C:\> Get-PrinterInfo -ComputerName Server1 -Properties Name,Status
+PS C:\> Get-PrinterSysInfo -ComputerName "192.168.0.5"
 
-This commnand gets the information from Server1 and will output only Name
+This command gets the information from remote system with IP 192.168.0.5
+
+.EXAMPLE
+
+PS C:\> Get-PrinterSysInfo -ComputerName Server1,Server2,Server3
+
+This command gets the information from Server1, Server2 and Server3
+
+.EXAMPLE
+
+PS C:\> Get-PrinterSysInfo -ComputerName Server1 -Properties Name,Status
+
+This command gets the information from Server1 and will output only Name
 and Status Properties.
 
 .EXAMPLE
 
-PS C:\> Get-PrinterInfo -ComputerName Server1 -Properties *
+PS C:\> Get-PrinterSysInfo -ComputerName Server1 -Properties *
 
-This commnand gets the information from Server1 and will output all properties
-
-.EXAMPLE
-
-PS C:\> "Server1" | Get-PrinterInfo
-
-This commnand gets the information from Server1
+This command gets the information from Server1 and will output all properties
 
 .EXAMPLE
 
-PS C:\> Get-PrinterInfo -ComputerName Server1 -Protocol DCOM
+PS C:\> "Server1" | Get-PrinterSysInfo
 
-This commnand gets the information from Server1 using DCOM protocol
+This command gets the information from Server1
+
+.EXAMPLE
+
+PS C:\> Get-PrinterSysInfo -ComputerName Server1 -Protocol DCOM
+
+This command gets the information from Server1 using DCOM protocol
 
 .LINK
 
-https://www.sconstantinou.com/get-printerinfo
+https://www.sconstantinou.com/Get-PrinterSysInfo
 #>
 
     [cmdletbinding()]
