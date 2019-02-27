@@ -71,20 +71,20 @@ will help you out perform your job.
 
 ### Release Notes
 
-*__1.1.3 20-11-2018__
+* __1.1.3 20-11-2018__
   * Get-FloppyDrive renamed to Get-FloppyDriveSysInfo
   * Get-NetworkAdapter renamed to GetNetworkAdapterSysInfo
   * Get-PrinterInfo renamed to Get-PrinterSysInfo
   * Get-SCSIController renamed to Get-SCSIControllerSysInfo
   * Fixed typo errors in help info
 
-*__1.1.2 13-11-2018__
+* __1.1.2 13-11-2018__
   * Fixed Wildcard bug on Properties parameter
 
-*__1.1.1 12-11-2018__
+* __1.1.1 12-11-2018__
   * Removed Miminum PowerShell Version
 
-*__1.1.0 12-11-2018__
+* __1.1.0 12-11-2018__
   * FreeSpacePercentage property added
   * UsedSpacePercentage property added
   * Added protocol choice (WinRM, DCOM)
