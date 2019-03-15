@@ -1,155 +1,191 @@
-﻿function Get-CacheMemory {
-<#
-.SYNOPSIS
+﻿function Get-CacheMemory 
+{
+  <#
+      .SYNOPSIS
 
-Gets the internal and external cache memory on a computer system.
+      Gets the internal and external cache memory on a computer system.
 
-.DESCRIPTION
+      .DESCRIPTION
 
-Gets the internal and external cache memory on a computer system
-and converts all codes in results into human readable format.
+      Gets the internal and external cache memory on a computer system
+      and converts all codes in results into human readable format.
 
-.PARAMETER ComputerName
+      .PARAMETER ComputerName
 
-Specifies the computer names or IP Addresses of the systems that
-we want to get the information from.
+      Specifies the computer names or IP Addresses of the systems that
+      we want to get the information from.
 
-.PARAMETER Protocol
+      .PARAMETER Credential
 
-Specifies the protocol that will be used to get the information
-from the remote system.
+      Specifies the credentials that will be used to get the information
+      from remote system.
 
-.PARAMETER Properties
+      .PARAMETER Authentication
 
-Specifies the object properties that appear in the display and
-the order in which they appear. Wildcards are permitted.
+      Specifies the authentication that will be used to connect to the
+      remote system to get the information from.
 
-.INPUTS
+      .PARAMETER Protocol
 
-System.Array. Get-CacheMemory can accept a string value to
-determine the ComputerName parameter.
+      Specifies the protocol that will be used to get the information
+      from the remote system.
 
-.OUTPUTS
+      .PARAMETER Properties
 
-System.Object. Get-CacheMemory returns an object containing
-all the information that has been retrieved.
+      Specifies the object properties that appear in the display and
+      the order in which they appear. Wildcards are permitted.
 
-.EXAMPLE
+      .INPUTS
 
-PS C:\> Get-CacheMemory
+      System.Array. Get-CacheMemory can accept a string value to
+      determine the ComputerName parameter.
 
-This command gets the information from local system
+      .OUTPUTS
 
-.EXAMPLE
+      System.Object. Get-CacheMemory returns an object containing
+      all the information that has been retrieved.
 
-PS C:\> Get-CacheMemory -ComputerName Server1
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-CacheMemory
 
-.EXAMPLE
+      This command gets the information from local system
 
-PS C:\> Get-CacheMemory -ComputerName "192.168.0.5"
+      .EXAMPLE
 
-This command gets the information from remote system with IP 192.168.0.5
+      PS C:\> Get-CacheMemory -ComputerName Server1
 
-.EXAMPLE
+      This command gets the information from Server1
 
-PS C:\> Get-CacheMemory -ComputerName Server1,Server2,Server3
+      .EXAMPLE
 
-This command gets the information from Server1, Server2 and Server3
+      PS C:\> Get-CacheMemory -ComputerName "192.168.0.5"
 
-.EXAMPLE
+      This command gets the information from remote system with IP 192.168.0.5
 
-PS C:\> Get-CacheMemory -ComputerName Server1 -Properties Name,Status
+      .EXAMPLE
 
-This command gets the information from Server1 and will output only Name
-and Status Properties.
+      PS C:\> Get-CacheMemory -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
+      This command gets the information from Server1, Server2 and Server3
 
-PS C:\> Get-CacheMemory -ComputerName Server1 -Properties *
+      .EXAMPLE
 
-This command gets the information from Server1 and will output all properties
+      PS C:\> Get-CacheMemory -ComputerName Server1 -Properties Name,Status
 
-.EXAMPLE
+      This command gets the information from Server1 and will output only Name
+      and Status Properties.
 
-PS C:\> "Server1" | Get-CacheMemory
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-CacheMemory -ComputerName Server1 -Properties *
 
-.EXAMPLE
+      This command gets the information from Server1 and will output all properties
 
-PS C:\> Get-CacheMemory -ComputerName Server1 -Protocol DCOM
+      .EXAMPLE
 
-This command gets the information from Server1 using DCOM protocol
+      PS C:\> "Server1" | Get-CacheMemory
 
-.LINK
+      This command gets the information from Server1
 
-https://www.sconstantinou.com/get-cachememory
-#>
+      .EXAMPLE
 
-    [cmdletbinding()]
+      PS C:\> Get-CacheMemory -ComputerName Server1 -Protocol DCOM
 
-    param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [SupportsWildcards()][alias("Property")][String[]]$Properties)
+      This command gets the information from Server1 using DCOM protocol
 
-    $ClassName = 'Win32_CacheMemory'
-    [System.Collections.ArrayList]$DefaultProperties = 'BlockSize','CacheSpeed','CacheType','DeviceID','InstalledSize','Level','MaxCacheSize','NumberOfBlocks','Status','SystemName'
+      .EXAMPLE
 
-    [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
-    foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
+      PS C:\> Get-CacheMemory -ComputerName Server1 -Credential domain\user
 
-    $CacheMemory = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
+      This command gets the information from Server1 using a different user
 
-    foreach ($_ in $CacheMemory){
+      .EXAMPLE
 
-        $InstalledSize = $_.InstalledSize * 1KB
-        $MaxCacheSize = $_.MaxCacheSize * 1KB
+      PS C:\> Get-CacheMemory -ComputerName Server1 -Credential domain\user -Authentication Basic
 
-        if ($_.BlockSize -ge 1KB) {
+      This command gets the information from Server1 using a different user using basic authentication
 
-            $CacheMemory | Add-Member -MemberType NoteProperty -Name "BlockSizeKB" -Value "" -Force
-        }
+      .LINK
 
-        if ($InstalledSize -ge 1MB) {
+      https://www.sconstantinou.com/get-cachememory
+  #>
 
-            $CacheMemory | Add-Member -MemberType NoteProperty -Name "InstalledSizeMB" -Value "" -Force
-        }
+  [cmdletbinding()]
 
-        if ($MaxCacheSize -ge 1MB) {
+  param (
+    [parameter(ValueFromPipeline = $true)][alias('cn')][String[]]$ComputerName,
+    [alias('cred')][ValidateNotNull()][pscredential][System.Management.Automation.Credential()]$Credential = [pscredential]::Empty,
+    [alias('a')][validateset('Default','Digest','Negotiate','Basic','Kerberos','NtlmDomain','CredSsp')][String]$Authentication,
+    [alias('p')][validateset('WinRM','DCOM')][String]$Protocol,
+  [SupportsWildcards()][alias('Property')][String[]]$Properties)
 
-            $CacheMemory | Add-Member -MemberType NoteProperty -Name "MaxCacheSizeMB" -Value "" -Force
-        }
+  $ClassName = 'Win32_CacheMemory'
+  [Collections.ArrayList]$DefaultProperties = 'BlockSize', 'CacheSpeed', 'CacheType', 'DeviceID', 'InstalledSize', 'Level', 'MaxCacheSize', 'NumberOfBlocks', 'Status', 'SystemName'
 
+  [Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+  $RemoveProperties = @('CreationClassName', 'SystemCreationClassName', 'PNPDeviceID')
+  foreach ($_ in $RemoveProperties)
+  {
+    $AllProperties.Remove($_)
+  }
+
+  $CacheMemory = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Credential $Credential -Authentication $Authentication -Protocol $Protocol -Properties $AllProperties
+
+  foreach ($_ in $CacheMemory)
+  {
+    $InstalledSize = $_.InstalledSize * 1KB
+    $MaxCacheSize = $_.MaxCacheSize * 1KB
+
+    if ($_.BlockSize -ge 1KB) 
+    {
+      $CacheMemory | Add-Member -MemberType NoteProperty -Name 'BlockSizeKB' -Value '' -Force
     }
 
-    foreach ($_ in $CacheMemory){
-
-        $_.Availability = Get-Availability ($_.Availability)
-        $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
-        $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
-        $_.Access = Get-Access ($_.Access)
-        $_.Associativity = Get-Associativity ($_.Associativity)
-        $_.CacheType = Get-CacheType ($_.CacheType)
-        $_.CurrentSRAM = Get-CurrentSRAM ($_.CurrentSRAM)
-        $_.ErrorAccess = Get-ErrorAccess ($_.ErrorAccess)
-        $_.ErrorCorrectType = Get-ErrorCorrectType ($_.ErrorCorrectType)
-        $_.ErrorDataOrder = Get-ErrorDataOrder ($_.ErrorDataOrder)
-        $_.ErrorInfo = Get-ErrorInfo ($_.ErrorInfo)
-        $_.Level = Get-Level ($_.Level)
-        $_.Location = Get-Location ($_.Location)
-        $_.ReadPolicy = Get-ReadPolicy ($_.ReadPolicy)
-        $_.ReplacementPolicy = Get-ReplacementPolicy ($_.ReplacementPolicy)
-        $_.SupportedSRAM = Get-SupportedSRAM ($_.SupportedSRAM)
-        $_.WritePolicy = Get-WritePolicy ($_.WritePolicy)
-        if ($_.PSObject.Properties.Name -match "BlockSizeKB"){$_.BlockSizeKB = Get-SizeKB ($_.BlockSize)}
-        if ($_.PSObject.Properties.Name -match "MaxCacheSizeMB"){$_.MaxCacheSizeMB = Get-SizeMB ($_.MaxCacheSize * 1KB)}
-        if ($_.PSObject.Properties.Name -match "InstalledSizeMB"){$_.InstalledSizeMB = Get-SizeMB ($_.InstalledSize * 1KB)}
+    if ($InstalledSize -ge 1MB) 
+    {
+      $CacheMemory | Add-Member -MemberType NoteProperty -Name 'InstalledSizeMB' -Value '' -Force
     }
 
-    Optimize-Output -Object $CacheMemory -Properties $Properties -DefaultProperties $DefaultProperties
+    if ($MaxCacheSize -ge 1MB) 
+    {
+      $CacheMemory | Add-Member -MemberType NoteProperty -Name 'MaxCacheSizeMB' -Value '' -Force
+    }
+  }
+
+  foreach ($_ in $CacheMemory)
+  {
+    $_.Availability = Get-Availability -Code ($_.Availability)
+    $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode -Code ($_.ConfigManagerErrorCode)
+    $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode -Code ($_.PowerManagementCapabilities)
+    $_.StatusInfo = Get-StatusInfo -Code ($_.StatusInfo)
+    $_.Access = Get-Access -Code ($_.Access)
+    $_.Associativity = Get-Associativity -Code ($_.Associativity)
+    $_.CacheType = Get-CacheType -Code ($_.CacheType)
+    $_.CurrentSRAM = Get-CurrentSRAM -Code ($_.CurrentSRAM)
+    $_.ErrorAccess = Get-ErrorAccess -Code ($_.ErrorAccess)
+    $_.ErrorCorrectType = Get-ErrorCorrectType -Code ($_.ErrorCorrectType)
+    $_.ErrorDataOrder = Get-ErrorDataOrder -Code ($_.ErrorDataOrder)
+    $_.ErrorInfo = Get-ErrorInfo -Code ($_.ErrorInfo)
+    $_.Level = Get-Level -Code ($_.Level)
+    $_.Location = Get-LocationCode -Code ($_.Location)
+    $_.ReadPolicy = Get-ReadPolicy -Code ($_.ReadPolicy)
+    $_.ReplacementPolicy = Get-ReplacementPolicy -Code ($_.ReplacementPolicy)
+    $_.SupportedSRAM = Get-SupportedSRAM -Code ($_.SupportedSRAM)
+    $_.WritePolicy = Get-WritePolicy -Code ($_.WritePolicy)
+    if ($_.PSObject.Properties.Name -match 'BlockSizeKB')
+    {
+      $_.BlockSizeKB = Get-SizeKB -Size ($_.BlockSize)
+    }
+    if ($_.PSObject.Properties.Name -match 'MaxCacheSizeMB')
+    {
+      $_.MaxCacheSizeMB = Get-SizeMB -Size ($_.MaxCacheSize * 1KB)
+    }
+    if ($_.PSObject.Properties.Name -match 'InstalledSizeMB')
+    {
+      $_.InstalledSizeMB = Get-SizeMB -Size ($_.InstalledSize * 1KB)
+    }
+  }
+
+  Optimize-Output -Object $CacheMemory -Properties $Properties -DefaultProperties $DefaultProperties
 }

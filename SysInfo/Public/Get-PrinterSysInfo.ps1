@@ -1,151 +1,190 @@
-﻿function Get-PrinterSysInfo {
-<#
-.SYNOPSIS
+﻿function Get-PrinterSysInfo 
+{
+  <#
+      .SYNOPSIS
 
-Gets the information about a device connected to a computer
-running on a Microsoft Windows operating system that can produce
-a printed image or text on paper or other medium.
+      Gets the information about a device connected to a computer
+      running on a Microsoft Windows operating system that can produce
+      a printed image or text on paper or other medium.
 
-.DESCRIPTION
+      .DESCRIPTION
 
-Gets the information about a device connected to a computer
-running on a Microsoft Windows operating system that can produce
-a printed image or text on paper or other medium and converts
-all codes in results into human readable format.
+      Gets the information about a device connected to a computer
+      running on a Microsoft Windows operating system that can produce
+      a printed image or text on paper or other medium and converts
+      all codes in results into human readable format.
 
-.PARAMETER ComputerName
+      .PARAMETER ComputerName
 
-Specifies the computer names or IP Addresses of the systems that
-we want to get the information from.
+      Specifies the computer names or IP Addresses of the systems that
+      we want to get the information from.
 
-.PARAMETER Protocol
+      .PARAMETER Credential
 
-Specifies the protocol that will be used to get the information
-from the remote system.
+      Specifies the credentials that will be used to get the information
+      from remote system.
 
-.PARAMETER Properties
+      .PARAMETER Authentication
 
-Specifies the object properties that appear in the display and
-the order in which they appear. Wildcards are permitted.
+      Specifies the authentication that will be used to connect to the
+      remote system to get the information from.
 
-.INPUTS
+      .PARAMETER Protocol
 
-System.Array. Get-PrinterSysInfo can accept a string value
-to determine the ComputerName parameter.
+      Specifies the protocol that will be used to get the information
+      from the remote system.
 
-.OUTPUTS
+      .PARAMETER Properties
 
-System.Object. Get-PrinterSysInfo returns an object containing
-all the information that has been retrieved.
+      Specifies the object properties that appear in the display and
+      the order in which they appear. Wildcards are permitted.
 
-.EXAMPLE
+      .INPUTS
 
-PS C:\> Get-PrinterSysInfo
+      System.Array. Get-PrinterSysInfo can accept a string value
+      to determine the ComputerName parameter.
 
-This command gets the information from local system
+      .OUTPUTS
 
-.EXAMPLE
+      System.Object. Get-PrinterSysInfo returns an object containing
+      all the information that has been retrieved.
 
-PS C:\> Get-PrinterSysInfo -ComputerName Server1
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-PrinterSysInfo
 
-.EXAMPLE
+      This command gets the information from local system
 
-PS C:\> Get-PrinterSysInfo -ComputerName "192.168.0.5"
+      .EXAMPLE
 
-This command gets the information from remote system with IP 192.168.0.5
+      PS C:\> Get-PrinterSysInfo -ComputerName Server1
 
-.EXAMPLE
+      This command gets the information from Server1
 
-PS C:\> Get-PrinterSysInfo -ComputerName Server1,Server2,Server3
+      .EXAMPLE
 
-This command gets the information from Server1, Server2 and Server3
+      PS C:\> Get-PrinterSysInfo -ComputerName "192.168.0.5"
 
-.EXAMPLE
+      This command gets the information from remote system with IP 192.168.0.5
 
-PS C:\> Get-PrinterSysInfo -ComputerName Server1 -Properties Name,Status
+      .EXAMPLE
 
-This command gets the information from Server1 and will output only Name
-and Status Properties.
+      PS C:\> Get-PrinterSysInfo -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
+      This command gets the information from Server1, Server2 and Server3
 
-PS C:\> Get-PrinterSysInfo -ComputerName Server1 -Properties *
+      .EXAMPLE
 
-This command gets the information from Server1 and will output all properties
+      PS C:\> Get-PrinterSysInfo -ComputerName Server1 -Properties Name,Status
 
-.EXAMPLE
+      This command gets the information from Server1 and will output only Name
+      and Status Properties.
 
-PS C:\> "Server1" | Get-PrinterSysInfo
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-PrinterSysInfo -ComputerName Server1 -Properties *
 
-.EXAMPLE
+      This command gets the information from Server1 and will output all properties
 
-PS C:\> Get-PrinterSysInfo -ComputerName Server1 -Protocol DCOM
+      .EXAMPLE
 
-This command gets the information from Server1 using DCOM protocol
+      PS C:\> "Server1" | Get-PrinterSysInfo
 
-.LINK
+      This command gets the information from Server1
 
-https://www.sconstantinou.com/Get-PrinterSysInfo
-#>
+      .EXAMPLE
 
-    [cmdletbinding()]
+      PS C:\> Get-PrinterSysInfo -ComputerName Server1 -Protocol DCOM
 
-    param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [SupportsWildcards()][alias("Property")][String[]]$Properties)
+      This command gets the information from Server1 using DCOM protocol
 
-    $ClassName = 'Win32_Printer'
-    [System.Collections.ArrayList]$DefaultProperties = 'Name','ShareName','PrinterState','PrinterStatus','Location','SystemName'
+      .EXAMPLE
 
-    [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
-    foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
+      PS C:\> Get-PrinterSysInfo -ComputerName Server1 -Credential domain\user
 
-    $PrinterInfo = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
+      This command gets the information from Server1 using a different user
 
-    foreach ($_ in $PrinterInfo){
+      .EXAMPLE
 
-        $MaxSizeSupported = $_.MaxSizeSupported * 1KB
+      PS C:\> Get-PrinterSysInfo -ComputerName Server1 -Credential domain\user -Authentication Basic
 
-        switch ($MaxSizeSupported){
-            {$MaxSizeSupported -ge 1MB}
-                {
-                    $PrinterInfo | Add-Member -MemberType NoteProperty -Name "MaxSizeSupportedMB" -Value "" -Force
-                }
-            {$MaxSizeSupported -ge 1GB}
-                {
-                    $PrinterInfo | Add-Member -MemberType NoteProperty -Name "MaxSizeSupportedGB" -Value "" -Force
-                }
-        }
+      This command gets the information from Server1 using a different user using basic authentication
+
+      .LINK
+
+      https://www.sconstantinou.com/Get-PrinterSysInfo
+  #>
+
+  [cmdletbinding()]
+
+  param (
+    [parameter(ValueFromPipeline = $true)][alias('cn')][String[]]$ComputerName,
+    [alias('cred')][ValidateNotNull()][pscredential][System.Management.Automation.Credential()]$Credential = [pscredential]::Empty,
+    [alias('a')][validateset('Default','Digest','Negotiate','Basic','Kerberos','NtlmDomain','CredSsp')][String]$Authentication,
+    [alias('p')][validateset('WinRM','DCOM')][String]$Protocol,
+    [SupportsWildcards()][alias('Property')][String[]]$Properties
+  )
+
+  $ClassName = 'Win32_Printer'
+  [Collections.ArrayList]$DefaultProperties = 'Name', 'ShareName', 'PrinterState', 'PrinterStatus', 'Location', 'SystemName'
+
+  [Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+  $RemoveProperties = @('CreationClassName', 'SystemCreationClassName', 'PNPDeviceID')
+  foreach ($_ in $RemoveProperties)
+  {
+    $AllProperties.Remove($_)
+  }
+
+  $PrinterInfo = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Credential $Credential -Authentication $Authentication -Protocol $Protocol -Properties $AllProperties
+
+  foreach ($_ in $PrinterInfo)
+  {
+    $MaxSizeSupported = $_.MaxSizeSupported * 1KB
+
+    switch ($MaxSizeSupported){
+      {
+        $MaxSizeSupported -ge 1MB
+      }
+      {
+        $PrinterInfo | Add-Member -MemberType NoteProperty -Name 'MaxSizeSupportedMB' -Value '' -Force
+      }
+      {
+        $MaxSizeSupported -ge 1GB
+      }
+      {
+        $PrinterInfo | Add-Member -MemberType NoteProperty -Name 'MaxSizeSupportedGB' -Value '' -Force
+      }
     }
+  }
 
-    foreach ($_ in $PrinterInfo){
-
-        $_.Attributes = Get-AttributesCode ($_.Attributes)
-        $_.Availability = Get-Availability ($_.Availability)
-        $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
-        $_.CurrentCapabilities = Get-CurrentCapabilitiesCode ($_.CurrentCapabilities)
-        $_.CurrentLanguage = Get-CurrentLanguage ($_.CurrentLanguage)
-        $_.DefaultCapabilities = Get-DefaultCapabilitiesCode ($_.DefaultCapabilities)
-        $_.DefaultLanguage = Get-DefaultLanguage ($_.DefaultLanguage)
-        $_.DetectedErrorState = Get-DetectedErrorState ($_.DetectedErrorState)
-        $_.ExtendedDetectedErrorState = Get-ExtendedDetectedErrorState ($_.ExtendedDetectedErrorState)
-        $_.ExtendedPrinterStatus = Get-ExtendedPrinterStatus ($_.ExtendedPrinterStatus)
-        $_.LanguagesSupported = Get-LanguagesSupported ($_.LanguagesSupported)
-        $_.MarkingTechnology = Get-MarkingTechnology ($_.MarkingTechnology)
-        $_.PaperSizesSupported = Get-PaperSizesSupported ($_.PaperSizesSupported)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
-        $_.PrinterState = Get-PrinterState ($_.PrinterState)
-        $_.PrinterStatus = Get-PrinterStatus ($_.PrinterStatus)
-        $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
-        if ($_.PSObject.Properties.Name -match "MaxSizeSupportedMB"){$_.MaxSizeSupportedMB = Get-SizeMB ($_.MaxSizeSupported)}
-        if ($_.PSObject.Properties.Name -match "MaxSizeSupportedGB"){$_.MaxSizeSupportedGB = Get-SizeGB ($_.MaxSizeSupported)}
+  foreach ($_ in $PrinterInfo)
+  {
+    $_.Attributes = Get-AttributesCode -Code ($_.Attributes)
+    $_.Availability = Get-Availability -Code ($_.Availability)
+    $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode -Code ($_.ConfigManagerErrorCode)
+    $_.CurrentCapabilities = Get-CurrentCapabilitiesCode -Code ($_.CurrentCapabilities)
+    $_.CurrentLanguage = Get-CurrentLanguage -Code ($_.CurrentLanguage)
+    $_.DefaultCapabilities = Get-DefaultCapabilitiesCode -Code ($_.DefaultCapabilities)
+    $_.DefaultLanguage = Get-DefaultLanguage -Code ($_.DefaultLanguage)
+    $_.DetectedErrorState = Get-DetectedErrorState -Code ($_.DetectedErrorState)
+    $_.ExtendedDetectedErrorState = Get-ExtendedDetectedErrorState -Code ($_.ExtendedDetectedErrorState)
+    $_.ExtendedPrinterStatus = Get-ExtendedPrinterStatus -Code ($_.ExtendedPrinterStatus)
+    $_.LanguagesSupported = Get-LanguagesSupported -Code ($_.LanguagesSupported)
+    $_.MarkingTechnology = Get-MarkingTechnology -Code ($_.MarkingTechnology)
+    $_.PaperSizesSupported = Get-PaperSizesSupported -Code ($_.PaperSizesSupported)
+    $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode -Code ($_.PowerManagementCapabilities)
+    $_.PrinterState = Get-PrinterState -Code ($_.PrinterState)
+    $_.PrinterStatus = Get-PrinterStatus -Code ($_.PrinterStatus)
+    $_.StatusInfo = Get-StatusInfo -Code ($_.StatusInfo)
+    if ($_.PSObject.Properties.Name -match 'MaxSizeSupportedMB')
+    {
+      $_.MaxSizeSupportedMB = Get-SizeMB -Size ($_.MaxSizeSupported)
     }
+    if ($_.PSObject.Properties.Name -match 'MaxSizeSupportedGB')
+    {
+      $_.MaxSizeSupportedGB = Get-SizeGB -Size ($_.MaxSizeSupported)
+    }
+  }
 
-    Optimize-Output -Object $PrinterInfo -Properties $Properties -DefaultProperties $DefaultProperties
+  Optimize-Output -Object $PrinterInfo -Properties $Properties -DefaultProperties $DefaultProperties
 }

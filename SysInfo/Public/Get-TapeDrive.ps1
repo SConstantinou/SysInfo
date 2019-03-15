@@ -1,168 +1,226 @@
-﻿function Get-TapeDrive {
-<#
-.SYNOPSIS
+﻿function Get-TapeDrive 
+{
+  <#
+      .SYNOPSIS
 
-Gets the information about a tape drive on a computer
-system running Windows.
+      Gets the information about a tape drive on a computer
+      system running Windows.
 
-.DESCRIPTION
+      .DESCRIPTION
 
-Gets the information about a tape drive on a computer
-system running Windows and converts all codes in results
-into human readable format.
+      Gets the information about a tape drive on a computer
+      system running Windows and converts all codes in results
+      into human readable format.
 
-.PARAMETER ComputerName
+      .PARAMETER ComputerName
 
-Specifies the computer names or IP Addresses of the systems that
-we want to get the information from.
+      Specifies the computer names or IP Addresses of the systems that
+      we want to get the information from.
 
-.PARAMETER Protocol
+      .PARAMETER Credential
 
-Specifies the protocol that will be used to get the information
-from the remote system.
+      Specifies the credentials that will be used to get the information
+      from remote system.
 
-.PARAMETER Properties
+      .PARAMETER Authentication
 
-Specifies the object properties that appear in the display and
-the order in which they appear. Wildcards are permitted.
+      Specifies the authentication that will be used to connect to the
+      remote system to get the information from.
 
-.INPUTS
+      .PARAMETER Protocol
 
-System.Array. Get-TapeDrive can accept a string value to
-determine the ComputerName parameter.
+      Specifies the protocol that will be used to get the information
+      from the remote system.
 
-.OUTPUTS
+      .PARAMETER Properties
 
-System.Object. Get-TapeDrive returns an object containing
-all the information that has been retrieved.
+      Specifies the object properties that appear in the display and
+      the order in which they appear. Wildcards are permitted.
 
-.EXAMPLE
+      .INPUTS
 
-PS C:\> Get-TapeDrive
+      System.Array. Get-TapeDrive can accept a string value to
+      determine the ComputerName parameter.
 
-This command gets the information from local system
+      .OUTPUTS
 
-.EXAMPLE
+      System.Object. Get-TapeDrive returns an object containing
+      all the information that has been retrieved.
 
-PS C:\> Get-TapeDrive -ComputerName Server1
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-TapeDrive
 
-.EXAMPLE
+      This command gets the information from local system
 
-PS C:\> Get-TapeDrive -ComputerName "192.168.0.5"
+      .EXAMPLE
 
-This command gets the information from remote system with IP 192.168.0.5
+      PS C:\> Get-TapeDrive -ComputerName Server1
 
-.EXAMPLE
+      This command gets the information from Server1
 
-PS C:\> Get-TapeDrive -ComputerName Server1,Server2,Server3
+      .EXAMPLE
 
-This command gets the information from Server1, Server2 and Server3
+      PS C:\> Get-TapeDrive -ComputerName "192.168.0.5"
 
-.EXAMPLE
+      This command gets the information from remote system with IP 192.168.0.5
 
-PS C:\> Get-TapeDrive -ComputerName Server1 -Properties Name,Status
+      .EXAMPLE
 
-This command gets the information from Server1 and will output only Name
-and Status Properties.
+      PS C:\> Get-TapeDrive -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
+      This command gets the information from Server1, Server2 and Server3
 
-PS C:\> Get-TapeDrive -ComputerName Server1 -Properties *
+      .EXAMPLE
 
-This command gets the information from Server1 and will output all properties
+      PS C:\> Get-TapeDrive -ComputerName Server1 -Properties Name,Status
 
-.EXAMPLE
+      This command gets the information from Server1 and will output only Name
+      and Status Properties.
 
-PS C:\> "Server1" | Get-TapeDrive
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-TapeDrive -ComputerName Server1 -Properties *
 
-.EXAMPLE
+      This command gets the information from Server1 and will output all properties
 
-PS C:\> Get-TapeDrive -ComputerName Server1 -Protocol DCOM
+      .EXAMPLE
 
-This command gets the information from Server1 using DCOM protocol
+      PS C:\> "Server1" | Get-TapeDrive
 
-.LINK
+      This command gets the information from Server1
 
-https://www.sconstantinou.com/get-tapedrive
-#>
+      .EXAMPLE
 
-    [cmdletbinding()]
+      PS C:\> Get-TapeDrive -ComputerName Server1 -Protocol DCOM
 
-    param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [SupportsWildcards()][alias("Property")][String[]]$Properties)
+      This command gets the information from Server1 using DCOM protocol
 
-    $ClassName = 'Win32_TapeDrive'
-    [System.Collections.ArrayList]$DefaultProperties = 'Name','Id','Manufacturer','Compression','ECC','MediaType','NeedsCleaning','SystemName'
+      .EXAMPLE
 
-    [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")
-    foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
+      PS C:\> Get-TapeDrive -ComputerName Server1 -Credential domain\user
 
-    $TapeDrive = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
+      This command gets the information from Server1 using a different user
 
-    foreach ($_ in $TapeDrive){
+      .EXAMPLE
 
-        [uint64]$MaxMediaSize = $_.MaxMediaSize * 1KB
+      PS C:\> Get-TapeDrive -ComputerName Server1 -Credential domain\user -Authentication Basic
 
-        if ($_.DefaultBlockSize -ge 1KB) {
+      This command gets the information from Server1 using a different user using basic authentication
 
-            $TapeDrive | Add-Member -MemberType NoteProperty -Name "DefaultBlockSizeKB" -Value "" -Force
-        }
+      .LINK
 
-        if ($_.MaxBlockSize -ge 1KB) {
+      https://www.sconstantinou.com/get-tapedrive
+  #>
 
-            $DiskDrive | Add-Member -MemberType NoteProperty -Name "MaxBlockSizeKB" -Value "" -Force
-        }
+  [cmdletbinding()]
 
-        switch ($MaxMediaSize){
-            {$MaxMediaSize -ge 1MB}
-                {
-                    $DiskDrive | Add-Member -MemberType NoteProperty -Name "MaxMediaSizeMB" -Value "" -Force
-                }
-            {$MaxMediaSize -ge 1GB}
-                {
-                    $DiskDrive | Add-Member -MemberType NoteProperty -Name "MaxMediaSizeGB" -Value "" -Force
-                }
-            {$MaxMediaSize -ge 1TB}
-                {
-                    $DiskDrive | Add-Member -MemberType NoteProperty -Name "MaxMediaSizeTB" -Value "" -Force
-                }
-            {$MaxMediaSize -ge 1PB}
-                {
-                    $DiskDrive | Add-Member -MemberType NoteProperty -Name "MaxMediaSizePB" -Value "" -Force
-                }
-        }
+  param (
+    [parameter(ValueFromPipeline = $true)][alias('cn')][String[]]$ComputerName,
+    [alias('cred')][ValidateNotNull()][pscredential][System.Management.Automation.Credential()]$Credential = [pscredential]::Empty,
+    [alias('a')][validateset('Default','Digest','Negotiate','Basic','Kerberos','NtlmDomain','CredSsp')][String]$Authentication,
+    [alias('p')][validateset('WinRM','DCOM')][String]$Protocol,
+    [SupportsWildcards()][alias('Property')][String[]]$Properties
+  )
 
-        if ($_.MinBlockSize -ge 1KB) {
+  $ClassName = 'Win32_TapeDrive'
+  [Collections.ArrayList]$DefaultProperties = 'Name', 'Id', 'Manufacturer', 'Compression', 'ECC', 'MediaType', 'NeedsCleaning', 'SystemName'
 
-            $DiskDrive | Add-Member -MemberType NoteProperty -Name "MinBlockSizeKB" -Value "" -Force
-        }
+  [Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+  $RemoveProperties = @('CreationClassName', 'SystemCreationClassName', 'DeviceID', 'PNPDeviceID')
+  foreach ($_ in $RemoveProperties)
+  {
+    $AllProperties.Remove($_)
+  }
+
+  $TapeDrive = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Credential $Credential -Authentication $Authentication -Protocol $Protocol -Properties $AllProperties
+
+  foreach ($_ in $TapeDrive)
+  {
+    [uint64]$MaxMediaSize = $_.MaxMediaSize * 1KB
+
+    if ($_.DefaultBlockSize -ge 1KB) 
+    {
+      $TapeDrive | Add-Member -MemberType NoteProperty -Name 'DefaultBlockSizeKB' -Value '' -Force
     }
 
-    foreach ($_ in $TapeDrive){
-
-        $_.Layout = Get-Layout ($_.Layout)
-        $_.Availability = Get-Availability ($_.Availability)
-        $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
-        $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
-        $_.Compression = Get-Compression ($_.Compression)
-        $_.ECC = Get-ECC ($_.ECC)
-        $_.ReportSetMarks = Get-ReportSetMarksStatus ($_.ReportSetMarks)
-        if ($_.PSObject.Properties.Name -match "DefaultBlockSizeKB"){$_.DefaultBlockSizeKB = Get-SizeKB ($_.DefaultBlockSize)}
-        if ($_.PSObject.Properties.Name -match "MaxBlockSizeKB"){$_.MaxBlockSizeKB = Get-SizeKB ($_.MaxBlockSize)}
-        if ($_.PSObject.Properties.Name -match "MaxMediaSizeMB"){$_.MaxMediaSizeMB = Get-SizeMB ($_.MaxMediaSize)}
-        if ($_.PSObject.Properties.Name -match "MaxMediaSizeGB"){$_.MaxMediaSizeGB = Get-SizeGB ($_.MaxMediaSize * 1KB)}
-	    if ($_.PSObject.Properties.Name -match "MaxMediaSizeTB"){$_.MaxMediaSizeTB = Get-SizeTB ($_.MaxMediaSize * 1KB)}
-        if ($_.PSObject.Properties.Name -match "MaxMediaSizePB"){$_.MaxMediaSizePB = Get-SizePB ($_.MaxMediaSize * 1KB)}
-        if ($_.PSObject.Properties.Name -match "MinBlockSizeKB"){$_.MinBlockSizeKB = Get-SizeKB ($_.MinBlockSize)}
+    if ($_.MaxBlockSize -ge 1KB) 
+    {
+      $DiskDrive | Add-Member -MemberType NoteProperty -Name 'MaxBlockSizeKB' -Value '' -Force
     }
 
-    Optimize-Output -Object $TapeDrive -Properties $Properties -DefaultProperties $DefaultProperties
+    switch ($MaxMediaSize){
+      {
+        $MaxMediaSize -ge 1MB
+      }
+      {
+        $DiskDrive | Add-Member -MemberType NoteProperty -Name 'MaxMediaSizeMB' -Value '' -Force
+      }
+      {
+        $MaxMediaSize -ge 1GB
+      }
+      {
+        $DiskDrive | Add-Member -MemberType NoteProperty -Name 'MaxMediaSizeGB' -Value '' -Force
+      }
+      {
+        $MaxMediaSize -ge 1TB
+      }
+      {
+        $DiskDrive | Add-Member -MemberType NoteProperty -Name 'MaxMediaSizeTB' -Value '' -Force
+      }
+      {
+        $MaxMediaSize -ge 1PB
+      }
+      {
+        $DiskDrive | Add-Member -MemberType NoteProperty -Name 'MaxMediaSizePB' -Value '' -Force
+      }
+    }
+
+    if ($_.MinBlockSize -ge 1KB) 
+    {
+      $DiskDrive | Add-Member -MemberType NoteProperty -Name 'MinBlockSizeKB' -Value '' -Force
+    }
+  }
+
+  foreach ($_ in $TapeDrive)
+  {
+    $_.Layout = Get-Layout -Code ($_.Layout)
+    $_.Availability = Get-Availability -Code ($_.Availability)
+    $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode -Code ($_.ConfigManagerErrorCode)
+    $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode -Code ($_.PowerManagementCapabilities)
+    $_.StatusInfo = Get-StatusInfo -Code ($_.StatusInfo)
+    $_.Compression = Get-Compression -Code ($_.Compression)
+    $_.ECC = Get-ECC -Code ($_.ECC)
+    $_.ReportSetMarks = Get-ReportSetMarksStatus -Code ($_.ReportSetMarks)
+    if ($_.PSObject.Properties.Name -match 'DefaultBlockSizeKB')
+    {
+      $_.DefaultBlockSizeKB = Get-SizeKB -Size ($_.DefaultBlockSize)
+    }
+    if ($_.PSObject.Properties.Name -match 'MaxBlockSizeKB')
+    {
+      $_.MaxBlockSizeKB = Get-SizeKB -Size ($_.MaxBlockSize)
+    }
+    if ($_.PSObject.Properties.Name -match 'MaxMediaSizeMB')
+    {
+      $_.MaxMediaSizeMB = Get-SizeMB -Size ($_.MaxMediaSize)
+    }
+    if ($_.PSObject.Properties.Name -match 'MaxMediaSizeGB')
+    {
+      $_.MaxMediaSizeGB = Get-SizeGB -Size ($_.MaxMediaSize * 1KB)
+    }
+    if ($_.PSObject.Properties.Name -match 'MaxMediaSizeTB')
+    {
+      $_.MaxMediaSizeTB = Get-SizeTB -Size ($_.MaxMediaSize * 1KB)
+    }
+    if ($_.PSObject.Properties.Name -match 'MaxMediaSizePB')
+    {
+      $_.MaxMediaSizePB = Get-SizePB -Size ($_.MaxMediaSize * 1KB)
+    }
+    if ($_.PSObject.Properties.Name -match 'MinBlockSizeKB')
+    {
+      $_.MinBlockSizeKB = Get-SizeKB -Size ($_.MinBlockSize)
+    }
+  }
+
+  Optimize-Output -Object $TapeDrive -Properties $Properties -DefaultProperties $DefaultProperties
 }

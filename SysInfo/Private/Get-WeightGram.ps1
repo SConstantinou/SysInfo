@@ -1,8 +1,37 @@
-﻿Function Get-WeightGram {
+﻿Function Get-WeightGram 
+{
+  <#
+      .SYNOPSIS
+      Converts Pounds to Grams
 
-    param ([float]$Pounds)
+      .DESCRIPTION
+      Converts Pounds to Grams
 
-    if ($Pounds -ne ''){[math]::round($Pounds * 453.592,2)}
+      .PARAMETER Pounds
+      number of pounds
 
-    Return
+      .EXAMPLE
+      Get-WeightGram -Pounds Value
+      Converts Pounds to Grams
+
+      .LINK
+      https://www.sconstantinou.com
+
+      .INPUTS
+      None
+
+      .OUTPUTS
+      Float
+  #>
+
+
+
+  param ([Parameter(Mandatory = $true,HelpMessage = 'Pounds coming from the system')][float]$Pounds)
+
+  if ($Pounds -ne '')
+  {
+    [math]::round($Pounds * 453.592,2)
+  }
+
+  Return
 }

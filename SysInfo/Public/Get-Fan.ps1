@@ -1,116 +1,145 @@
-﻿function Get-Fan {
-<#
-.SYNOPSIS
+﻿function Get-Fan 
+{
+  <#
+      .SYNOPSIS
 
-Gets the properties of a fan device in the computer system.
+      Gets the properties of a fan device in the computer system.
 
-.DESCRIPTION
+      .DESCRIPTION
 
-Gets the properties of a fan device in the computer system
-and converts all codes in results into human readable format.
+      Gets the properties of a fan device in the computer system
+      and converts all codes in results into human readable format.
 
-.PARAMETER ComputerName
+      .PARAMETER ComputerName
 
-Specifies the computer names or IP Addresses of the systems that
-we want to get the information from.
+      Specifies the computer names or IP Addresses of the systems that
+      we want to get the information from.
 
-.PARAMETER Protocol
+      .PARAMETER Credential
 
-Specifies the protocol that will be used to get the information
-from the remote system.
+      Specifies the credentials that will be used to get the information
+      from remote system.
 
-.PARAMETER Properties
+      .PARAMETER Authentication
 
-Specifies the object properties that appear in the display and
-the order in which they appear. Wildcards are permitted.
+      Specifies the authentication that will be used to connect to the
+      remote system to get the information from.
 
-.INPUTS
+      .PARAMETER Protocol
 
-System.Array. Get-Fan can accept a string value to
-determine the ComputerName parameter.
+      Specifies the protocol that will be used to get the information
+      from the remote system.
 
-.OUTPUTS
+      .PARAMETER Properties
 
-System.Object. Get-Fan returns an object containing
-all the information that has been retrieved.
+      Specifies the object properties that appear in the display and
+      the order in which they appear. Wildcards are permitted.
 
-.EXAMPLE
+      .INPUTS
 
-PS C:\> Get-Fan
+      System.Array. Get-Fan can accept a string value to
+      determine the ComputerName parameter.
 
-This command gets the information from local system
+      .OUTPUTS
 
-.EXAMPLE
+      System.Object. Get-Fan returns an object containing
+      all the information that has been retrieved.
 
-PS C:\> Get-Fan -ComputerName Server1
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-Fan
 
-.EXAMPLE
+      This command gets the information from local system
 
-PS C:\> Get-Fan -ComputerName "192.168.0.5"
+      .EXAMPLE
 
-This command gets the information from remote system with IP 192.168.0.5
+      PS C:\> Get-Fan -ComputerName Server1
 
-.EXAMPLE
+      This command gets the information from Server1
 
-PS C:\> Get-Fan -ComputerName Server1,Server2,Server3
+      .EXAMPLE
 
-This command gets the information from Server1, Server2 and Server3
+      PS C:\> Get-Fan -ComputerName "192.168.0.5"
 
-.EXAMPLE
+      This command gets the information from remote system with IP 192.168.0.5
 
-PS C:\> Get-Fan -ComputerName Server1 -Properties Name,Status
+      .EXAMPLE
 
-This command gets the information from Server1 and will output only Name
-and Status Properties.
+      PS C:\> Get-Fan -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
+      This command gets the information from Server1, Server2 and Server3
 
-PS C:\> Get-Fan -ComputerName Server1 -Properties *
+      .EXAMPLE
 
-This command gets the information from Server1 and will output all properties
+      PS C:\> Get-Fan -ComputerName Server1 -Properties Name,Status
 
-.EXAMPLE
+      This command gets the information from Server1 and will output only Name
+      and Status Properties.
 
-PS C:\> "Server1" | Get-Fan
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-Fan -ComputerName Server1 -Properties *
 
-.EXAMPLE
+      This command gets the information from Server1 and will output all properties
 
-PS C:\> Get-Fan -ComputerName Server1 -Protocol DCOM
+      .EXAMPLE
 
-This command gets the information from Server1 using DCOM protocol
+      PS C:\> "Server1" | Get-Fan
 
-.LINK
+      This command gets the information from Server1
 
-https://www.sconstantinou.com/get-fan
-#>
+      .EXAMPLE
 
-    [cmdletbinding()]
+      PS C:\> Get-Fan -ComputerName Server1 -Protocol DCOM
 
-    param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [SupportsWildcards()][alias("Property")][String[]]$Properties)
+      This command gets the information from Server1 using DCOM protocol
 
-    $ClassName = 'Win32_Fan'
-    [System.Collections.ArrayList]$DefaultProperties = 'Name','ActiveCooling','DesiredSpeed','VariableSpeed','Status','SystemName'
+      .EXAMPLE
 
-    [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")
-    foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
+      PS C:\> Get-Fan -ComputerName Server1 -Credential domain\user
 
-    $Fan = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
+      This command gets the information from Server1 using a different user
 
-    foreach ($_ in $Fan){
+      .EXAMPLE
 
-        $_.Availability = Get-Availability ($_.Availability)
-        $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
-        $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
-    }
+      PS C:\> Get-Fan -ComputerName Server1 -Credential domain\user -Authentication Basic
 
-    Optimize-Output -Object $Fan -Properties $Properties -DefaultProperties $DefaultProperties
+      This command gets the information from Server1 using a different user using basic authentication
+
+      .LINK
+
+      https://www.sconstantinou.com/get-fan
+  #>
+
+  [cmdletbinding()]
+
+  param (
+    [parameter(ValueFromPipeline = $true)][alias('cn')][String[]]$ComputerName,
+    [alias('cred')][ValidateNotNull()][pscredential][System.Management.Automation.Credential()]$Credential = [pscredential]::Empty,
+    [alias('a')][validateset('Default','Digest','Negotiate','Basic','Kerberos','NtlmDomain','CredSsp')][String]$Authentication,
+    [alias('p')][validateset('WinRM','DCOM')][String]$Protocol,
+    [SupportsWildcards()][alias('Property')][String[]]$Properties
+  )
+
+  $ClassName = 'Win32_Fan'
+  [Collections.ArrayList]$DefaultProperties = 'Name', 'ActiveCooling', 'DesiredSpeed', 'VariableSpeed', 'Status', 'SystemName'
+
+  [Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+  $RemoveProperties = @('CreationClassName', 'SystemCreationClassName', 'DeviceID', 'PNPDeviceID')
+  foreach ($_ in $RemoveProperties)
+  {
+    $AllProperties.Remove($_)
+  }
+
+  $Fan = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Credential $Credential -Authentication $Authentication -Protocol $Protocol -Properties $AllProperties
+
+  foreach ($_ in $Fan)
+  {
+    $_.Availability = Get-Availability -Code ($_.Availability)
+    $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode -Code ($_.ConfigManagerErrorCode)
+    $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode -Code ($_.PowerManagementCapabilities)
+    $_.StatusInfo = Get-StatusInfo -Code ($_.StatusInfo)
+  }
+
+  Optimize-Output -Object $Fan -Properties $Properties -DefaultProperties $DefaultProperties
 }

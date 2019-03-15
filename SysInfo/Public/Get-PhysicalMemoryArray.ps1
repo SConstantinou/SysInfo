@@ -1,194 +1,268 @@
-﻿function Get-PhysicalMemoryArray {
-<#
-.SYNOPSIS
+﻿function Get-PhysicalMemoryArray 
+{
+  <#
+      .SYNOPSIS
 
-Gets the details about the computer system physical memory.
+      Gets the details about the computer system physical memory.
 
-.DESCRIPTION
+      .DESCRIPTION
 
-Gets the details about the computer system physical memory and
-converts all codes in results into human readable format.
-Output includes the number of memory devices, memory capacity
-available, and memory type
+      Gets the details about the computer system physical memory and
+      converts all codes in results into human readable format.
+      Output includes the number of memory devices, memory capacity
+      available, and memory type
 
-.PARAMETER ComputerName
+      .PARAMETER ComputerName
 
-Specifies the computer names or IP Addresses of the systems that
-we want to get the information from.
+      Specifies the computer names or IP Addresses of the systems that
+      we want to get the information from.
 
-.PARAMETER Protocol
+      .PARAMETER Credential
 
-Specifies the protocol that will be used to get the information
-from the remote system.
+      Specifies the credentials that will be used to get the information
+      from remote system.
 
-.PARAMETER Properties
+      .PARAMETER Authentication
 
-Specifies the object properties that appear in the display and
-the order in which they appear. Wildcards are permitted.
+      Specifies the authentication that will be used to connect to the
+      remote system to get the information from.
 
-.INPUTS
+      .PARAMETER Protocol
 
-System.Array. Get-PhysicalMemoryArray can accept a string value
-to determine the ComputerName parameter.
+      Specifies the protocol that will be used to get the information
+      from the remote system.
 
-.OUTPUTS
+      .PARAMETER Properties
 
-System.Object. Get-PhysicalMemoryArray returns an object containing
-all the information that has been retrieved.
+      Specifies the object properties that appear in the display and
+      the order in which they appear. Wildcards are permitted.
 
-.EXAMPLE
+      .INPUTS
 
-PS C:\> Get-PhysicalMemoryArray
+      System.Array. Get-PhysicalMemoryArray can accept a string value
+      to determine the ComputerName parameter.
 
-This command gets the information from local system
+      .OUTPUTS
 
-.EXAMPLE
+      System.Object. Get-PhysicalMemoryArray returns an object containing
+      all the information that has been retrieved.
 
-PS C:\> Get-PhysicalMemoryArray -ComputerName Server1
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-PhysicalMemoryArray
 
-.EXAMPLE
+      This command gets the information from local system
 
-PS C:\> Get-PhysicalMemoryArray -ComputerName "192.168.0.5"
+      .EXAMPLE
 
-This command gets the information from remote system with IP 192.168.0.5
+      PS C:\> Get-PhysicalMemoryArray -ComputerName Server1
 
-.EXAMPLE
+      This command gets the information from Server1
 
-PS C:\> Get-PhysicalMemoryArray -ComputerName Server1,Server2,Server3
+      .EXAMPLE
 
-This command gets the information from Server1, Server2 and Server3
+      PS C:\> Get-PhysicalMemoryArray -ComputerName "192.168.0.5"
 
-.EXAMPLE
+      This command gets the information from remote system with IP 192.168.0.5
 
-PS C:\> Get-PhysicalMemoryArray -ComputerName Server1 -Properties Name,Status
+      .EXAMPLE
 
-This command gets the information from Server1 and will output only Name
-and Status Properties
+      PS C:\> Get-PhysicalMemoryArray -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
+      This command gets the information from Server1, Server2 and Server3
 
-PS C:\> Get-PhysicalMemoryArray -ComputerName Server1 -Properties *
+      .EXAMPLE
 
-This command gets the information from Server1 and will output all properties
+      PS C:\> Get-PhysicalMemoryArray -ComputerName Server1 -Properties Name,Status
 
-.EXAMPLE
+      This command gets the information from Server1 and will output only Name
+      and Status Properties
 
-PS C:\> "Server1" | Get-PhysicalMemoryArray
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-PhysicalMemoryArray -ComputerName Server1 -Properties *
 
-.EXAMPLE
+      This command gets the information from Server1 and will output all properties
 
-PS C:\> Get-PhysicalMemoryArray -ComputerName Server1 -Protocol DCOM
+      .EXAMPLE
 
-This command gets the information from Server1 using DCOM protocol
+      PS C:\> "Server1" | Get-PhysicalMemoryArray
 
-.LINK
+      This command gets the information from Server1
 
-https://www.sconstantinou.com/get-physicalmemoryarray
-#>
+      .EXAMPLE
 
-    [cmdletbinding()]
+      PS C:\> Get-PhysicalMemoryArray -ComputerName Server1 -Protocol DCOM
 
-    param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [SupportsWildcards()][alias("Property")][String[]]$Properties)
+      This command gets the information from Server1 using DCOM protocol
 
-    $ClassName = 'Win32_PhysicalMemoryArray'
-    [System.Collections.ArrayList]$DefaultProperties = 'Name','MemoryDevices','MaxCapacity','Model','Tag'
+      .EXAMPLE
 
-    [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName")
-    foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
+      PS C:\> Get-PhysicalMemoryArray -ComputerName Server1 -Credential domain\user
 
-    $PhysicalMemoryArray = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
+      This command gets the information from Server1 using a different user
 
-    foreach ($_ in $PhysicalMemoryArray){
+      .EXAMPLE
 
-        [uint64]$MaxCapacity = $_.MaxCapacity * 1KB
-        [uint64]$MaxCapacityEx = $_.MaxCapacityEx * 1KB
+      PS C:\> Get-PhysicalMemoryArray -ComputerName Server1 -Credential domain\user -Authentication Basic
 
-        switch ($MaxCapacity){
-            {$MaxCapacity -ge 1MB}
-                {
-                    $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityMB" -Value "" -Force
-                }
-            {$MaxCapacity -ge 1GB}
-                {
-                    $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityGB" -Value "" -Force
-                }
-            {$MaxCapacity -ge 1TB}
-                {
-                    $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityTB" -Value "" -Force
-                }
-            {$MaxCapacity -ge 1PB}
-                {
-                    $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityPB" -Value "" -Force
-                }
-        }
+      This command gets the information from Server1 using a different user using basic authentication
 
-        switch ($MaxCapacityEx){
-            {$MaxCapacityEx -ge 1MB}
-                {
-                    $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityExMB" -Value "" -Force
-                }
-            {$MaxCapacityEx -ge 1GB}
-                {
-                    $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityExGB" -Value "" -Force
-                }
-            {$MaxCapacityEx -ge 1TB}
-                {
-                    $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityExTB" -Value "" -Force
-                }
-            {$MaxCapacityEx -ge 1PB}
-                {
-                    $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name "MaxCapacityExPB" -Value "" -Force
-                }
-        }
+      .LINK
 
-        if ($null -ne $_.Depth){
-            $PhysicalMemoryArray |
-                Add-Member -MemberType NoteProperty -Name "DepthCM" -Value "$(Get-LengthCM ($_.Depth))" -Force
-        }
+      https://www.sconstantinou.com/get-physicalmemoryarray
+  #>
 
-        if ($null -ne $_.Height){
-            $PhysicalMemoryArray |
-                Add-Member -MemberType NoteProperty -Name "HeightCM" -Value "$(Get-LengthCM ($_.Height))" -Force
-        }
+  [cmdletbinding()]
 
-        if ($null -ne $_.Width){
-            $PhysicalMemoryArray |
-                Add-Member -MemberType NoteProperty -Name "WidthCM" -Value "$(Get-LengthCM ($_.Width))" -Force
-        }
+  param (
+    [parameter(ValueFromPipeline = $true)][alias('cn')][String[]]$ComputerName,
+    [alias('cred')][ValidateNotNull()][pscredential][System.Management.Automation.Credential()]$Credential = [pscredential]::Empty,
+    [alias('a')][validateset('Default','Digest','Negotiate','Basic','Kerberos','NtlmDomain','CredSsp')][String]$Authentication,
+    [alias('p')][validateset('WinRM','DCOM')][String]$Protocol,
+    [SupportsWildcards()][alias('Property')][String[]]$Properties
+  )
 
-        if ($null -ne $_.Weight){
-            $PhysicalMemoryArray |
-                Add-Member -MemberType NoteProperty -Name "WeightGr" -Value "$(Get-WeightGram ($_.Weight))" -Force
-        }
+  $ClassName = 'Win32_PhysicalMemoryArray'
+  [Collections.ArrayList]$DefaultProperties = 'Name', 'MemoryDevices', 'MaxCapacity', 'Model', 'Tag'
 
-        if (($_.PSObject.Properties.Name -match "WeightGr") -and ($_.WeightGr -ge 1000)){
-            $PhysicalMemoryArray |
-                Add-Member -MemberType NoteProperty -Name "WeightKg" -Value "$(Get-WeightKg ($_.Weight))" -Force
-        }
+  [Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+  $RemoveProperties = @('CreationClassName')
+  foreach ($_ in $RemoveProperties)
+  {
+    $AllProperties.Remove($_)
+  }
+
+  $PhysicalMemoryArray = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Credential $Credential -Authentication $Authentication -Protocol $Protocol -Properties $AllProperties
+
+  foreach ($_ in $PhysicalMemoryArray)
+  {
+    [uint64]$MaxCapacity = $_.MaxCapacity * 1KB
+    [uint64]$MaxCapacityEx = $_.MaxCapacityEx * 1KB
+
+    switch ($MaxCapacity){
+      {
+        $MaxCapacity -ge 1MB
+      }
+      {
+        $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name 'MaxCapacityMB' -Value '' -Force
+      }
+      {
+        $MaxCapacity -ge 1GB
+      }
+      {
+        $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name 'MaxCapacityGB' -Value '' -Force
+      }
+      {
+        $MaxCapacity -ge 1TB
+      }
+      {
+        $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name 'MaxCapacityTB' -Value '' -Force
+      }
+      {
+        $MaxCapacity -ge 1PB
+      }
+      {
+        $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name 'MaxCapacityPB' -Value '' -Force
+      }
     }
 
-    foreach ($_ in $PhysicalMemoryArray){
-
-        $_.Location = Get-PhysicalMemoryArrayLocation ($_.Location)
-        $_.MemoryErrorCorrection = Get-MemoryErrorCorrection ($_.MemoryErrorCorrection)
-        $_.Use = Get-PhysicalMemoryArrayUse ($_.Use)
-        if ($_.PSObject.Properties.Name -match "MaxCapacityMB"){$_.MaxCapacityMB = Get-SizeMB ($_.MaxCapacity * 1KB)}
-        if ($_.PSObject.Properties.Name -match "MaxCapacityGB"){$_.MaxCapacityGB = Get-SizeGB ($_.MaxCapacity * 1KB)}
-        if ($_.PSObject.Properties.Name -match "MaxCapacityTB"){$_.MaxCapacityTB = Get-SizeTB ($_.MaxCapacity * 1KB)}
-        if ($_.PSObject.Properties.Name -match "MaxCapacityPB"){$_.MaxCapacityPB = Get-SizePB ($_.MaxCapacity * 1KB)}
-        if ($_.PSObject.Properties.Name -match "MaxCapacityExMB"){$_.MaxCapacityExMB = Get-SizeMB ($_.MaxCapacityEx * 1KB)}
-        if ($_.PSObject.Properties.Name -match "MaxCapacityExGB"){$_.MaxCapacityExGB = Get-SizeGB ($_.MaxCapacityEx * 1KB)}
-        if ($_.PSObject.Properties.Name -match "MaxCapacityExTB"){$_.MaxCapacityExTB = Get-SizeTB ($_.MaxCapacityEx * 1KB)}
-        if ($_.PSObject.Properties.Name -match "MaxCapacityExPB"){$_.MaxCapacityExPB = Get-SizePB ($_.MaxCapacityEx * 1KB)}
+    switch ($MaxCapacityEx){
+      {
+        $MaxCapacityEx -ge 1MB
+      }
+      {
+        $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name 'MaxCapacityExMB' -Value '' -Force
+      }
+      {
+        $MaxCapacityEx -ge 1GB
+      }
+      {
+        $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name 'MaxCapacityExGB' -Value '' -Force
+      }
+      {
+        $MaxCapacityEx -ge 1TB
+      }
+      {
+        $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name 'MaxCapacityExTB' -Value '' -Force
+      }
+      {
+        $MaxCapacityEx -ge 1PB
+      }
+      {
+        $PhysicalMemoryArray | Add-Member -MemberType NoteProperty -Name 'MaxCapacityExPB' -Value '' -Force
+      }
     }
 
-    Optimize-Output -Object $PhysicalMemoryArray -Properties $Properties -DefaultProperties $DefaultProperties
+    if ($null -ne $_.Depth)
+    {
+      $PhysicalMemoryArray |
+      Add-Member -MemberType NoteProperty -Name 'DepthCM' -Value "$(Get-LengthCM -Inches ($_.Depth))" -Force
+    }
+
+    if ($null -ne $_.Height)
+    {
+      $PhysicalMemoryArray |
+      Add-Member -MemberType NoteProperty -Name 'HeightCM' -Value "$(Get-LengthCM -Inches ($_.Height))" -Force
+    }
+
+    if ($null -ne $_.Width)
+    {
+      $PhysicalMemoryArray |
+      Add-Member -MemberType NoteProperty -Name 'WidthCM' -Value "$(Get-LengthCM -Inches ($_.Width))" -Force
+    }
+
+    if ($null -ne $_.Weight)
+    {
+      $PhysicalMemoryArray |
+      Add-Member -MemberType NoteProperty -Name 'WeightGr' -Value "$(Get-WeightGram -Pounds ($_.Weight))" -Force
+    }
+
+    if (($_.PSObject.Properties.Name -match 'WeightGr') -and ($_.WeightGr -ge 1000))
+    {
+      $PhysicalMemoryArray |
+      Add-Member -MemberType NoteProperty -Name 'WeightKg' -Value "$(Get-WeightKg -Pounds ($_.Weight))" -Force
+    }
+  }
+
+  foreach ($_ in $PhysicalMemoryArray)
+  {
+    $_.Location = Get-PhysicalMemoryArrayLocation -Code ($_.Location)
+    $_.MemoryErrorCorrection = Get-MemoryErrorCorrection -Code ($_.MemoryErrorCorrection)
+    $_.Use = Get-PhysicalMemoryArrayUse -Code ($_.Use)
+    if ($_.PSObject.Properties.Name -match 'MaxCapacityMB')
+    {
+      $_.MaxCapacityMB = Get-SizeMB -Size ($_.MaxCapacity * 1KB)
+    }
+    if ($_.PSObject.Properties.Name -match 'MaxCapacityGB')
+    {
+      $_.MaxCapacityGB = Get-SizeGB -Size ($_.MaxCapacity * 1KB)
+    }
+    if ($_.PSObject.Properties.Name -match 'MaxCapacityTB')
+    {
+      $_.MaxCapacityTB = Get-SizeTB -Size ($_.MaxCapacity * 1KB)
+    }
+    if ($_.PSObject.Properties.Name -match 'MaxCapacityPB')
+    {
+      $_.MaxCapacityPB = Get-SizePB -Size ($_.MaxCapacity * 1KB)
+    }
+    if ($_.PSObject.Properties.Name -match 'MaxCapacityExMB')
+    {
+      $_.MaxCapacityExMB = Get-SizeMB -Size ($_.MaxCapacityEx * 1KB)
+    }
+    if ($_.PSObject.Properties.Name -match 'MaxCapacityExGB')
+    {
+      $_.MaxCapacityExGB = Get-SizeGB -Size ($_.MaxCapacityEx * 1KB)
+    }
+    if ($_.PSObject.Properties.Name -match 'MaxCapacityExTB')
+    {
+      $_.MaxCapacityExTB = Get-SizeTB -Size ($_.MaxCapacityEx * 1KB)
+    }
+    if ($_.PSObject.Properties.Name -match 'MaxCapacityExPB')
+    {
+      $_.MaxCapacityExPB = Get-SizePB -Size ($_.MaxCapacityEx * 1KB)
+    }
+  }
+
+  Optimize-Output -Object $PhysicalMemoryArray -Properties $Properties -DefaultProperties $DefaultProperties
 }

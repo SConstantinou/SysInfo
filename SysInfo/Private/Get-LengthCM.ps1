@@ -1,8 +1,37 @@
-﻿Function Get-LengthCM {
+﻿Function Get-LengthCM 
+{
+  <#
+      .SYNOPSIS
+      Converts inches to cm
 
-    param ([float]$Inches)
+      .DESCRIPTION
+      Converts inches to cm
 
-    if ($Inches -ne ''){[math]::round($Inches * 2.54,2)}
+      .PARAMETER Inches
+      number of inches
 
-    Return
+      .EXAMPLE
+      Get-LengthCM -Inches Value
+      Converts inches to cm
+
+      .LINK
+      https://www.sconstantinou.com
+
+      .INPUTS
+      None
+
+      .OUTPUTS
+      Float
+  #>
+
+
+
+  param ([Parameter(Mandatory = $true,HelpMessage = 'Inches coming from system')][float]$Inches)
+
+  if ($Inches -ne '')
+  {
+    [math]::round($Inches * 2.54,2)
+  }
+
+  Return
 }

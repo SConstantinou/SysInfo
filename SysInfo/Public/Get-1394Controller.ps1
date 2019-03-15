@@ -14,6 +14,16 @@ and converts all codes in results into human readable format.
 Specifies the computer names or IP Addresses of the systems that
 we want to get the information from.
 
+.PARAMETER Credential
+
+Specifies the credentials that will be used to get the information
+from remote system.
+
+.PARAMETER Authentication
+
+Specifies the authentication that will be used to connect to the
+remote system to get the information from.
+
 .PARAMETER Protocol
 
 Specifies the protocol that will be used to get the information
@@ -83,6 +93,18 @@ PS C:\> Get-1394Controller -ComputerName Server1 -Protocol DCOM
 
 This command gets the information from Server1 using DCOM protocol
 
+.EXAMPLE
+
+PS C:\> Get-1394Controller -ComputerName Server1 -Credential domain\user
+
+This command gets the information from Server1 using a different user
+
+.EXAMPLE
+
+PS C:\> Get-1394Controller -ComputerName Server1 -Credential domain\user -Authentication Basic
+
+This command gets the information from Server1 using a different user using basic authentication
+
 .LINK
 
 https://www.sconstantinou.com/get-1394controller
@@ -91,26 +113,28 @@ https://www.sconstantinou.com/get-1394controller
     [cmdletbinding()]
 
     param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [SupportsWildcards()][alias("Property")][String[]]$Properties)
+        [parameter(ValueFromPipeline = $true)][alias('cn')][String[]]$ComputerName,
+        [alias('cred')][ValidateNotNull()][pscredential][System.Management.Automation.Credential()]$Credential = [pscredential]::Empty,
+        [alias('a')][validateset('Default','Digest','Negotiate','Basic','Kerberos','NtlmDomain','CredSsp')][String]$Authentication,
+        [alias('p')][validateset('WinRM','DCOM')][String]$Protocol,
+        [SupportsWildcards()][alias('Property')][String[]]$Properties)
 
     $ClassName = 'Win32_1394Controller'
-    [System.Collections.ArrayList]$DefaultProperties = 'Manufacturer','Name','Status','SystemName'
+    [Collections.ArrayList]$DefaultProperties = 'Manufacturer','Name','Status','SystemName'
 
-    [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
+    [Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+    $RemoveProperties = @('CreationClassName','SystemCreationClassName','PNPDeviceID')
     foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
 
-    $1394Controller = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
+    $1394Controller = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Credential $Credential -Authentication $Authentication -Protocol $Protocol -Properties $AllProperties
 
     foreach ($_ in $1394Controller){
 
-        $_.Availability = Get-Availability ($_.Availability)
-        $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
-        $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
-        $_.ProtocolSupported = Get-ProtocolSupported ($_.ProtocolSupported)
+        $_.Availability = Get-Availability -Code ($_.Availability)
+        $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode -Code ($_.ConfigManagerErrorCode)
+        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode -Code ($_.PowerManagementCapabilities)
+        $_.StatusInfo = Get-StatusInfo -Code ($_.StatusInfo)
+        $_.ProtocolSupported = Get-ProtocolSupported -Code ($_.ProtocolSupported)
     }
 
     Optimize-Output -Object $1394Controller -Properties $Properties -DefaultProperties $DefaultProperties

@@ -1,152 +1,196 @@
-﻿function Get-BaseBoard {
-<#
-.SYNOPSIS
+﻿function Get-BaseBoard 
+{
+  <#
+      .SYNOPSIS
 
-Gets the information of a baseboard.
+      Gets the information of a baseboard.
 
-.DESCRIPTION
+      .DESCRIPTION
 
-Gets the information of a baseboard and converts all codes
-in results into human readable format.
+      Gets the information of a baseboard and converts all codes
+      in results into human readable format.
 
-.PARAMETER ComputerName
+      .PARAMETER ComputerName
 
-Specifies the computer names or IP Addresses of the systems that
-we want to get the information from.
+      Specifies the computer names or IP Addresses of the systems that
+      we want to get the information from.
 
-.PARAMETER Protocol
+      .PARAMETER Credential
 
-Specifies the protocol that will be used to get the information
-from the remote system.
+      Specifies the credentials that will be used to get the information
+      from remote system.
 
-.PARAMETER Properties
+      .PARAMETER Authentication
 
-Specifies the object properties that appear in the display and
-the order in which they appear. Wildcards are permitted.
+      Specifies the authentication that will be used to connect to the
+      remote system to get the information from.
 
-.INPUTS
+      .PARAMETER Protocol
 
-System.Array. Get-BaseBoard can accept a string value to
-determine the ComputerName parameter.
+      Specifies the protocol that will be used to get the information
+      from the remote system.
 
-.OUTPUTS
+      .PARAMETER Properties
 
-System.Object. Get-BaseBoard returns an object containing
-all the information that has been retrieved.
+      Specifies the object properties that appear in the display and
+      the order in which they appear. Wildcards are permitted.
 
-.EXAMPLE
+      .INPUTS
 
-PS C:\> Get-BaseBoard
+      System.Array. Get-BaseBoard can accept a string value to
+      determine the ComputerName parameter.
 
-This command gets the information from local system
+      .OUTPUTS
 
-.EXAMPLE
+      System.Object. Get-BaseBoard returns an object containing
+      all the information that has been retrieved.
 
-PS C:\> Get-BaseBoard -ComputerName Server1
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-BaseBoard
 
-.EXAMPLE
+      This command gets the information from local system
 
-PS C:\> Get-BaseBoard -ComputerName "192.168.0.5"
+      .EXAMPLE
 
-This command gets the information from remote system with IP 192.168.0.5
+      PS C:\> Get-BaseBoard -ComputerName Server1
 
-.EXAMPLE
+      This command gets the information from Server1
 
-PS C:\> Get-BaseBoard -ComputerName Server1,Server2,Server3
+      .EXAMPLE
 
-This command gets the information from Server1, Server2 and Server3
+      PS C:\> Get-BaseBoard -ComputerName "192.168.0.5"
 
-.EXAMPLE
+      This command gets the information from remote system with IP 192.168.0.5
 
-PS C:\> Get-BaseBoard -ComputerName Server1 -Properties Name,Status
+      .EXAMPLE
 
-This command gets the information from Server1 and will output only Name
-and Status Properties.
+      PS C:\> Get-BaseBoard -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
+      This command gets the information from Server1, Server2 and Server3
 
-PS C:\> Get-BaseBoard -ComputerName Server1 -Properties *
+      .EXAMPLE
 
-This command gets the information from Server1 and will output all properties
+      PS C:\> Get-BaseBoard -ComputerName Server1 -Properties Name,Status
 
-.EXAMPLE
+      This command gets the information from Server1 and will output only Name
+      and Status Properties.
 
-PS C:\> "Server1" | Get-BaseBoard
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-BaseBoard -ComputerName Server1 -Properties *
 
-.EXAMPLE
+      This command gets the information from Server1 and will output all properties
 
-PS C:\> Get-BaseBoard -ComputerName Server1 -Protocol DCOM
+      .EXAMPLE
 
-This command gets the information from Server1 using DCOM protocol
+      PS C:\> "Server1" | Get-BaseBoard
 
-.LINK
+      This command gets the information from Server1
 
-https://www.sconstantinou.com/get-baseboard
-#>
+      .EXAMPLE
 
-    [cmdletbinding()]
+      PS C:\> Get-BaseBoard -ComputerName Server1 -Protocol DCOM
 
-    param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [SupportsWildcards()][alias("Property")][String[]]$Properties)
+      This command gets the information from Server1 using DCOM protocol
 
-    $ClassName = 'Win32_BaseBoard'
-    [System.Collections.ArrayList]$DefaultProperties = 'Manufacturer','Model','Name','SerialNumber','SKU','Product'
+      .EXAMPLE
 
-    [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName")
-    foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
+      PS C:\> Get-BaseBoard -ComputerName Server1 -Credential domain\user
 
-    $BaseBoard = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
+      This command gets the information from Server1 using a different user
 
-    foreach ($_ in $BaseBoard){
+      .EXAMPLE
 
-        if ($null -ne $_.Depth){
-            $BaseBoard |
-                Add-Member -MemberType NoteProperty -Name "DepthCM" -Value "" -Force
-        }
+      PS C:\> Get-BaseBoard -ComputerName Server1 -Credential domain\user -Authentication Basic
 
-        if ($null -ne $_.Height){
-            $BaseBoard |
-                Add-Member -MemberType NoteProperty -Name "HeightCM" -Value "" -Force
-        }
+      This command gets the information from Server1 using a different user using basic authentication
 
-        if ($null -ne $_.Width){
-            $BaseBoard |
-                Add-Member -MemberType NoteProperty -Name "WidthCM" -Value "" -Force
-        }
+      .LINK
 
-        if ($null -ne $_.Weight){
-            $BaseBoard |
-                Add-Member -MemberType NoteProperty -Name "WeightGr" -Value "" -Force
-        }
+      https://www.sconstantinou.com/get-baseboard
+  #>
+
+  [cmdletbinding()]
+
+  param (
+    [parameter(ValueFromPipeline = $true)][alias('cn')][String[]]$ComputerName,
+    [alias('cred')][ValidateNotNull()][pscredential][System.Management.Automation.Credential()]$Credential = [pscredential]::Empty,
+    [alias('a')][validateset('Default','Digest','Negotiate','Basic','Kerberos','NtlmDomain','CredSsp')][String]$Authentication,
+    [alias('p')][validateset('WinRM','DCOM')][String]$Protocol,
+  [SupportsWildcards()][alias('Property')][String[]]$Properties)
+
+  $ClassName = 'Win32_BaseBoard'
+  [Collections.ArrayList]$DefaultProperties = 'Manufacturer', 'Model', 'Name', 'SerialNumber', 'SKU', 'Product'
+
+  [Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+  $RemoveProperties = @('CreationClassName')
+  foreach ($_ in $RemoveProperties)
+  {
+    $AllProperties.Remove($_)
+  }
+
+  $BaseBoard = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Credential $Credential -Authentication $Authentication -Protocol $Protocol -Properties $AllProperties
+
+  foreach ($_ in $BaseBoard)
+  {
+    if ($null -ne $_.Depth)
+    {
+      $BaseBoard | Add-Member -MemberType NoteProperty -Name 'DepthCM' -Value '' -Force
     }
 
-    Foreach ($_ in $BaseBoard){
-
-        if ($_.PSObject.Properties.Name -match "DepthCM"){$_.DepthCM = Get-LengthCM ($_.Depth)}
-        if ($_.PSObject.Properties.Name -match "HeightCM"){$_.HeightCM = Get-LengthCM ($_.Height)}
-        if ($_.PSObject.Properties.Name -match "WidthCM"){$_.WidthCM = Get-LengthCM ($_.Width)}
-        if ($_.PSObject.Properties.Name -match "WeightGr"){$_.WeightGr = Get-WeightGram ($_.Weight)}
+    if ($null -ne $_.Height)
+    {
+      $BaseBoard | Add-Member -MemberType NoteProperty -Name 'HeightCM' -Value '' -Force
     }
 
-    foreach ($_ in $BaseBoard){
-
-        if (($BaseBoard.PSObject.Properties.Name -match "WeightGr") -and ($_.WeightGr -ge 1000)){
-            $BaseBoard |
-                Add-Member -MemberType NoteProperty -Name "WeightKg" -Value "" -Force
-        }
+    if ($null -ne $_.Width)
+    {
+      $BaseBoard | Add-Member -MemberType NoteProperty -Name 'WidthCM' -Value '' -Force
     }
 
-    foreach ($_ in $BaseBoard){
-
-        if ($_.PSObject.Properties.Name -match "WeightKg"){$_.WeightKg = Get-WeightKg ($_.Weight)}
+    if ($null -ne $_.Weight)
+    {
+      $BaseBoard | Add-Member -MemberType NoteProperty -Name 'WeightGr' -Value '' -Force
     }
+  }
 
-    Optimize-Output -Object $BaseBoard -Properties $Properties -DefaultProperties $DefaultProperties
+  Foreach ($_ in $BaseBoard)
+  {
+    if ($_.PSObject.Properties.Name -match 'DepthCM')
+    {
+      $_.DepthCM = Get-LengthCM -Inches ($_.Depth)
+    }
+    if ($_.PSObject.Properties.Name -match 'HeightCM')
+    {
+      $_.HeightCM = Get-LengthCM -Inches ($_.Height)
+    }
+    if ($_.PSObject.Properties.Name -match 'WidthCM')
+    {
+      $_.WidthCM = Get-LengthCM -Inches ($_.Width)
+    }
+    if ($_.PSObject.Properties.Name -match 'WeightGr')
+    {
+      $_.WeightGr = Get-WeightGram -Pounds ($_.Weight)
+    }
+  }
+
+  foreach ($_ in $BaseBoard)
+  {
+    if (($BaseBoard.PSObject.Properties.Name -match 'WeightGr') -and ($_.WeightGr -ge 1000))
+    {
+      $BaseBoard |
+      Add-Member -MemberType NoteProperty -Name 'WeightKg' -Value '' -Force
+    }
+  }
+
+  foreach ($_ in $BaseBoard)
+  {
+    if ($_.PSObject.Properties.Name -match 'WeightKg')
+    {
+      $_.WeightKg = Get-WeightKg -Pounds ($_.Weight)
+    }
+  }
+
+  Optimize-Output -Object $BaseBoard -Properties $Properties -DefaultProperties $DefaultProperties
 }

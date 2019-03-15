@@ -1,123 +1,152 @@
-﻿function Get-PointingDevice {
-<#
-.SYNOPSIS
+﻿function Get-PointingDevice 
+{
+  <#
+      .SYNOPSIS
 
-Gets the information about an input device used to point to and
-select regions on the display of a computer system running Windows.
+      Gets the information about an input device used to point to and
+      select regions on the display of a computer system running Windows.
 
-.DESCRIPTION
+      .DESCRIPTION
 
-Gets the information about an input device used to point to and
-select regions on the display of a computer system running Windows
-and converts all codes in results into human readable format.
-Output includes any device used to manipulate a pointer, or point
-to the display on a computer system running Windows
+      Gets the information about an input device used to point to and
+      select regions on the display of a computer system running Windows
+      and converts all codes in results into human readable format.
+      Output includes any device used to manipulate a pointer, or point
+      to the display on a computer system running Windows
 
-.PARAMETER ComputerName
+      .PARAMETER ComputerName
 
-Specifies the computer names or IP Addresses of the systems that
-we want to get the information from.
+      Specifies the computer names or IP Addresses of the systems that
+      we want to get the information from.
 
-.PARAMETER Protocol
+      .PARAMETER Credential
 
-Specifies the protocol that will be used to get the information
-from the remote system.
+      Specifies the credentials that will be used to get the information
+      from remote system.
 
-.PARAMETER Properties
+      .PARAMETER Authentication
 
-Specifies the object properties that appear in the display and
-the order in which they appear. Wildcards are permitted.
+      Specifies the authentication that will be used to connect to the
+      remote system to get the information from.
 
-.INPUTS
+      .PARAMETER Protocol
 
-System.Array. Get-PointingDevice can accept a string value
-to determine the ComputerName parameter.
+      Specifies the protocol that will be used to get the information
+      from the remote system.
 
-.OUTPUTS
+      .PARAMETER Properties
 
-System.Object. Get-PointingDevice returns an object containing
-all the information that has been retrieved.
+      Specifies the object properties that appear in the display and
+      the order in which they appear. Wildcards are permitted.
 
-.EXAMPLE
+      .INPUTS
 
-PS C:\> Get-PointingDevice
+      System.Array. Get-PointingDevice can accept a string value
+      to determine the ComputerName parameter.
 
-This command gets the information from local system
+      .OUTPUTS
 
-.EXAMPLE
+      System.Object. Get-PointingDevice returns an object containing
+      all the information that has been retrieved.
 
-PS C:\> Get-PointingDevice -ComputerName Server1
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-PointingDevice
 
-.EXAMPLE
+      This command gets the information from local system
 
-PS C:\> Get-PointingDevice -ComputerName "192.168.0.5"
+      .EXAMPLE
 
-This command gets the information from remote system with IP 192.168.0.5
+      PS C:\> Get-PointingDevice -ComputerName Server1
 
-.EXAMPLE
+      This command gets the information from Server1
 
-PS C:\> Get-PointingDevice -ComputerName Server1,Server2,Server3
+      .EXAMPLE
 
-This command gets the information from Server1, Server2 and Server3
+      PS C:\> Get-PointingDevice -ComputerName "192.168.0.5"
 
-.EXAMPLE
+      This command gets the information from remote system with IP 192.168.0.5
 
-PS C:\> Get-PointingDevice -ComputerName Server1 -Properties Name,Status
+      .EXAMPLE
 
-This command gets the information from Server1 and will output only Name
-and Status Properties.
+      PS C:\> Get-PointingDevice -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
+      This command gets the information from Server1, Server2 and Server3
 
-PS C:\> Get-PointingDevice -ComputerName Server1 -Properties *
+      .EXAMPLE
 
-This command gets the information from Server1 and will output all properties
+      PS C:\> Get-PointingDevice -ComputerName Server1 -Properties Name,Status
 
-.EXAMPLE
+      This command gets the information from Server1 and will output only Name
+      and Status Properties.
 
-PS C:\> "Server1" | Get-PointingDevice
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-PointingDevice -ComputerName Server1 -Properties *
 
-.EXAMPLE
+      This command gets the information from Server1 and will output all properties
 
-PS C:\> Get-PointingDevice -ComputerName Server1 -Protocol DCOM
+      .EXAMPLE
 
-This command gets the information from Server1 using DCOM protocol
+      PS C:\> "Server1" | Get-PointingDevice
 
-.LINK
+      This command gets the information from Server1
 
-https://www.sconstantinou.com/get-pointingdevice
-#>
+      .EXAMPLE
 
-    [cmdletbinding()]
+      PS C:\> Get-PointingDevice -ComputerName Server1 -Protocol DCOM
 
-    param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [SupportsWildcards()][alias("Property")][String[]]$Properties)
+      This command gets the information from Server1 using DCOM protocol
 
-    $ClassName = 'Win32_PointingDevice'
-    [System.Collections.ArrayList]$DefaultProperties = 'Name','Status','PointingType','DeviceInterface','HardwareType','Manufacturer','SystemName'
+      .EXAMPLE
 
-    [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName","SystemCreationClassName","DeviceID","PNPDeviceID")
-    foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
+      PS C:\> Get-PointingDevice -ComputerName Server1 -Credential domain\user
 
-    $PointingDevice = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
+      This command gets the information from Server1 using a different user
 
-    foreach ($_ in $PointingDevice){
+      .EXAMPLE
 
-        $_.Availability = Get-Availability ($_.Availability)
-        $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
-        $_.Handedness = Get-Handedness ($_.Handedness)
-        $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
-        $_.DeviceInterface = Get-DeviceInterface ($_.DeviceInterface)
-        $_.PointingType = Get-PointingType ($_.PointingType)
-    }
+      PS C:\> Get-PointingDevice -ComputerName Server1 -Credential domain\user -Authentication Basic
 
-    Optimize-Output -Object $PointingDevice -Properties $Properties -DefaultProperties $DefaultProperties
+      This command gets the information from Server1 using a different user using basic authentication
+
+      .LINK
+
+      https://www.sconstantinou.com/get-pointingdevice
+  #>
+
+  [cmdletbinding()]
+
+  param (
+    [parameter(ValueFromPipeline = $true)][alias('cn')][String[]]$ComputerName,
+    [alias('cred')][ValidateNotNull()][pscredential][System.Management.Automation.Credential()]$Credential = [pscredential]::Empty,
+    [alias('a')][validateset('Default','Digest','Negotiate','Basic','Kerberos','NtlmDomain','CredSsp')][String]$Authentication,
+    [alias('p')][validateset('WinRM','DCOM')][String]$Protocol,
+    [SupportsWildcards()][alias('Property')][String[]]$Properties
+  )
+
+  $ClassName = 'Win32_PointingDevice'
+  [Collections.ArrayList]$DefaultProperties = 'Name', 'Status', 'PointingType', 'DeviceInterface', 'HardwareType', 'Manufacturer', 'SystemName'
+
+  [Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+  $RemoveProperties = @('CreationClassName', 'SystemCreationClassName', 'DeviceID', 'PNPDeviceID')
+  foreach ($_ in $RemoveProperties)
+  {
+    $AllProperties.Remove($_)
+  }
+
+  $PointingDevice = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Credential $Credential -Authentication $Authentication -Protocol $Protocol -Properties $AllProperties
+
+  foreach ($_ in $PointingDevice)
+  {
+    $_.Availability = Get-Availability -Code ($_.Availability)
+    $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode -Code ($_.ConfigManagerErrorCode)
+    $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode -Code ($_.PowerManagementCapabilities)
+    $_.Handedness = Get-Handedness -Code ($_.Handedness)
+    $_.StatusInfo = Get-StatusInfo -Code ($_.StatusInfo)
+    $_.DeviceInterface = Get-DeviceInterface -Code ($_.DeviceInterface)
+    $_.PointingType = Get-PointingType -Code ($_.PointingType)
+  }
+
+  Optimize-Output -Object $PointingDevice -Properties $Properties -DefaultProperties $DefaultProperties
 }

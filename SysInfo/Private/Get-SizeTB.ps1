@@ -1,8 +1,35 @@
-﻿Function Get-SizeTB {
+﻿Function Get-SizeTB 
+{
+  <#
+      .SYNOPSIS
+      Converts bytes to Terabytes
 
-    param ([uint64]$Size)
+      .DESCRIPTION
+      Converts bytes to Terabytes
 
-    if ($Size -ne ''){[math]::round($Size / 1TB,2)}
+      .PARAMETER Size
+      Size in bytes from the system.
 
-    Return
+      .EXAMPLE
+      Get-SizeTB -Size Value
+      Converts bytes to Terabytes
+
+      .LINK
+      https://www.sconstantinou.com
+
+      .INPUTS
+      None
+
+      .OUTPUTS
+      Uint64
+  #>
+
+  param ([Parameter(Mandatory = $true,HelpMessage = 'Size in inches from the system')][uint64]$Size)
+
+  if ($Size -ne '')
+  {
+    [math]::round($Size / 1TB,2)
+  }
+
+  Return
 }

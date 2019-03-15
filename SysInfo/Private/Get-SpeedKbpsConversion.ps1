@@ -1,8 +1,35 @@
-﻿Function Get-SpeedKbpsConversion {
+﻿Function Get-SpeedKbpsConversion 
+{
+  <#
+      .SYNOPSIS
+      Converts bps to Kbps
 
-    param ([uint64]$Speed)
+      .DESCRIPTION
+      Converts bps to Kbps
 
-    if ($Speed -ne ''){[math]::round($Speed / 1000,2)}
+      .PARAMETER Speed
+      Speed in bps from the system..
 
-    Return
+      .EXAMPLE
+      Get-SpeedKbpsConversionn -Speed Value
+      Converts bps to Kbps
+
+      .LINK
+      https://www.sconstantinou.com
+
+      .INPUTS
+      None
+
+      .OUTPUTS
+      Uint64
+  #>
+
+  param ([Parameter(Mandatory = $true,HelpMessage = 'Speed received from the system')][uint64]$Speed)
+
+  if ($Speed -ne '')
+  {
+    [math]::round($Speed / 1000,2)
+  }
+
+  Return
 }

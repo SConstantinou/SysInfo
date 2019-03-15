@@ -1,120 +1,146 @@
-﻿function Get-PrinterConfiguration {
-<#
-.SYNOPSIS
+﻿function Get-PrinterConfiguration 
+{
+  <#
+      .SYNOPSIS
 
-Gets the information about the configuration for a printer device.
+      Gets the information about the configuration for a printer device.
 
-.DESCRIPTION
+      .DESCRIPTION
 
-Gets the information about the configuration for a printer device
-and converts all codes in results into human readable format.
-Output includes capabilities such as resolution, color, fonts
-and orientation.
+      Gets the information about the configuration for a printer device
+      and converts all codes in results into human readable format.
+      Output includes capabilities such as resolution, color, fonts
+      and orientation.
 
-.PARAMETER ComputerName
+      .PARAMETER ComputerName
 
-Specifies the computer names or IP Addresses of the systems that
-we want to get the information from.
+      Specifies the computer names or IP Addresses of the systems that
+      we want to get the information from.
 
-.PARAMETER Protocol
+      .PARAMETER Credential
 
-Specifies the protocol that will be used to get the information
-from the remote system.
+      Specifies the credentials that will be used to get the information
+      from remote system.
 
-.PARAMETER Properties
+      .PARAMETER Authentication
 
-Specifies the object properties that appear in the display and
-the order in which they appear. Wildcards are permitted.
+      Specifies the authentication that will be used to connect to the
+      remote system to get the information from.
 
-.INPUTS
+      .PARAMETER Protocol
 
-System.Array. Get-PrinterConfiguration can accept a string value
-to determine the ComputerName parameter.
+      Specifies the protocol that will be used to get the information
+      from the remote system.
 
-.OUTPUTS
+      .PARAMETER Properties
 
-System.Object. Get-PrinterConfiguration returns an object containing
-all the information that has been retrieved.
+      Specifies the object properties that appear in the display and
+      the order in which they appear. Wildcards are permitted.
 
-.EXAMPLE
+      .INPUTS
 
-PS C:\> Get-PrinterConfiguration
+      System.Array. Get-PrinterConfiguration can accept a string value
+      to determine the ComputerName parameter.
 
-This command gets the information from local system
+      .OUTPUTS
 
-.EXAMPLE
+      System.Object. Get-PrinterConfiguration returns an object containing
+      all the information that has been retrieved.
 
-PS C:\> Get-PrinterConfiguration -ComputerName Server1
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-PrinterConfiguration
 
-.EXAMPLE
+      This command gets the information from local system
 
-PS C:\> Get-PrinterConfiguration -ComputerName "192.168.0.5"
+      .EXAMPLE
 
-This command gets the information from remote system with IP 192.168.0.5
+      PS C:\> Get-PrinterConfiguration -ComputerName Server1
 
-.EXAMPLE
+      This command gets the information from Server1
 
-PS C:\> Get-PrinterConfiguration -ComputerName Server1,Server2,Server3
+      .EXAMPLE
 
-This command gets the information from Server1, Server2 and Server3
+      PS C:\> Get-PrinterConfiguration -ComputerName "192.168.0.5"
 
-.EXAMPLE
+      This command gets the information from remote system with IP 192.168.0.5
 
-PS C:\> Get-PrinterConfiguration -ComputerName Server1 -Properties Name,Status
+      .EXAMPLE
 
-This command gets the information from Server1 and will output only Name
-and Status Properties.
+      PS C:\> Get-PrinterConfiguration -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
+      This command gets the information from Server1, Server2 and Server3
 
-PS C:\> Get-PrinterConfiguration -ComputerName Server1 -Properties *
+      .EXAMPLE
 
-This command gets the information from Server1 and will output all properties
+      PS C:\> Get-PrinterConfiguration -ComputerName Server1 -Properties Name,Status
 
-.EXAMPLE
+      This command gets the information from Server1 and will output only Name
+      and Status Properties.
 
-PS C:\> "Server1" | Get-PrinterConfiguration
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-PrinterConfiguration -ComputerName Server1 -Properties *
 
-.EXAMPLE
+      This command gets the information from Server1 and will output all properties
 
-PS C:\> Get-PrinterConfiguration -ComputerName Server1 -Protocol DCOM
+      .EXAMPLE
 
-This command gets the information from Server1 using DCOM protocol
+      PS C:\> "Server1" | Get-PrinterConfiguration
 
-.LINK
+      This command gets the information from Server1
 
-https://www.sconstantinou.com/get-printerconfiguration
-#>
+      .EXAMPLE
 
-    [cmdletbinding()]
+      PS C:\> Get-PrinterConfiguration -ComputerName Server1 -Protocol DCOM
 
-    param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [SupportsWildcards()][alias("Property")][String[]]$Properties)
+      This command gets the information from Server1 using DCOM protocol
 
-    $ClassName = 'Win32_PrinterConfiguration'
-    [System.Collections.ArrayList]$DefaultProperties = 'PrintQuality','DriverVersion','Name','PaperSize','Caption','Manufacturer','SystemName'
+      .EXAMPLE
 
-    $AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+      PS C:\> Get-PrinterConfiguration -ComputerName Server1 -Credential domain\user
 
-    $PrinterConfiguration = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
+      This command gets the information from Server1 using a different user
 
-    foreach ($_ in $PrinterConfiguration){
+      .EXAMPLE
 
-        $_.Color = Get-Color ($_.Color)
-        $_.DitherType = Get-DitherType ($_.DitherType)
-        $_.ICMIntent = Get-ICMIntent ($_.ICMIntent)
-        $_.ICMMethod = Get-ICMMethod ($_.ICMMethod)
-        $_.MediaType = Get-PrinterMediaType ($_.MediaType)
-        $_.Orientation = Get-Orientation ($_.Orientation)
-        $_.PrintQuality = Get-PrintQuality ($_.PrintQuality)
-        $_.TTOption = Get-TTOption ($_.TTOption)
-    }
+      PS C:\> Get-PrinterConfiguration -ComputerName Server1 -Credential domain\user -Authentication Basic
 
-    Optimize-Output -Object $PrinterConfiguration -Properties $Properties -DefaultProperties $DefaultProperties
+      This command gets the information from Server1 using a different user using basic authentication
+
+      .LINK
+
+      https://www.sconstantinou.com/get-printerconfiguration
+  #>
+
+  [cmdletbinding()]
+
+  param (
+    [parameter(ValueFromPipeline = $true)][alias('cn')][String[]]$ComputerName,
+    [alias('cred')][ValidateNotNull()][pscredential][System.Management.Automation.Credential()]$Credential = [pscredential]::Empty,
+    [alias('a')][validateset('Default','Digest','Negotiate','Basic','Kerberos','NtlmDomain','CredSsp')][String]$Authentication,
+    [alias('p')][validateset('WinRM','DCOM')][String]$Protocol,
+    [SupportsWildcards()][alias('Property')][String[]]$Properties
+  )
+
+  $ClassName = 'Win32_PrinterConfiguration'
+  [Collections.ArrayList]$DefaultProperties = 'PrintQuality', 'DriverVersion', 'Name', 'PaperSize', 'Caption', 'Manufacturer', 'SystemName'
+
+  $AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+
+  $PrinterConfiguration = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Credential $Credential -Authentication $Authentication -Protocol $Protocol -Properties $AllProperties
+
+  foreach ($_ in $PrinterConfiguration)
+  {
+    $_.Color = Get-Color -Code ($_.Color)
+    $_.DitherType = Get-DitherType -Code ($_.DitherType)
+    $_.ICMIntent = Get-ICMIntent -Code ($_.ICMIntent)
+    $_.ICMMethod = Get-ICMMethod -Code ($_.ICMMethod)
+    $_.MediaType = Get-PrinterMediaType -Code ($_.MediaType)
+    $_.Orientation = Get-Orientation -Code ($_.Orientation)
+    $_.PrintQuality = Get-PrintQuality -Code ($_.PrintQuality)
+    $_.TTOption = Get-TTOption -Code ($_.TTOption)
+  }
+
+  Optimize-Output -Object $PrinterConfiguration -Properties $Properties -DefaultProperties $DefaultProperties
 }

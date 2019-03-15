@@ -1,146 +1,186 @@
-﻿function Get-FloppyDriveSysInfo {
-<#
-.SYNOPSIS
+﻿function Get-FloppyDriveSysInfo 
+{
+  <#
+      .SYNOPSIS
 
-Gets the information and functions of a floppy disk drive.
+      Gets the information and functions of a floppy disk drive.
 
-.DESCRIPTION
+      .DESCRIPTION
 
-Gets the information and functions of a floppy disk drive
-and converts all codes in results into human readable format.
-Get-FloppyDriveSysInfo is not available for use as of Windows 10
-and Windows Server 2016.
+      Gets the information and functions of a floppy disk drive
+      and converts all codes in results into human readable format.
+      Get-FloppyDriveSysInfo is not available for use as of Windows 10
+      and Windows Server 2016.
 
-.PARAMETER ComputerName
+      .PARAMETER ComputerName
 
-Specifies the computer names or IP Addresses of the systems that
-we want to get the information from.
+      Specifies the computer names or IP Addresses of the systems that
+      we want to get the information from.
 
-.PARAMETER Protocol
+      .PARAMETER Credential
 
-Specifies the protocol that will be used to get the information
-from the remote system.
+      Specifies the credentials that will be used to get the information
+      from remote system.
 
-.PARAMETER Properties
+      .PARAMETER Authentication
 
-Specifies the object properties that appear in the display and
-the order in which they appear. Wildcards are permitted.
+      Specifies the authentication that will be used to connect to the
+      remote system to get the information from.
 
-.INPUTS
+      .PARAMETER Protocol
 
-System.Array. Get-FloppyDriveSysInfo can accept a string value to
-determine the ComputerName parameter.
+      Specifies the protocol that will be used to get the information
+      from the remote system.
 
-.OUTPUTS
+      .PARAMETER Properties
 
-System.Object. Get-FloppyDriveSysInfo returns an object containing
-all the information that has been retrieved.
+      Specifies the object properties that appear in the display and
+      the order in which they appear. Wildcards are permitted.
 
-.EXAMPLE
+      .INPUTS
 
-PS C:\> Get-FloppyDriveSysInfo
+      System.Array. Get-FloppyDriveSysInfo can accept a string value to
+      determine the ComputerName parameter.
 
-This command gets the information from local system
+      .OUTPUTS
 
-.EXAMPLE
+      System.Object. Get-FloppyDriveSysInfo returns an object containing
+      all the information that has been retrieved.
 
-PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-FloppyDriveSysInfo
 
-.EXAMPLE
+      This command gets the information from local system
 
-PS C:\> Get-FloppyDriveSysInfo -ComputerName "192.168.0.5"
+      .EXAMPLE
 
-This command gets the information from remote system with IP 192.168.0.5
+      PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1
 
-.EXAMPLE
+      This command gets the information from Server1
 
-PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1,Server2,Server3
+      .EXAMPLE
 
-This command gets the information from Server1, Server2 and Server3
+      PS C:\> Get-FloppyDriveSysInfo -ComputerName "192.168.0.5"
 
-.EXAMPLE
+      This command gets the information from remote system with IP 192.168.0.5
 
-PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1 -Properties Name,Status
+      .EXAMPLE
 
-This command gets the information from Server1 and will output only Name
-and Status Properties.
+      PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
+      This command gets the information from Server1, Server2 and Server3
 
-PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1 -Properties *
+      .EXAMPLE
 
-This command gets the information from Server1 and will output all properties
+      PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1 -Properties Name,Status
 
-.EXAMPLE
+      This command gets the information from Server1 and will output only Name
+      and Status Properties.
 
-PS C:\> "Server1" | Get-FloppyDriveSysInfo
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1 -Properties *
 
-.EXAMPLE
+      This command gets the information from Server1 and will output all properties
 
-PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1 -Protocol DCOM
+      .EXAMPLE
 
-This command gets the information from Server1 using DCOM protocol
+      PS C:\> "Server1" | Get-FloppyDriveSysInfo
 
-.LINK
+      This command gets the information from Server1
 
-https://www.sconstantinou.com/Get-FloppyDriveSysInfo
-#>
+      .EXAMPLE
 
-    [cmdletbinding()]
+      PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1 -Protocol DCOM
 
-    param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [SupportsWildcards()][alias("Property")][String[]]$Properties)
+      This command gets the information from Server1 using DCOM protocol
 
-    $ClassName = 'Win32_FloppyDrive'
-    [System.Collections.ArrayList]$DefaultProperties = 'Name','Manufacturer','Status','SystemName'
+      .EXAMPLE
 
-    [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName","SystemCreationClassName","PNPDeviceID")
-    foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
+      PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1 -Credential domain\user
 
-    $FloppyDrive = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
+      This command gets the information from Server1 using a different user
 
-    foreach ($_ in $FloppyDrive){
+      .EXAMPLE
 
-        if ($_.DefaultBlockSize -ge 1KB) {
+      PS C:\> Get-FloppyDriveSysInfo -ComputerName Server1 -Credential domain\user -Authentication Basic
 
-            $FloppyDrive | Add-Member -MemberType NoteProperty -Name "DefaultBlockSizeKB" -Value "" -Force
-        }
+      This command gets the information from Server1 using a different user using basic authentication
 
-        if ($_.MaxBlockSize -ge 1KB) {
+      .LINK
 
-            $FloppyDrive | Add-Member -MemberType NoteProperty -Name "MaxBlockSizeKB" -Value "" -Force
-        }
+      https://www.sconstantinou.com/Get-FloppyDriveSysInfo
+  #>
 
-        if (($_.MaxMediaSize * 1KB) -ge 1MB) {
+  [cmdletbinding()]
 
-            $FloppyDrive | Add-Member -MemberType NoteProperty -Name "MaxMediaSizeMB" -Value "" -Force
-        }
+  param (
+    [parameter(ValueFromPipeline = $true)][alias('cn')][String[]]$ComputerName,
+    [alias('cred')][ValidateNotNull()][pscredential][System.Management.Automation.Credential()]$Credential = [pscredential]::Empty,
+    [alias('a')][validateset('Default','Digest','Negotiate','Basic','Kerberos','NtlmDomain','CredSsp')][String]$Authentication,
+    [alias('p')][validateset('WinRM','DCOM')][String]$Protocol,
+    [SupportsWildcards()][alias('Property')][String[]]$Properties
+  )
 
-        if ($_.MinBlockSize -ge 1KB) {
+  $ClassName = 'Win32_FloppyDrive'
+  [Collections.ArrayList]$DefaultProperties = 'Name', 'Manufacturer', 'Status', 'SystemName'
 
-            $FloppyDrive | Add-Member -MemberType NoteProperty -Name "MinBlockSizeKB" -Value "" -Force
-        }
+  [Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+  $RemoveProperties = @('CreationClassName', 'SystemCreationClassName', 'PNPDeviceID')
+  foreach ($_ in $RemoveProperties)
+  {
+    $AllProperties.Remove($_)
+  }
 
+  $FloppyDrive = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Credential $Credential -Authentication $Authentication -Protocol $Protocol -Properties $AllProperties
+
+  foreach ($_ in $FloppyDrive)
+  {
+    if ($_.DefaultBlockSize -ge 1KB) 
+    {
+      $FloppyDrive | Add-Member -MemberType NoteProperty -Name 'DefaultBlockSizeKB' -Value '' -Force
     }
 
-    foreach ($_ in $FloppyDrive){
-
-        $_.Availability = Get-Availability ($_.Availability)
-        $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode ($_.ConfigManagerErrorCode)
-        $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode ($_.PowerManagementCapabilities)
-        $_.StatusInfo = Get-StatusInfo ($_.StatusInfo)
-        if ($_.PSObject.Properties.Name -match "DefaultBlockSizeKB"){$_.DefaultBlockSizeKB = Get-SizeKB ($_.DefaultBlockSize)}
-        if ($_.PSObject.Properties.Name -match "MaxBlockSizeKB"){$_.MaxBlockSizeKB = Get-SizeKB ($_.MaxBlockSize)}
-        if ($_.PSObject.Properties.Name -match "MaxMediaSizeMB"){$_.MaxMediaSizeMB = Get-SizeMB ($_.MaxMediaSize)}
-        if ($_.PSObject.Properties.Name -match "MinBlockSizeKB"){$_.MinBlockSizeKB = Get-SizeKB ($_.MinBlockSize)}
+    if ($_.MaxBlockSize -ge 1KB) 
+    {
+      $FloppyDrive | Add-Member -MemberType NoteProperty -Name 'MaxBlockSizeKB' -Value '' -Force
     }
 
-    Optimize-Output -Object $FloppyDrive -Properties $Properties -DefaultProperties $DefaultProperties
+    if (($_.MaxMediaSize * 1KB) -ge 1MB) 
+    {
+      $FloppyDrive | Add-Member -MemberType NoteProperty -Name 'MaxMediaSizeMB' -Value '' -Force
+    }
+
+    if ($_.MinBlockSize -ge 1KB) 
+    {
+      $FloppyDrive | Add-Member -MemberType NoteProperty -Name 'MinBlockSizeKB' -Value '' -Force
+    }
+  }
+
+  foreach ($_ in $FloppyDrive)
+  {
+    $_.Availability = Get-Availability -Code ($_.Availability)
+    $_.ConfigManagerErrorCode = Get-ConfigManagerErrorCode -Code ($_.ConfigManagerErrorCode)
+    $_.PowerManagementCapabilities = Get-PowerManagementCapabilitiesCode -Code ($_.PowerManagementCapabilities)
+    $_.StatusInfo = Get-StatusInfo -Code ($_.StatusInfo)
+    if ($_.PSObject.Properties.Name -match 'DefaultBlockSizeKB')
+    {
+      $_.DefaultBlockSizeKB = Get-SizeKB -Size ($_.DefaultBlockSize)
+    }
+    if ($_.PSObject.Properties.Name -match 'MaxBlockSizeKB')
+    {
+      $_.MaxBlockSizeKB = Get-SizeKB -Size ($_.MaxBlockSize)
+    }
+    if ($_.PSObject.Properties.Name -match 'MaxMediaSizeMB')
+    {
+      $_.MaxMediaSizeMB = Get-SizeMB -Size ($_.MaxMediaSize)
+    }
+    if ($_.PSObject.Properties.Name -match 'MinBlockSizeKB')
+    {
+      $_.MinBlockSizeKB = Get-SizeKB -Size ($_.MinBlockSize)
+    }
+  }
+
+  Optimize-Output -Object $FloppyDrive -Properties $Properties -DefaultProperties $DefaultProperties
 }

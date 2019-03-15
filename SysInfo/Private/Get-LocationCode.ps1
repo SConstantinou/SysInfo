@@ -1,4 +1,4 @@
-﻿Function Get-IPXFrameType 
+﻿Function Get-LocationCode 
 {
   <#
       .SYNOPSIS
@@ -11,7 +11,7 @@
       The code received the the system.
 
       .EXAMPLE
-      Get-IPXFrameType -Code Value
+      Get-LocationCode -Code Value
       Converts code to the associated string value
 
       .LINK
@@ -24,30 +24,26 @@
       System.String
   #>
 
-  param ([Parameter][uint32[]]$Code)
+  param ([Parameter(Mandatory = $true,HelpMessage = 'Code received from the system')][uint16]$Code)
 
-  if ($Code.Count -ne 0)
+  if ($Code -ne '')
   {
     switch ($Code){
       0 
       {
-        'Ethernet II'
+        'Internal'
       }
       1 
       {
-        'Ethernet 802.3'
+        'External'
       }
       2 
       {
-        'Ethernet 802.2'
+        'Reserved'
       }
       3 
       {
-        'Ethernet SNAP'
-      }
-      255 
-      {
-        'Auto'
+        'Unknown'
       }
       default 
       {

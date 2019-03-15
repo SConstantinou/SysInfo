@@ -1,35 +1,128 @@
-﻿Function Get-CurrentCapabilitiesCode {
+﻿Function Get-CurrentCapabilitiesCode 
+{
+  <#
+      .SYNOPSIS
+      Code lookup table
 
-    param ([uint16[]]$Code)
+      .DESCRIPTION
+      Checks and converts codes to meaning full information
 
-    if ($Code.Count -ne 0){
+      .PARAMETER Code
+      The code received the the system.
 
-        switch ($Code){
-            0 {'Unknown'}
-            1 {'Other'}
-            2 {'Color Printing'}
-            3 {'Duplex Printing'}
-            4 {'Copies'}
-            5 {'Collation'}
-            6 {'Stapling'}
-            7 {'Transparency Printing'}
-            8 {'Punch'}
-            9 {'Cover'}
-            10 {'Bind'}
-            11 {'Black and White Printing'}
-            12 {'One Sided'}
-            13 {'Two Sided Long Edge'}
-            14 {'Two Sided Short Edge'}
-            15 {'Portrait'}
-            16 {'Landscape'}
-            17 {'Reverse Portrait'}
-            18 {'Reverse Landscape'}
-            19 {'Quality High'}
-            20 {'Quality Normal'}
-            21 {'Quality Low'}
-            default {'Invalid Code'}
-        }
+      .EXAMPLE
+      Get-CurrentCapabilitiesCode -Code Value
+      Converts code to the associated string value
+
+      .LINK
+      https://www.sconstantinou.com
+
+      .INPUTS
+      None
+
+      .OUTPUTS
+      System.String
+  #>
+
+  param ([uint16[]]$Code)
+
+  if ($Code.Count -ne 0)
+  {
+    switch ($Code){
+      0 
+      {
+        'Unknown'
+      }
+      1 
+      {
+        'Other'
+      }
+      2 
+      {
+        'Color Printing'
+      }
+      3 
+      {
+        'Duplex Printing'
+      }
+      4 
+      {
+        'Copies'
+      }
+      5 
+      {
+        'Collation'
+      }
+      6 
+      {
+        'Stapling'
+      }
+      7 
+      {
+        'Transparency Printing'
+      }
+      8 
+      {
+        'Punch'
+      }
+      9 
+      {
+        'Cover'
+      }
+      10 
+      {
+        'Bind'
+      }
+      11 
+      {
+        'Black and White Printing'
+      }
+      12 
+      {
+        'One Sided'
+      }
+      13 
+      {
+        'Two Sided Long Edge'
+      }
+      14 
+      {
+        'Two Sided Short Edge'
+      }
+      15 
+      {
+        'Portrait'
+      }
+      16 
+      {
+        'Landscape'
+      }
+      17 
+      {
+        'Reverse Portrait'
+      }
+      18 
+      {
+        'Reverse Landscape'
+      }
+      19 
+      {
+        'Quality High'
+      }
+      20 
+      {
+        'Quality Normal'
+      }
+      21 
+      {
+        'Quality Low'
+      }
+      default 
+      {
+        'Invalid Code'
+      }
     }
+  }
 
-    Return
+  Return
 }

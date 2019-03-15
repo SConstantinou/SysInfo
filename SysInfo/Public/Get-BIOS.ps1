@@ -1,115 +1,140 @@
-﻿function Get-BIOS {
-<#
-.SYNOPSIS
+﻿function Get-BIOS 
+{
+  <#
+      .SYNOPSIS
 
-Gets the attributes of the computer system's basic input/output
-services (BIOS) that are installed on a computer.
+      Gets the attributes of the computer system's basic input/output
+      services (BIOS) that are installed on a computer.
 
-.DESCRIPTION
+      .DESCRIPTION
 
-Gets the attributes of the computer system's basic input/output
-services (BIOS) that are installed on a computer and converts
-all codes in results into human readable format.
+      Gets the attributes of the computer system's basic input/output
+      services (BIOS) that are installed on a computer and converts
+      all codes in results into human readable format.
 
-.PARAMETER ComputerName
+      .PARAMETER ComputerName
 
-Specifies the computer names or IP Addresses of the systems that
-we want to get the information from.
+      Specifies the computer names or IP Addresses of the systems that
+      we want to get the information from.
 
-.PARAMETER Protocol
+      .PARAMETER Credential
 
-Specifies the protocol that will be used to get the information
-from the remote system.
+      Specifies the credentials that will be used to get the information
+      from remote system.
 
-.PARAMETER Properties
+      .PARAMETER Authentication
 
-Specifies the object properties that appear in the display and
-the order in which they appear. Wildcards are permitted.
+      Specifies the authentication that will be used to connect to the
+      remote system to get the information from.
 
-.INPUTS
+      .PARAMETER Protocol
 
-System.Array. Get-BIOS can accept a string value to
-determine the ComputerName parameter.
+      Specifies the protocol that will be used to get the information
+      from the remote system.
 
-.OUTPUTS
+      .PARAMETER Properties
 
-System.Object. Get-BIOS returns an object containing
-all the information that has been retrieved.
+      Specifies the object properties that appear in the display and
+      the order in which they appear. Wildcards are permitted.
 
-.EXAMPLE
+      .INPUTS
 
-PS C:\> Get-BIOS
+      System.Array. Get-BIOS can accept a string value to
+      determine the ComputerName parameter.
 
-This command gets the information from local system
+      .OUTPUTS
 
-.EXAMPLE
+      System.Object. Get-BIOS returns an object containing
+      all the information that has been retrieved.
 
-PS C:\> Get-BIOS -ComputerName Server1
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-BIOS
 
-.EXAMPLE
+      This command gets the information from local system
 
-PS C:\> Get-BIOS -ComputerName "192.168.0.5"
+      .EXAMPLE
 
-This command gets the information from remote system with IP 192.168.0.5
+      PS C:\> Get-BIOS -ComputerName Server1
 
-.EXAMPLE
+      This command gets the information from Server1
 
-PS C:\> Get-BIOS -ComputerName Server1,Server2,Server3
+      .EXAMPLE
 
-This command gets the information from Server1, Server2 and Server3
+      PS C:\> Get-BIOS -ComputerName "192.168.0.5"
 
-.EXAMPLE
+      This command gets the information from remote system with IP 192.168.0.5
 
-PS C:\> Get-BIOS -ComputerName Server1 -Properties Name,Status
+      .EXAMPLE
 
-This command gets the information from Server1 and will output only Name
-and Status Properties.
+      PS C:\> Get-BIOS -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
+      This command gets the information from Server1, Server2 and Server3
 
-PS C:\> Get-BIOS -ComputerName Server1 -Properties *
+      .EXAMPLE
 
-This command gets the information from Server1 and will output all properties
+      PS C:\> Get-BIOS -ComputerName Server1 -Properties Name,Status
 
-.EXAMPLE
+      This command gets the information from Server1 and will output only Name
+      and Status Properties.
 
-PS C:\> "Server1" | Get-BIOS
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-BIOS -ComputerName Server1 -Properties *
 
-.EXAMPLE
+      This command gets the information from Server1 and will output all properties
 
-PS C:\> Get-BIOS -ComputerName Server1 -Protocol DCOM
+      .EXAMPLE
 
-This command gets the information from Server1 using DCOM protocol
+      PS C:\> "Server1" | Get-BIOS
 
-.LINK
+      This command gets the information from Server1
 
-https://www.sconstantinou.com/get-bios
-#>
+      .EXAMPLE
 
-    [cmdletbinding()]
+      PS C:\> Get-BIOS -ComputerName Server1 -Protocol DCOM
 
-    param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [SupportsWildcards()][alias("Property")][String[]]$Properties)
+      This command gets the information from Server1 using DCOM protocol
 
-    $ClassName = 'Win32_BIOS'
-    [System.Collections.ArrayList]$DefaultProperties = 'Name','Manufacturer','SerialNumber','Version','SMBIOSBIOSVersion','SystemName'
+      .EXAMPLE
 
-    $AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+      PS C:\> Get-BIOS -ComputerName Server1 -Credential domain\user
 
-    $BIOS = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
+      This command gets the information from Server1 using a different user
 
-    foreach ($_ in $BIOS){
+      .EXAMPLE
 
-        $_.BiosCharacteristics = Get-BiosCharacteristicsCode ($_.BiosCharacteristics)
-        $_.SoftwareElementState = Get-SoftwareElementState ($_.SoftwareElementState)
-        $_.TargetOperatingSystem = Get-TargetOperatingSystem ($_.TargetOperatingSystem)
-    }
+      PS C:\> Get-BIOS -ComputerName Server1 -Credential domain\user -Authentication Basic
 
-    Optimize-Output -Object $BIOS -Properties $Properties -DefaultProperties $DefaultProperties
+      This command gets the information from Server1 using a different user using basic authentication
+
+      .LINK
+
+      https://www.sconstantinou.com/get-bios
+  #>
+
+  [cmdletbinding()]
+
+  param (
+    [parameter(ValueFromPipeline = $true)][alias('cn')][String[]]$ComputerName,
+    [alias('cred')][ValidateNotNull()][pscredential][System.Management.Automation.Credential()]$Credential = [pscredential]::Empty,
+    [alias('a')][validateset('Default','Digest','Negotiate','Basic','Kerberos','NtlmDomain','CredSsp')][String]$Authentication,
+    [alias('p')][validateset('WinRM','DCOM')][String]$Protocol,
+  [SupportsWildcards()][alias('Property')][String[]]$Properties)
+
+  $ClassName = 'Win32_BIOS'
+  [Collections.ArrayList]$DefaultProperties = 'Name', 'Manufacturer', 'SerialNumber', 'Version', 'SMBIOSBIOSVersion', 'SystemName'
+
+  $AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+
+  $BIOS = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Credential $Credential -Authentication $Authentication -Protocol $Protocol -Properties $AllProperties
+
+  foreach ($_ in $BIOS)
+  {
+    $_.BiosCharacteristics = Get-BiosCharacteristicsCode -Code ($_.BiosCharacteristics)
+    $_.SoftwareElementState = Get-SoftwareElementState -Code ($_.SoftwareElementState)
+    $_.TargetOperatingSystem = Get-TargetOperatingSystem -Code ($_.TargetOperatingSystem)
+  }
+
+  Optimize-Output -Object $BIOS -Properties $Properties -DefaultProperties $DefaultProperties
 }

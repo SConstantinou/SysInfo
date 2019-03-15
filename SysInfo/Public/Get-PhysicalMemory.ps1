@@ -1,142 +1,185 @@
-﻿function Get-PhysicalMemory {
-<#
-.SYNOPSIS
+﻿function Get-PhysicalMemory 
+{
+  <#
+      .SYNOPSIS
 
-Gets the information about a physical memory device located on a
-computer system and available to the operating system.
+      Gets the information about a physical memory device located on a
+      computer system and available to the operating system.
 
-.DESCRIPTION
+      .DESCRIPTION
 
-Gets the information about a physical memory device located on a
-computer system and available to the operating system and converts
-all codes in results into human readable format.
+      Gets the information about a physical memory device located on a
+      computer system and available to the operating system and converts
+      all codes in results into human readable format.
 
-.PARAMETER ComputerName
+      .PARAMETER ComputerName
 
-Specifies the computer names or IP Addresses of the systems that
-we want to get the information from.
+      Specifies the computer names or IP Addresses of the systems that
+      we want to get the information from.
 
-.PARAMETER Protocol
+      .PARAMETER Credential
 
-Specifies the protocol that will be used to get the information
-from the remote system.
+      Specifies the credentials that will be used to get the information
+      from remote system.
 
-.PARAMETER Properties
+      .PARAMETER Authentication
 
-Specifies the object properties that appear in the display and
-the order in which they appear. Wildcards are permitted.
+      Specifies the authentication that will be used to connect to the
+      remote system to get the information from.
 
-.INPUTS
+      .PARAMETER Protocol
 
-System.Array. Get-PhysicalMemory can accept a string value
-to determine the ComputerName parameter.
+      Specifies the protocol that will be used to get the information
+      from the remote system.
 
-.OUTPUTS
+      .PARAMETER Properties
 
-System.Object. Get-PhysicalMemory returns an object containing
-all the information that has been retrieved.
+      Specifies the object properties that appear in the display and
+      the order in which they appear. Wildcards are permitted.
 
-.EXAMPLE
+      .INPUTS
 
-PS C:\> Get-PhysicalMemory
+      System.Array. Get-PhysicalMemory can accept a string value
+      to determine the ComputerName parameter.
 
-This command gets the information from local system
+      .OUTPUTS
 
-.EXAMPLE
+      System.Object. Get-PhysicalMemory returns an object containing
+      all the information that has been retrieved.
 
-PS C:\> Get-PhysicalMemory -ComputerName Server1
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\> Get-PhysicalMemory
 
-.EXAMPLE
+      This command gets the information from local system
 
-PS C:\> Get-PhysicalMemory -ComputerName "192.168.0.5"
+      .EXAMPLE
 
-This command gets the information from remote system with IP 192.168.0.5
+      PS C:\> Get-PhysicalMemory -ComputerName Server1
 
-.EXAMPLE
+      This command gets the information from Server1
 
-PS C:\> Get-PhysicalMemory -ComputerName Server1,Server2,Server3
+      .EXAMPLE
 
-This command gets the information from Server1, Server2 and Server3
+      PS C:\> Get-PhysicalMemory -ComputerName "192.168.0.5"
 
-.EXAMPLE
+      This command gets the information from remote system with IP 192.168.0.5
 
-PS C:\>  Get-NetworkAdapterConfiguration -ComputerName Server1 -Properties Name,Status
+      .EXAMPLE
 
-This command gets the information from Server1 and will output only Name
-and Status Properties
+      PS C:\> Get-PhysicalMemory -ComputerName Server1,Server2,Server3
 
-.EXAMPLE
+      This command gets the information from Server1, Server2 and Server3
 
-PS C:\>  Get-NetworkAdapterConfiguration -ComputerName Server1 -Properties *
+      .EXAMPLE
 
-This command gets the information from Server1 and will output all properties
+      PS C:\>  Get-NetworkAdapterConfiguration -ComputerName Server1 -Properties Name,Status
 
-.EXAMPLE
+      This command gets the information from Server1 and will output only Name
+      and Status Properties
 
-PS C:\> "Server1" | Get-PhysicalMemory
+      .EXAMPLE
 
-This command gets the information from Server1
+      PS C:\>  Get-NetworkAdapterConfiguration -ComputerName Server1 -Properties *
 
-.EXAMPLE
+      This command gets the information from Server1 and will output all properties
 
-PS C:\> Get-PhysicalMemory -ComputerName Server1 -Protocol DCOM
+      .EXAMPLE
 
-This command gets the information from Server1 using DCOM protocol
+      PS C:\> "Server1" | Get-PhysicalMemory
 
-.LINK
+      This command gets the information from Server1
 
-https://www.sconstantinou.com/get-physicalmemory
-#>
+      .EXAMPLE
 
-    [cmdletbinding()]
+      PS C:\> Get-PhysicalMemory -ComputerName Server1 -Protocol DCOM
 
-    param (
-        [parameter(ValueFromPipeline = $true)][alias("cn")][String[]]$ComputerName,
-        [alias("p")][validateset("WinRM","DCOM")][String]$Protocol,
-        [SupportsWildcards()][alias("Property")][String[]]$Properties)
+      This command gets the information from Server1 using DCOM protocol
 
-    $ClassName = 'Win32_PhysicalMemory'
-    [System.Collections.ArrayList]$DefaultProperties = 'Name','PartNumber','SerialNumber','Speed','DeviceLocator','Manufacturer','Tag','SystemName'
+      .EXAMPLE
 
-    [System.Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
-    $RemoveProperties = @("CreationClassName")
-    foreach ($_ in $RemoveProperties){$AllProperties.Remove($_)}
+      PS C:\> Get-PhysicalMemory -ComputerName Server1 -Credential domain\user
 
-    $PhysicalMemory = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Protocol $Protocol -Properties $AllProperties
+      This command gets the information from Server1 using a different user
 
-    foreach ($_ in $PhysicalMemory){
+      .EXAMPLE
 
-        [uint64]$Capacity = $_.Capacity
+      PS C:\> Get-PhysicalMemory -ComputerName Server1 -Credential domain\user -Authentication Basic
 
-        switch ($Capacity){
-            {$Capacity -gt 1KB}
-                {
-                    $PhysicalMemory | Add-Member -MemberType NoteProperty -Name "CapacityKB" -Value "" -Force
-                }
-            {$Capacity -gt 1MB}
-                {
-                    $PhysicalMemory | Add-Member -MemberType NoteProperty -Name "CapacityMB" -Value "" -Force
-                }
-            {$Capacity -gt 1GB}
-                {
-                    $PhysicalMemory | Add-Member -MemberType NoteProperty -Name "CapacityGB" -Value "" -Force
-                }
-        }
+      This command gets the information from Server1 using a different user using basic authentication
 
+      .LINK
+
+      https://www.sconstantinou.com/get-physicalmemory
+  #>
+
+  [cmdletbinding()]
+
+  param (
+    [parameter(ValueFromPipeline = $true)][alias('cn')][String[]]$ComputerName,
+    [alias('cred')][ValidateNotNull()][pscredential][System.Management.Automation.Credential()]$Credential = [pscredential]::Empty,
+    [alias('a')][validateset('Default','Digest','Negotiate','Basic','Kerberos','NtlmDomain','CredSsp')][String]$Authentication,
+    [alias('p')][validateset('WinRM','DCOM')][String]$Protocol,
+    [SupportsWildcards()][alias('Property')][String[]]$Properties
+  )
+
+  $ClassName = 'Win32_PhysicalMemory'
+  [Collections.ArrayList]$DefaultProperties = 'Name', 'PartNumber', 'SerialNumber', 'Speed', 'DeviceLocator', 'Manufacturer', 'Tag', 'SystemName'
+
+  [Collections.ArrayList]$AllProperties = ((Get-CimClass -ClassName $ClassName).CimClassProperties).Name
+  $RemoveProperties = @('CreationClassName')
+  foreach ($_ in $RemoveProperties)
+  {
+    $AllProperties.Remove($_)
+  }
+
+  $PhysicalMemory = Get-Info -ClassName $ClassName -ComputerName $ComputerName -Credential $Credential -Authentication $Authentication -Protocol $Protocol -Properties $AllProperties
+
+  foreach ($_ in $PhysicalMemory)
+  {
+    [uint64]$Capacity = $_.Capacity
+
+    switch ($Capacity){
+      {
+        $Capacity -gt 1KB
+      }
+      {
+        $PhysicalMemory | Add-Member -MemberType NoteProperty -Name 'CapacityKB' -Value '' -Force
+      }
+      {
+        $Capacity -gt 1MB
+      }
+      {
+        $PhysicalMemory | Add-Member -MemberType NoteProperty -Name 'CapacityMB' -Value '' -Force
+      }
+      {
+        $Capacity -gt 1GB
+      }
+      {
+        $PhysicalMemory | Add-Member -MemberType NoteProperty -Name 'CapacityGB' -Value '' -Force
+      }
     }
+  }
 
-    foreach ($_ in $PhysicalMemory){
-
-        $_.FormFactor = Get-FormFactor ($_.FormFactor)
-        $_.InterleavePosition = Get-InterleavePosition ($_.InterleavePosition)
-        $_.MemoryType = Get-MemoryType ($_.MemoryType)
-        $_.TypeDetail = Get-TypeDetail ($_.TypeDetail)
-        if ($_.PSObject.Properties.Name -match "CapacityKB"){$_.CapacityKB = Get-SizeKB ($_.Capacity)}
-        if ($_.PSObject.Properties.Name -match "CapacityMB"){$_.CapacityMB = Get-SizeMB ($_.Capacity)}
-        if ($_.PSObject.Properties.Name -match "CapacityGB"){$_.CapacityGB = Get-SizeGB ($_.Capacity)}
+  foreach ($_ in $PhysicalMemory)
+  {
+    $_.FormFactor = Get-FormFactor -Code ($_.FormFactor)
+    $_.InterleavePosition = Get-InterleavePosition -Code ($_.InterleavePosition)
+    $_.MemoryType = Get-MemoryType -Code ($_.MemoryType)
+    $_.TypeDetail = Get-TypeDetail -Code ($_.TypeDetail)
+    if ($_.PSObject.Properties.Name -match 'CapacityKB')
+    {
+      $_.CapacityKB = Get-SizeKB -Size ($_.Capacity)
     }
+    if ($_.PSObject.Properties.Name -match 'CapacityMB')
+    {
+      $_.CapacityMB = Get-SizeMB -Size ($_.Capacity)
+    }
+    if ($_.PSObject.Properties.Name -match 'CapacityGB')
+    {
+      $_.CapacityGB = Get-SizeGB -Size ($_.Capacity)
+    }
+  }
 
-    Optimize-Output -Object $PhysicalMemory -Properties $Properties -DefaultProperties $DefaultProperties
+  Optimize-Output -Object $PhysicalMemory -Properties $Properties -DefaultProperties $DefaultProperties
 }
