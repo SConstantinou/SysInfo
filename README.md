@@ -71,6 +71,14 @@ will help you out perform your job.
 
 ### Release Notes
 
+* __1.2.0 14-03-2019__
+  * Credential parameter added
+  * Authentication parameter added
+  * Properties are now sorted in alphabetical order
+  * Some internal functions have been renamed
+  * Code Improvements
+  * Bug fixes
+
 * __1.1.3 20-11-2018__
   * Get-FloppyDrive renamed to Get-FloppyDriveSysInfo
   * Get-NetworkAdapter renamed to GetNetworkAdapterSysInfo
